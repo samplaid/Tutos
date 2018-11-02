@@ -1,0 +1,1572 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<server xmlns="urn:jboss:domain:4.1">
+
+    <extensions>
+        <extension module="org.jboss.as.clustering.infinispan"/>
+        <extension module="org.jboss.as.clustering.jgroups"/>
+        <extension module="org.jboss.as.connector"/>
+        <extension module="org.jboss.as.deployment-scanner"/>
+        <extension module="org.jboss.as.ee"/>
+        <extension module="org.jboss.as.ejb3"/>
+        <extension module="org.jboss.as.jaxrs"/>
+        <extension module="org.jboss.as.jdr"/>
+        <extension module="org.jboss.as.jmx"/>
+        <extension module="org.jboss.as.jpa"/>
+        <extension module="org.jboss.as.jsf"/>
+        <extension module="org.jboss.as.logging"/>
+        <extension module="org.jboss.as.mail"/>
+        <extension module="org.jboss.as.modcluster"/>
+        <extension module="org.jboss.as.naming"/>
+        <extension module="org.jboss.as.pojo"/>
+        <extension module="org.jboss.as.remoting"/>
+        <extension module="org.jboss.as.sar"/>
+        <extension module="org.jboss.as.security"/>
+        <extension module="org.jboss.as.transactions"/>
+        <extension module="org.jboss.as.webservices"/>
+        <extension module="org.jboss.as.weld"/>
+        <extension module="org.wildfly.extension.batch.jberet"/>
+        <extension module="org.wildfly.extension.bean-validation"/>
+        <extension module="org.wildfly.extension.clustering.singleton"/>
+        <extension module="org.wildfly.extension.io"/>
+        <extension module="org.wildfly.extension.request-controller"/>
+        <extension module="org.wildfly.extension.security.manager"/>
+        <extension module="org.wildfly.extension.undertow"/>
+        <extension module="org.keycloak.keycloak-adapter-subsystem"/>
+        <extension module="org.wildfly.extension.messaging-activemq"/>
+    </extensions>
+
+
+    <management>
+        <security-realms>
+            <security-realm name="ManagementRealm">
+                <authentication>
+                    <local default-user="$local" skip-group-loading="true"/>
+                    <properties path="mgmt-users.properties" relative-to="jboss.server.config.dir"/>
+                </authentication>
+                <authorization map-groups-to-roles="false">
+                    <properties path="mgmt-groups.properties" relative-to="jboss.server.config.dir"/>
+                </authorization>
+            </security-realm>
+            <security-realm name="ApplicationRealm">
+                <authentication>
+                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
+                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
+                </authentication>
+                <authorization>
+                    <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
+                </authorization>
+            </security-realm>
+            <security-realm name="LdapManagementRealm">
+                <server-identities>
+                    <ssl>
+                        <keystore path="olympe.loc.jks" relative-to="jboss.server.config.dir" keystore-password="WealinsPassword"/>
+                    </ssl>
+                </server-identities>
+                <authentication>
+                    <local default-user="$local" skip-group-loading="true"/>
+                    <ldap connection="ldap-connection" base-dn="OU=Users,OU=1.Wealins,DC=olympe,DC=loc" recursive="true">
+                        <advanced-filter filter="(&amp;(sAMAccountName={0})(memberOf:1.2.840.113556.1.4.1941:=CN=GF_LINUX_ACCESS_DEV,OU=WEA,OU=Security,OU=Global,OU=Groups,OU=1.Wealins,DC=olympe,DC=loc))"/>
+                    </ldap>
+                </authentication>
+            </security-realm>
+        </security-realms>
+        <outbound-connections>
+            <ldap name="ldap-connection" url="ldaps://10.45.2.1:636" search-dn="CN=peap-svc,OU=Service Accounts,OU=1.Wealins,DC=olympe,DC=loc" search-credential="TuG3Wv8jxM"/>
+        </outbound-connections>
+        <audit-log>
+            <formatters>
+                <json-formatter name="json-formatter"/>
+            </formatters>
+            <handlers>
+                <file-handler name="file" formatter="json-formatter" path="audit-log.log" relative-to="jboss.server.data.dir"/>
+            </handlers>
+            <logger log-boot="true" log-read-only="false" enabled="false">
+                <handlers>
+                    <handler name="file"/>
+                </handlers>
+            </logger>
+        </audit-log>
+        <management-interfaces>
+            <http-interface security-realm="LdapManagementRealm" http-upgrade-enabled="true">
+                <socket-binding http="management-http" https="management-https"/>
+            </http-interface>
+        </management-interfaces>
+        <access-control provider="simple">
+            <role-mapping>
+                <role name="SuperUser">
+                    <include>
+                        <user name="$local"/>
+                    </include>
+                </role>
+            </role-mapping>
+        </access-control>
+    </management>
+
+    <profile>
+        <subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0"/>
+        <subsystem xmlns="urn:jboss:domain:logging:3.0">
+            <console-handler name="CONSOLE">
+                <level name="INFO"/>
+                <formatter>
+                    <named-formatter name="COLOR-PATTERN"/>
+                </formatter>
+            </console-handler>
+            <periodic-rotating-file-handler name="FILE" autoflush="true">
+                <formatter>
+                    <named-formatter name="PATTERN"/>
+                </formatter>
+                <file relative-to="jboss.server.log.dir" path="server.log"/>
+                <suffix value=".yyyy-MM-dd"/>
+                <append value="true"/>
+            </periodic-rotating-file-handler>
+            <logger category="com.arjuna">
+                <level name="WARN"/>
+            </logger>
+            <logger category="org.jboss.as.config">
+                <level name="INFO"/>
+            </logger>
+            <logger category="sun.rmi">
+                <level name="WARN"/>
+            </logger>
+            <root-logger>
+                <level name="INFO"/>
+                <handlers>
+                    <handler name="CONSOLE"/>
+                    <handler name="FILE"/>
+                </handlers>
+            </root-logger>
+            <formatter name="PATTERN">
+                <pattern-formatter pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n"/>
+            </formatter>
+            <formatter name="COLOR-PATTERN">
+                <pattern-formatter pattern="%K{level}%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n"/>
+            </formatter>
+            <logging-profiles>
+                <logging-profile name="soliam-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="soliam-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="soliam-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="ods-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="ods-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="ods-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="liability-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="liability-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="liability-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="SOAP">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="liability-services-webapp/soap.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="org.apache.cxf.services" use-parent-handlers="false">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="SOAP"/>
+                        </handlers>
+                    </logger>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="alfresco-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="alfresco-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="alfresco-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="editing-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="editing-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="editing-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="ewealins-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="ewealins-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="ewealins-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="dali-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="dali-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="dali-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="acl-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="acl-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="acl-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="webia-application-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="webia-application-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="webia-application-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="webia-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="webia-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="webia-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="org.hibernate">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="drm-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="drm-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="drm-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="edm-services-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="edm-services-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="edm-services-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="filenet-application-webapp">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="filenet-application-webapp/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="filenet-application-webapp/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+                <logging-profile name="batch-platform">
+                    <periodic-size-rotating-file-handler name="STDOUT">
+                        <level name="DEBUG"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="batch-platform/stdout.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <periodic-size-rotating-file-handler name="BUSINESS">
+                        <level name="INFO"/>
+                        <formatter>
+                            <pattern-formatter pattern="%d{dd-MM-yyyy HH:mm:ss,SSS} [%X{user}] %-5p [%t] %c | %m%n"/>
+                        </formatter>
+                        <file relative-to="jboss.server.log.dir" path="batch-platform/business.log"/>
+                        <rotate-size value="20M"/>
+                        <max-backup-index value="5"/>
+                        <suffix value=".yyyy-MM-dd"/>
+                    </periodic-size-rotating-file-handler>
+                    <logger category="business">
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="BUSINESS"/>
+                        </handlers>
+                    </logger>
+                    <logger category="org.springframework">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="lu.wealins">
+                        <level name="INFO"/>
+                    </logger>
+                    <logger category="org.springframework.batch.core.job">
+                        <level name="DEBUG"/>
+                    </logger>
+                    <root-logger>
+                        <level name="INFO"/>
+                        <handlers>
+                            <handler name="STDOUT"/>
+                        </handlers>
+                    </root-logger>
+                </logging-profile>
+            </logging-profiles>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:batch-jberet:1.0">
+            <default-job-repository name="in-memory"/>
+            <default-thread-pool name="batch"/>
+            <job-repository name="in-memory">
+                <in-memory/>
+            </job-repository>
+            <thread-pool name="batch">
+                <max-threads count="10"/>
+                <keepalive-time time="30" unit="seconds"/>
+            </thread-pool>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:bean-validation:1.0"/>
+        <subsystem xmlns="urn:jboss:domain:datasources:4.0">
+            <datasources>
+                <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+                    <driver>h2</driver>
+                    <security>
+                        <user-name>sa</user-name>
+                        <password>sa</password>
+                    </security>
+                </datasource>
+                <datasource jta="true" jndi-name="java:jboss/datasources/liabilityServicesDS" pool-name="liabilityServicesDS" enabled="true" use-ccm="true">
+                    <connection-url>jdbc:sqlserver://sv-wvt76.olympe.loc:1433;databaseName=LISSIA_DEV</connection-url>
+                    <connection-property name="sendStringParametersAsUnicode">
+                        false
+                    </connection-property>
+                    <driver>mssql</driver>
+                    <pool>
+                        <max-pool-size>100</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>dlissia-svc</user-name>
+                        <password>3RzWNFaw344a</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"/>
+                        <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+                        <validate-on-match>false</validate-on-match>
+                        <background-validation>true</background-validation>
+                        <background-validation-millis>120000</background-validation-millis>
+                    </validation>
+                    <statement>
+                        <prepared-statement-cache-size>150</prepared-statement-cache-size>
+                        <share-prepared-statements>true</share-prepared-statements>
+                    </statement>
+                </datasource>
+                <datasource jndi-name="java:jboss/datasources/webiaServicesDS" pool-name="webiaServicesDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:sqlserver://sv-wvt81.olympe.loc:1433;databaseName=WEBIA_DEV</connection-url>
+                    <connection-property name="sendStringParametersAsUnicode">
+                        false
+                    </connection-property>
+                    <driver>mssql</driver>
+                    <pool>
+                        <max-pool-size>100</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>dwebia-svc</user-name>
+                        <password>Hdwjes85224_</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"/>
+                        <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+                        <validate-on-match>false</validate-on-match>
+                        <background-validation>true</background-validation>
+                        <background-validation-millis>120000</background-validation-millis>
+                    </validation>
+                    <statement>
+                        <prepared-statement-cache-size>150</prepared-statement-cache-size>
+                        <share-prepared-statements>true</share-prepared-statements>
+                    </statement>
+                </datasource>
+                <datasource jndi-name="java:jboss/datasources/WIODS" pool-name="wiodsDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:sqlserver://sv-wvt46.olympe.loc:1433;DatabaseName=WIODS_DEV</connection-url>
+                    <driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
+                    <driver>mssql</driver>
+                    <new-connection-sql>select 1</new-connection-sql>
+                    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+                    <pool>
+                        <min-pool-size>5</min-pool-size>
+                        <max-pool-size>50</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>dwiodsro-svc</user-name>
+                        <password>zvY3F7w5</password>
+                    </security>
+                    <validation>
+                        <background-validation>false</background-validation>
+                    </validation>
+                    <timeout>
+                        <set-tx-query-timeout>true</set-tx-query-timeout>
+                        <blocking-timeout-millis>5000</blocking-timeout-millis>
+                        <idle-timeout-minutes>15</idle-timeout-minutes>
+                    </timeout>
+                    <statement>
+                        <track-statements>false</track-statements>
+                    </statement>
+                </datasource>
+                <datasource jta="true" jndi-name="java:/jdbc/useraccess" pool-name="userAccessDS" enabled="true" use-ccm="true">
+                    <connection-url>jdbc:sqlserver://sv-wvt81.olympe.loc:1433;DatabaseName=user_access_dev</connection-url>
+                    <driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
+                    <driver>mssql</driver>
+                    <new-connection-sql>select 1</new-connection-sql>
+                    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+                    <pool>
+                        <min-pool-size>5</min-pool-size>
+                        <max-pool-size>50</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>duseraccess-svc</user-name>
+                        <password>Xn74HqD3fiV2</password>
+                    </security>
+                    <validation>
+                        <background-validation>false</background-validation>
+                    </validation>
+                    <timeout>
+                        <set-tx-query-timeout>true</set-tx-query-timeout>
+                        <blocking-timeout-millis>5000</blocking-timeout-millis>
+                        <idle-timeout-minutes>15</idle-timeout-minutes>
+                    </timeout>
+                    <statement>
+                        <track-statements>false</track-statements>
+                    </statement>
+                </datasource>
+                <datasource jndi-name="java:jboss/datasources/EWEALINS" pool-name="ewealinsDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:sqlserver://sv-wvt81.olympe.loc:1433;DatabaseName=EWEALINS_DEV</connection-url>
+                    <driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
+                    <driver>mssql</driver>
+                    <new-connection-sql>select 1</new-connection-sql>
+                    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+                    <pool>
+                        <min-pool-size>5</min-pool-size>
+                        <max-pool-size>50</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>dewealins-svc</user-name>
+                        <password>SP9]cMA-</password>
+                    </security>
+                    <validation>
+                        <background-validation>false</background-validation>
+                    </validation>
+                    <timeout>
+                        <set-tx-query-timeout>true</set-tx-query-timeout>
+                        <blocking-timeout-millis>5000</blocking-timeout-millis>
+                        <idle-timeout-minutes>15</idle-timeout-minutes>
+                    </timeout>
+                    <statement>
+                        <track-statements>false</track-statements>
+                    </statement>
+                </datasource>
+                <datasource jndi-name="java:jboss/datasources/editingServicesDS" pool-name="editingServicesDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:sqlserver://sv-wvt81.olympe.loc:1433;databaseName=EDITING_DEV</connection-url>
+                    <connection-property name="sendStringParametersAsUnicode">
+                        false
+                    </connection-property>
+                    <driver>mssql</driver>
+                    <pool>
+                        <max-pool-size>100</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>dediting-svc</user-name>
+                        <password>4DXuZgSM</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"/>
+                        <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+                        <validate-on-match>false</validate-on-match>
+                        <background-validation>true</background-validation>
+                        <background-validation-millis>120000</background-validation-millis>
+                    </validation>
+                    <statement>
+                        <prepared-statement-cache-size>150</prepared-statement-cache-size>
+                        <share-prepared-statements>true</share-prepared-statements>
+                    </statement>
+                </datasource>
+                <datasource jndi-name="java:jboss/datasources/batchDS" pool-name="batchDS" enabled="true" use-java-context="true" statistics-enabled="true">
+                    <connection-url>jdbc:sqlserver://sv-wvt81.olympe.loc:1433;DatabaseName=BATCH_DEV</connection-url>
+                    <connection-property name="sendStringParametersAsUnicode">
+                        false
+                    </connection-property>
+                    <driver>mssql</driver>
+                    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+                    <pool>
+                        <max-pool-size>100</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>dbatch-svc</user-name>
+                        <password>8Ue5kW2i4WLc</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"/>
+                        <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+                        <validate-on-match>false</validate-on-match>
+                        <background-validation>true</background-validation>
+                        <background-validation-millis>120000</background-validation-millis>
+                    </validation>
+                    <timeout>
+                        <set-tx-query-timeout>false</set-tx-query-timeout>
+                        <blocking-timeout-millis>5000</blocking-timeout-millis>
+                        <idle-timeout-minutes>15</idle-timeout-minutes>
+                    </timeout>
+                    <statement>
+                        <prepared-statement-cache-size>150</prepared-statement-cache-size>
+                        <share-prepared-statements>true</share-prepared-statements>
+                    </statement>
+                </datasource>
+                <datasource jndi-name="java:jboss/datasources/luxadm" pool-name="LUXADM_DS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:oracle:thin:@dlpdb02d.iwi.local:5123/DDLP.rh.iwi.local</connection-url>
+                    <connection-property name="sendStringParametersAsUnicode">
+                        false
+                    </connection-property>
+                    <driver>ojdbc</driver>
+                    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+                    <pool>
+                        <max-pool-size>100</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>lux_adm</user-name>
+                        <password>luxdev</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleValidConnectionChecker"/>
+                        <validate-on-match>false</validate-on-match>
+                        <background-validation>false</background-validation>
+                        <stale-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleStaleConnectionChecker"/>
+                        <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter"/>
+                    </validation>
+                    <timeout>
+                        <set-tx-query-timeout>true</set-tx-query-timeout>
+                        <blocking-timeout-millis>3000</blocking-timeout-millis>
+                        <idle-timeout-minutes>3</idle-timeout-minutes>
+                        <query-timeout>120</query-timeout>
+                        <use-try-lock>30</use-try-lock>
+                        <allocation-retry-wait-millis>0</allocation-retry-wait-millis>
+                    </timeout>
+                    <statement>
+                        <prepared-statement-cache-size>32</prepared-statement-cache-size>
+                        <share-prepared-statements>true</share-prepared-statements>
+                    </statement>
+                </datasource>
+                <datasource jta="true" jndi-name="java:jboss/datasources/reportingServicesDS" pool-name="Reporting" enabled="true" use-ccm="true">
+                    <connection-url>jdbc:sqlserver://10.45.7.18:1433;databaseName=Reporting</connection-url>
+                    <driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
+                    <driver>mssql</driver>
+                    <security>
+                        <user-name>dlissia-svc</user-name>
+                        <password>3RzWNFaw344a</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"/>
+                        <background-validation>true</background-validation>
+                    </validation>
+                </datasource>
+                <drivers>
+                    <driver name="h2" module="com.h2database.h2">
+                        <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
+                    </driver>
+                    <driver name="mssql" module="com.microsoft.sqlserver.jdbc">
+                        <xa-datasource-class>com.microsoft.sqlserver.jdbc.SQLServerXADataSource</xa-datasource-class>
+                    </driver>
+                    <driver name="ojdbc" module="com.oracle.ojdbc">
+                        <xa-datasource-class>oracle.jdbc.xa.client.OracleXADataSource</xa-datasource-class>
+                    </driver>
+                </drivers>
+            </datasources>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:deployment-scanner:2.0">
+            <deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="5000" runtime-failure-causes-rollback="${jboss.deployment.scanner.rollback.on.failure:false}"/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:ee:4.0">
+            <spec-descriptor-property-replacement>false</spec-descriptor-property-replacement>
+            <concurrent>
+                <context-services>
+                    <context-service name="default" jndi-name="java:jboss/ee/concurrency/context/default" use-transaction-setup-provider="true"/>
+                </context-services>
+                <managed-thread-factories>
+                    <managed-thread-factory name="default" jndi-name="java:jboss/ee/concurrency/factory/default" context-service="default"/>
+                </managed-thread-factories>
+                <managed-executor-services>
+                    <managed-executor-service name="default" jndi-name="java:jboss/ee/concurrency/executor/default" context-service="default" hung-task-threshold="60000" keepalive-time="5000"/>
+                </managed-executor-services>
+                <managed-scheduled-executor-services>
+                    <managed-scheduled-executor-service name="default" jndi-name="java:jboss/ee/concurrency/scheduler/default" context-service="default" hung-task-threshold="60000" keepalive-time="3000"/>
+                </managed-scheduled-executor-services>
+            </concurrent>
+            <default-bindings context-service="java:jboss/ee/concurrency/context/default" datasource="java:jboss/datasources/ExampleDS" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:ejb3:4.0">
+            <session-bean>
+                <stateless>
+                    <bean-instance-pool-ref pool-name="slsb-strict-max-pool"/>
+                </stateless>
+                <stateful default-access-timeout="5000" cache-ref="distributable" passivation-disabled-cache-ref="simple"/>
+                <singleton default-access-timeout="5000"/>
+            </session-bean>
+            <pools>
+                <bean-instance-pools>
+                    <strict-max-pool name="slsb-strict-max-pool" derive-size="from-worker-pools" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
+                    <strict-max-pool name="mdb-strict-max-pool" derive-size="from-cpu-count" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
+                </bean-instance-pools>
+            </pools>
+            <caches>
+                <cache name="simple"/>
+                <cache name="distributable" passivation-store-ref="infinispan" aliases="passivating clustered"/>
+            </caches>
+            <passivation-stores>
+                <passivation-store name="infinispan" cache-container="ejb" max-size="10000"/>
+            </passivation-stores>
+            <async thread-pool-name="default"/>
+            <timer-service thread-pool-name="default" default-data-store="default-file-store">
+                <data-stores>
+                    <file-data-store name="default-file-store" path="timer-service-data" relative-to="jboss.server.data.dir"/>
+                </data-stores>
+            </timer-service>
+            <remote connector-ref="http-remoting-connector" thread-pool-name="default"/>
+            <thread-pools>
+                <thread-pool name="default">
+                    <max-threads count="10"/>
+                    <keepalive-time time="100" unit="milliseconds"/>
+                </thread-pool>
+            </thread-pools>
+            <default-security-domain value="other"/>
+            <default-missing-method-permissions-deny-access value="true"/>
+            <log-system-exceptions value="true"/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:io:1.1">
+            <worker name="default"/>
+            <buffer-pool name="default"/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:infinispan:4.0">
+            <cache-container name="server" aliases="singleton cluster" default-cache="default" module="org.wildfly.clustering.server">
+                <transport lock-timeout="60000"/>
+                <replicated-cache name="default" mode="SYNC">
+                    <transaction mode="BATCH"/>
+                </replicated-cache>
+            </cache-container>
+            <cache-container name="web" default-cache="dist" module="org.wildfly.clustering.web.infinispan">
+                <transport lock-timeout="60000"/>
+                <distributed-cache name="dist" mode="ASYNC" l1-lifespan="0" owners="2">
+                    <locking isolation="REPEATABLE_READ"/>
+                    <transaction mode="BATCH"/>
+                    <file-store/>
+                </distributed-cache>
+            </cache-container>
+            <cache-container name="ejb" aliases="sfsb" default-cache="dist" module="org.wildfly.clustering.ejb.infinispan">
+                <transport lock-timeout="60000"/>
+                <distributed-cache name="dist" mode="ASYNC" l1-lifespan="0" owners="2">
+                    <locking isolation="REPEATABLE_READ"/>
+                    <transaction mode="BATCH"/>
+                    <file-store/>
+                </distributed-cache>
+            </cache-container>
+            <cache-container name="hibernate" default-cache="local-query" module="org.hibernate.infinispan">
+                <transport lock-timeout="60000"/>
+                <local-cache name="local-query">
+                    <eviction strategy="LRU" max-entries="10000"/>
+                    <expiration max-idle="100000"/>
+                </local-cache>
+                <invalidation-cache name="entity" mode="SYNC">
+                    <transaction mode="NON_XA"/>
+                    <eviction strategy="LRU" max-entries="10000"/>
+                    <expiration max-idle="100000"/>
+                </invalidation-cache>
+                <replicated-cache name="timestamps" mode="ASYNC"/>
+            </cache-container>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:jaxrs:1.0"/>
+        <subsystem xmlns="urn:jboss:domain:jca:4.0">
+            <archive-validation enabled="true" fail-on-error="true" fail-on-warn="false"/>
+            <bean-validation enabled="true"/>
+            <default-workmanager>
+                <short-running-threads>
+                    <core-threads count="50"/>
+                    <queue-length count="50"/>
+                    <max-threads count="50"/>
+                    <keepalive-time time="10" unit="seconds"/>
+                </short-running-threads>
+                <long-running-threads>
+                    <core-threads count="50"/>
+                    <queue-length count="50"/>
+                    <max-threads count="50"/>
+                    <keepalive-time time="10" unit="seconds"/>
+                </long-running-threads>
+            </default-workmanager>
+            <cached-connection-manager/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:jdr:1.0"/>
+        <subsystem xmlns="urn:jboss:domain:jgroups:4.0">
+            <channels default="ee">
+                <channel name="ee" stack="udp"/>
+            </channels>
+            <stacks>
+                <stack name="udp">
+                    <transport type="UDP" socket-binding="jgroups-udp"/>
+                    <protocol type="PING"/>
+                    <protocol type="MERGE3"/>
+                    <protocol type="FD_SOCK" socket-binding="jgroups-udp-fd"/>
+                    <protocol type="FD_ALL"/>
+                    <protocol type="VERIFY_SUSPECT"/>
+                    <protocol type="pbcast.NAKACK2"/>
+                    <protocol type="UNICAST3"/>
+                    <protocol type="pbcast.STABLE"/>
+                    <protocol type="pbcast.GMS"/>
+                    <protocol type="UFC"/>
+                    <protocol type="MFC"/>
+                    <protocol type="FRAG2"/>
+                </stack>
+                <stack name="tcp">
+                    <transport type="TCP" socket-binding="jgroups-tcp"/>
+                    <protocol type="MPING" socket-binding="jgroups-mping"/>
+                    <protocol type="MERGE3"/>
+                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
+                    <protocol type="FD"/>
+                    <protocol type="VERIFY_SUSPECT"/>
+                    <protocol type="pbcast.NAKACK2"/>
+                    <protocol type="UNICAST3"/>
+                    <protocol type="pbcast.STABLE"/>
+                    <protocol type="pbcast.GMS"/>
+                    <protocol type="MFC"/>
+                    <protocol type="FRAG2"/>
+                </stack>
+            </stacks>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:jmx:1.3">
+            <expose-resolved-model/>
+            <expose-expression-model/>
+            <remoting-connector/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:jpa:1.1">
+            <jpa default-datasource="" default-extended-persistence-inheritance="DEEP"/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:jsf:1.0"/>
+        <subsystem xmlns="urn:jboss:domain:mail:2.0">
+            <mail-session name="default" jndi-name="java:jboss/mail/Default">
+                <smtp-server outbound-socket-binding-ref="mail-smtp"/>
+            </mail-session>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:modcluster:2.0">
+            <mod-cluster-config advertise-socket="modcluster" proxies="eap-proxy" balancer="eap-apps" advertise="false" connector="ajp">
+                <dynamic-load-provider>
+                    <load-metric type="busyness"/>
+                </dynamic-load-provider>
+            </mod-cluster-config>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:naming:2.0">
+            <remote-naming/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:pojo:1.0"/>
+        <subsystem xmlns="urn:jboss:domain:remoting:3.0">
+            <endpoint/>
+            <http-connector name="http-remoting-connector" connector-ref="default" security-realm="ApplicationRealm"/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:resource-adapters:4.0">
+            <resource-adapters>
+                <resource-adapter id="artemis-rar-2.6.0">
+                    <archive>
+                        artemis-rar-2.6.0.rar
+                    </archive>
+                    <transaction-support>XATransaction</transaction-support>
+                    <config-property name="UserName">
+                        uappeepartemis-svc
+                    </config-property>
+                    <config-property name="ConnectionParameters">
+                        host=sv-lvu73.rh.olympe.loc;port=61616;sslEnabled=true
+                    </config-property>
+                    <config-property name="connectorClassName">
+                        org.apache.activemq.artemis.core.remoting.impl.netty.NettyConnectorFactory
+                    </config-property>
+                    <config-property name="Password">
+                        d4!Ou7)-t8*i6
+                    </config-property>
+                    <connection-definitions>
+                        <connection-definition class-name="org.apache.activemq.artemis.ra.ActiveMQRAManagedConnectionFactory" jndi-name="java:/jms/artemis/queueConnectionFactory" enabled="true" pool-name="ConnectionFactory">
+                            <xa-pool>
+                                <min-pool-size>1</min-pool-size>
+                                <max-pool-size>20</max-pool-size>
+                                <prefill>false</prefill>
+                                <is-same-rm-override>false</is-same-rm-override>
+                            </xa-pool>
+                        </connection-definition>
+                    </connection-definitions>
+                </resource-adapter>
+                <resource-adapter id="activemq-rar-5.15.4-DRM">
+                    <archive>
+                        activemq-rar-5.15.4.rar
+                    </archive>
+                    <transaction-support>XATransaction</transaction-support>
+                    <config-property name="ServerUrl">
+                        ssl://sv-lvd47.rh.olympe.loc:61616
+                    </config-property>
+                    <config-property name="UserName">
+                        ddrmartemis-svc
+                    </config-property>
+                    <config-property name="Password">
+                        mUjtqF864TF5
+                    </config-property>
+                    <connection-definitions>
+                        <connection-definition class-name="org.apache.activemq.ra.ActiveMQManagedConnectionFactory" jndi-name="java:/jms/drm/connectionFactory" enabled="true" tracking="false" pool-name="DRMConnectionFactory">
+                            <xa-pool>
+                                <min-pool-size>1</min-pool-size>
+                                <max-pool-size>20</max-pool-size>
+                                <prefill>false</prefill>
+                                <is-same-rm-override>false</is-same-rm-override>
+                            </xa-pool>
+                        </connection-definition>
+                    </connection-definitions>
+                    <admin-objects>
+                        <admin-object class-name="org.apache.activemq.command.ActiveMQTopic" jndi-name="java:/jms/drm/internalSugarEventsTopic" use-java-context="true" pool-name="internalSugarEventsTopic">
+                            <config-property name="PhysicalName">
+                                DRMSERVICES.INTERNAL.SUGAR_EVENTS
+                            </config-property>
+                        </admin-object>
+                        <admin-object class-name="org.apache.activemq.command.ActiveMQTopic" jndi-name="java:/jms/drm/distributorUpdateEventsTopic" use-java-context="true" pool-name="distributorUpdateEventsTopic">
+                            <config-property name="PhysicalName">
+                                DRMSERVICES.DISTRIBUTOR_UPDATE_EVENTS
+                            </config-property>
+                        </admin-object>
+                    </admin-objects>
+                </resource-adapter>
+            </resource-adapters>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:request-controller:1.0"/>
+        <subsystem xmlns="urn:jboss:domain:sar:1.0"/>
+        <subsystem xmlns="urn:jboss:domain:security-manager:1.0">
+            <deployment-permissions>
+                <maximum-set>
+                    <permission class="java.security.AllPermission"/>
+                </maximum-set>
+            </deployment-permissions>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:security:1.2">
+            <security-domains>
+                <security-domain name="other" cache-type="default">
+                    <authentication>
+                        <login-module code="Remoting" flag="optional">
+                            <module-option name="password-stacking" value="useFirstPass"/>
+                        </login-module>
+                        <login-module code="RealmDirect" flag="required">
+                            <module-option name="password-stacking" value="useFirstPass"/>
+                        </login-module>
+                    </authentication>
+                </security-domain>
+                <security-domain name="jboss-web-policy" cache-type="default">
+                    <authorization>
+                        <policy-module code="Delegating" flag="required"/>
+                    </authorization>
+                </security-domain>
+                <security-domain name="jboss-ejb-policy" cache-type="default">
+                    <authorization>
+                        <policy-module code="Delegating" flag="required"/>
+                    </authorization>
+                </security-domain>
+                <security-domain name="jaspitest" cache-type="default">
+                    <authentication-jaspi>
+                        <login-module-stack name="dummy">
+                            <login-module code="Dummy" flag="optional"/>
+                        </login-module-stack>
+                        <auth-module code="Dummy"/>
+                    </authentication-jaspi>
+                </security-domain>
+                <security-domain name="keycloak">
+                    <authentication>
+                        <login-module code="org.keycloak.adapters.jboss.KeycloakLoginModule" flag="required"/>
+                    </authentication>
+                </security-domain>
+            </security-domains>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:singleton:1.0">
+            <singleton-policies default="default">
+                <singleton-policy name="default" cache-container="server">
+                    <simple-election-policy/>
+                </singleton-policy>
+            </singleton-policies>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:transactions:3.0">
+            <core-environment>
+                <process-id>
+                    <uuid/>
+                </process-id>
+            </core-environment>
+            <recovery-environment socket-binding="txn-recovery-environment" status-socket-binding="txn-status-manager"/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:undertow:3.1">
+            <buffer-cache name="default"/>
+            <server name="default-server">
+                <ajp-listener name="ajp" max-connections="600" read-timeout="60000" record-request-start-time="true" socket-binding="ajp"/>
+                <http-listener name="default" socket-binding="http" redirect-socket="https"/>
+                <host name="default-host" alias="localhost">
+                    <location name="/" handler="welcome-content"/>
+                    <filter-ref name="server-header"/>
+                    <filter-ref name="x-powered-by-header"/>
+                </host>
+            </server>
+            <servlet-container name="default">
+                <jsp-config/>
+                <websockets/>
+            </servlet-container>
+            <handlers>
+                <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
+            </handlers>
+            <filters>
+                <response-header name="server-header" header-name="Server" header-value="JBoss-EAP/7"/>
+                <response-header name="x-powered-by-header" header-name="X-Powered-By" header-value="Undertow/1"/>
+            </filters>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:webservices:2.0">
+            <wsdl-host>${jboss.bind.address:127.0.0.1}</wsdl-host>
+            <endpoint-config name="Standard-Endpoint-Config"/>
+            <endpoint-config name="Recording-Endpoint-Config">
+                <pre-handler-chain name="recording-handlers" protocol-bindings="##SOAP11_HTTP ##SOAP11_HTTP_MTOM ##SOAP12_HTTP ##SOAP12_HTTP_MTOM">
+                    <handler name="RecordingHandler" class="org.jboss.ws.common.invocation.RecordingServerHandler"/>
+                </pre-handler-chain>
+            </endpoint-config>
+            <client-config name="Standard-Client-Config"/>
+        </subsystem>
+        <subsystem xmlns="urn:jboss:domain:weld:3.0"/>
+        <subsystem xmlns="urn:jboss:domain:keycloak:1.1">
+            <secure-deployment name="liability-services-webapp-18.6.10-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="webia-application-webapp-18.6.10-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-applications</resource>
+                <public-client>true</public-client>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="webia-services-webapp-18.6.10-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="batch-platform-18.5.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-applications</resource>
+                <public-client>true</public-client>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="editing-services-webapp-18.3.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="acl-services-webapp-18.2.0-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="alfresco-services-webapp-18.1.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="edm-services-webapp-18.1.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="ewealins-services-webapp-18.1.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="ods-services-webapp-18.1.2-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="soliam-services-webapp-18.1.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="devops-tools-webapp-0.0.2-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="mail-services-webapp-18.1.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="dali-services-webapp-18.1.0-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>NONE</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="drm-services-webapp-18.1.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>NONE</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="rhsso-services-webapp-18.2.0-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="filenet-application-webapp-17.3.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-applications</resource>
+                <public-client>true</public-client>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+            <secure-deployment name="reporting-services-webapp-18.1.1-SNAPSHOT.war">
+                <realm>Wealins</realm>
+                <resource>wealins-rest-applications</resource>
+                <bearer-only>true</bearer-only>
+                <auth-server-url>https://sv-lvd47.rh.olympe.loc/auth</auth-server-url>
+                <ssl-required>EXTERNAL</ssl-required>
+            </secure-deployment>
+        </subsystem>
+    </profile>
+
+    <interfaces>
+        <interface name="management">
+            <inet-address value="${jboss.bind.address.management:127.0.0.1}"/>
+        </interface>
+        <interface name="public">
+            <inet-address value="${jboss.bind.address:127.0.0.1}"/>
+        </interface>
+        <interface name="private">
+            <inet-address value="${jboss.bind.address.private:127.0.0.1}"/>
+        </interface>
+    </interfaces>
+
+    <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
+        <socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/>
+        <socket-binding name="management-https" interface="management" port="${jboss.management.https.port:9993}"/>
+        <socket-binding name="ajp" port="${jboss.ajp.port:8009}"/>
+        <socket-binding name="http" port="${jboss.http.port:8080}"/>
+        <socket-binding name="https" port="${jboss.https.port:8443}"/>
+        <socket-binding name="jgroups-mping" interface="private" port="0" multicast-address="${jboss.default.multicast.address:230.0.0.4}" multicast-port="45700"/>
+        <socket-binding name="jgroups-tcp" interface="private" port="7600"/>
+        <socket-binding name="jgroups-tcp-fd" interface="private" port="57600"/>
+        <socket-binding name="jgroups-udp" interface="private" port="55200" multicast-address="${jboss.default.multicast.address:230.0.0.4}" multicast-port="45688"/>
+        <socket-binding name="jgroups-udp-fd" interface="private" port="54200"/>
+        <socket-binding name="modcluster" port="0" multicast-address="224.0.1.105" multicast-port="23364"/>
+        <socket-binding name="txn-recovery-environment" port="4712"/>
+        <socket-binding name="txn-status-manager" port="4713"/>
+        <outbound-socket-binding name="mail-smtp">
+            <remote-destination host="localhost" port="25"/>
+        </outbound-socket-binding>
+        <outbound-socket-binding name="eap-proxy">
+            <remote-destination host="localhost" port="6666"/>
+        </outbound-socket-binding>
+    </socket-binding-group>
+
+    <deployments>
+        <deployment name="acl-services-webapp-18.2.0-SNAPSHOT.war" runtime-name="acl-services-webapp-18.2.0-SNAPSHOT.war">
+            <content sha1="ca8fa8282c4469f7fc740c0ae232b3b7850d579e"/>
+        </deployment>
+        <deployment name="alfresco-services-webapp-18.1.1-SNAPSHOT.war" runtime-name="alfresco-services-webapp-18.1.1-SNAPSHOT.war" enabled="false">
+            <content sha1="42473bba16f18ffac3586eaea2b349eb6a5d3873"/>
+        </deployment>
+        <deployment name="dali-services-webapp-18.1.0-SNAPSHOT.war" runtime-name="dali-services-webapp-18.1.0-SNAPSHOT.war" enabled="false">
+            <content sha1="c8d3c4c40c830298585aaa6e7e412635b7bf7818"/>
+        </deployment>
+        <deployment name="devops-tools-webapp-0.0.2-SNAPSHOT.war" runtime-name="devops-tools-webapp-0.0.2-SNAPSHOT.war">
+            <content sha1="116074589c01adee547215b962f73ee3e155fd75"/>
+        </deployment>
+        <deployment name="drm-services-webapp-18.1.1-SNAPSHOT.war" runtime-name="drm-services-webapp-18.1.1-SNAPSHOT.war" enabled="false">
+            <content sha1="94b5d10de5fbc1e46e8e99dc6214cd3dbc45dee1"/>
+        </deployment>
+        <deployment name="edm-services-webapp-18.1.1-SNAPSHOT.war" runtime-name="edm-services-webapp-18.1.1-SNAPSHOT.war" enabled="false">
+            <content sha1="a7b054840f1b5490518790f65e1ac338605bb003"/>
+        </deployment>
+        <deployment name="ewealins-services-webapp-18.1.1-SNAPSHOT.war" runtime-name="ewealins-services-webapp-18.1.1-SNAPSHOT.war">
+            <content sha1="4069539612cf7e1f404b2f0d60afe80756efae4f"/>
+        </deployment>
+        <deployment name="filenet-application-webapp-17.3.1-SNAPSHOT.war" runtime-name="filenet-application-webapp-17.3.1-SNAPSHOT.war" enabled="false">
+            <content sha1="3ac4eaeb2bdfdc4024ed68313597bb58d7503ab6"/>
+        </deployment>
+        <deployment name="mail-services-webapp-18.1.1-SNAPSHOT.war" runtime-name="mail-services-webapp-18.1.1-SNAPSHOT.war" enabled="false">
+            <content sha1="a73305e7b9d96d7face6e5d29a59c61d330a0c60"/>
+        </deployment>
+        <deployment name="reporting-services-webapp-18.1.1-SNAPSHOT.war" runtime-name="reporting-services-webapp-18.1.1-SNAPSHOT.war">
+            <content sha1="1cdfc26565b3713bc1e16268575bb5899b677f5e"/>
+        </deployment>
+        <deployment name="soliam-services-webapp-18.1.1-SNAPSHOT.war" runtime-name="soliam-services-webapp-18.1.1-SNAPSHOT.war">
+            <content sha1="a9d878467046fe32c8d43c4d93b1ba07a56cebe4"/>
+        </deployment>
+        <deployment name="ods-services-webapp-18.1.2-SNAPSHOT.war" runtime-name="ods-services-webapp-18.1.2-SNAPSHOT.war" enabled="false">
+            <content sha1="00a188e3a157cab54471eb8032c8403f3f713b43"/>
+        </deployment>
+        <deployment name="rhsso-services-webapp-18.2.0-SNAPSHOT.war" runtime-name="rhsso-services-webapp-18.2.0-SNAPSHOT.war">
+            <content sha1="7897fd59a9fc3ce3c20de5219b5dfb079324bca1"/>
+        </deployment>
+        <deployment name="artemis-rar-2.6.0.rar" runtime-name="artemis-rar-2.6.0.rar">
+            <content sha1="43ab17756142797a326aaafd04e71693cd51de4a"/>
+        </deployment>
+        <deployment name="editing-services-webapp-18.3.1-SNAPSHOT.war" runtime-name="editing-services-webapp-18.3.1-SNAPSHOT.war">
+            <content sha1="81cb819319509886c7d5da398330dd4391958714"/>
+        </deployment>
+        <deployment name="batch-platform-18.5.1-SNAPSHOT.war" runtime-name="batch-platform-18.5.1-SNAPSHOT.war">
+            <content sha1="cf524e0812e92de298a444ece31930eef61da2e3"/>
+        </deployment>
+        <deployment name="activemq-rar-5.15.4.rar" runtime-name="activemq-rar-5.15.4.rar">
+            <content sha1="d802974251fcad8cbcd5c02c51c3c7f5f4f60685"/>
+        </deployment>
+        <deployment name="webia-services-webapp-18.6.10-SNAPSHOT.war" runtime-name="webia-services-webapp-18.6.10-SNAPSHOT.war">
+            <content sha1="7321f9748642790c33e6294bae9367b9f69083a6"/>
+        </deployment>
+        <deployment name="liability-services-webapp-18.6.10-SNAPSHOT.war" runtime-name="liability-services-webapp-18.6.10-SNAPSHOT.war">
+            <content sha1="0e5d6960ba70ea25ed09e084cef5de12848339b6"/>
+        </deployment>
+        <deployment name="webia-application-webapp-18.6.10-SNAPSHOT.war" runtime-name="webia-application-webapp-18.6.10-SNAPSHOT.war">
+            <content sha1="2ecd068216ae717ae26030d0f61a2fe002ecedbd"/>
+        </deployment>
+    </deployments>
+</server>
