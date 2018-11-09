@@ -1,0 +1,4 @@
+mvn package && java -jar target/gs-authenticating-ldap-0.1.0.jar
+http://localhost:8080
+
+Enter username ben and password benspassword. You should see this message in your browse
