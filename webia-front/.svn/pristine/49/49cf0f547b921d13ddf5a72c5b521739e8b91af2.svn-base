@@ -1,0 +1,56 @@
+<div class="agent-basic-form">
+      <div class="split-screen relative" >
+        <div [ngBusy]="[busy]">
+            <div class="agc-form container-fluid relative" >
+                <div [ngBusy]="subs">
+                <section class="form-horizontal" *ngIf="!inModal">
+                    <div class="row menu marginLeft3 nomarginRight">
+                        <div class="row vertical-center-noline marginVertical5">
+                            <div class="text-nowrap col-md-10 paddingLeft12">
+                                <label class="header-form-title">{{ title }}</label>
+                                <label class="header-form-status">
+                                    <span class="label label-primary w-label" *ngIf="agent && agent.status && agent.status == 1">Active</span>                
+                                    <span class="label label-primary w-label" *ngIf="agent && agent.status && agent.status !=1 ">Inactive</span>
+                                </label>
+                                <label class="header-form-code" *ngIf="agent && agent.agtId"><b>Code</b><span class="paddingHorizontal2">{{ agent?.agtId }}</span></label>                                
+                                <ng-content select="agt-header"></ng-content>
+                            </div>                           
+                            <div class="col-md-2">
+                                <div class="pull-right paddingRight7">
+                                    <button type="submit" class="btn btn-xs btn-primary" [desactive]="mode" (click)="save()">
+                                    <i class="fa fa-floppy-o"></i>Savesd</button>
+                                    <button type="button" class="btn btn-xs btn-primary" (click)="refresh()">
+								    <i class="fa fa-refresh"></i>Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section [ngClass]="{'form':!inModal}" *ngIf="agent">
+                    <div class="col-md-12">
+                        <ngbd-alert-container ref='agentCpt'></ngbd-alert-container>
+                    </div>
+                    <div class="agent-basic-identity">
+                        <agent-identity-form [agent]="agent" [mode]="mode"></agent-identity-form>
+                    </div>
+                    <div class="line-break"></div>
+                    <div class="row">     
+                        <div class="title col-md-12">Address</div>
+                    </div>
+                    <div class="row">                      
+                        <div class="paddingLeft5 agent-basic-address">
+                            <agent-address-form [agent]="agent" [mode]="mode"></agent-address-form>
+                        </div>                        
+                        <ng-content select="agt-basic-address"></ng-content>
+                    </div>
+                </section>
+                
+                <section>
+                    <ng-content></ng-content>
+                </section>
+                </div>
+            </div>
+        </div>
+     </div>
+</div>

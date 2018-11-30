@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="title col-md-5">Transaction</div>
+</div>
+<div class="row">
+    <label class="marginTop col-md-2 text-right">Gross amount</label>
+    <div class="form-group col-md-1 transaction-amount">
+        <span class="text-nowrap">{{ transaction?.grossAmount | currencyPipe:transaction?.currency:"after" }}</span>
+    </div>
+    <label class="marginTop col-md-2 text-right">Net amount</label>
+    <div class="form-group col-md-1 transaction-amount">                                
+        <span>{{ transaction?.netAmount | currencyPipe:transaction?.currency:"after" }}</span>
+    </div>                          
+    <ng-container *ngIf="!!transaction?.feeAmount">
+        <label class="marginTop col-md-2 text-right">Fee amount</label>
+        <div class="form-group col-md-1 transaction-amount">
+            <span>{{transaction?.feeAmount | currencyPipe:transaction?.currency:"after" }}</span>
+        </div>                          
+    </ng-container>                        
+    <ng-container *ngIf="!!transaction?.taxAmount">
+        <label class="marginTop col-md-2 text-right">Tax amount</label>
+        <div class="form-group col-md-1 transaction-amount">                                
+            <span>{{ transaction?.taxAmount | currencyPipe:transaction?.currency:"after" }}</span>
+        </div>      
+    </ng-container>                                                                                
+</div>
+<div class="row">
+    <transaction-details-main [commission]="surrenderDetails?.commission" [detailsIn]="surrenderDetails?.detailsIn" [detailsOut]="surrenderDetails?.detailsOut"
+    [transaction]="transaction" [switch]="surrenderDetails?.isSwitch" [policy]="policyId">
+    </transaction-details-main>   
+</div>  

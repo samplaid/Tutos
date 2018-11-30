@@ -1,0 +1,42 @@
+<ng-container *ngIf="page.content && page.content.length > 0">
+	<ng-content select="[caption]"></ng-content>
+	<div class="relative">
+		<table class="table dataTable table-striped table-hover fullwidth" role="grid" [ngBusy]="[operationEntryBusy]">
+			<thead>
+				<tr role="row">
+					<th class="width-fluid-1">Policy</th>
+					<th class="width-fluid-1">Item id</th>
+					<th class="width-fluid-1">Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<ng-container *ngIf="!!page">
+					<tr *ngFor="let holding of (page.content); let i = index">
+						<td>
+							<ng-container *ngIf="holding">
+								<a *ngIf="holding.policyExist" [attr.href]="'#/policy?id='+ holding.policyId" target="_blank">{{holding.policyId}}</a>
+								<span *ngIf="!holding.policyExist">{{ holding.policyId }}</span>
+							</ng-container>					
+						</td>
+						<td>{{holding?.workflowItemId}}</td>
+						<td>{{translateAppFormStatus(holding?.statusCd)}}</td>
+					</tr>
+					<tr *ngIf="!page.content || page.content.length == 0">
+						<td colspan="9" class="text-center">
+							<p>No result found </p>
+						</td>
+					</tr>
+				</ng-container>
+			</tbody>
+			<tfoot *ngIf="!!page && page.totalPages > 1">
+				<tr>
+					<td colspan="10" class="text-center">
+						<pagination class="text-center" [boundaryLinks]="true" 
+									[totalItems]="page.totalRecordCount" [itemsPerPage]="page.size" [(ngModel)]="page.currentPage" (pageChanged)="searchOperationEntry($event.page)" [maxSize]="10"
+									previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</ng-container>

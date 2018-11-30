@@ -1,0 +1,26 @@
+.in {
+    display: table-cell;
+}
+
+.in.risktype{
+    width: 10%;
+    min-width: 10%;
+}
+
+.in.code{
+    width: 7.5%;
+    min-width: 7.5%;
+}
+.in.desc{
+    width: 17%;
+    min-width: 17%;
+}
+.in.clsrisk{
+    width: 3%;
+}
+.in.btn-group {
+    width: 1%;    
+}
+.in .in-grp{
+    width: 100%;
+}

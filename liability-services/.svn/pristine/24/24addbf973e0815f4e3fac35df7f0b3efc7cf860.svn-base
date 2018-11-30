@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+	<deployment>
+		<dependencies>
+			<module name="org.jboss.resteasy.resteasy-spring" />
+			<module name="org.keycloak.keycloak-core" />
+        	<module name="lu.wealins.config.liability-services" />
+			<module name="org.hibernate" />
+			<module name="org.slf4j" />
+			<module name="deployment.activemq-rar-5.15.4.rar" />
+		</dependencies>
+		 
+	</deployment>
+</jboss-deployment-structure>

@@ -1,0 +1,37 @@
+                            <!-- STR -->
+                            <div class="row" *ngIf="fc.type == 1">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">STR</label>
+                                    <div class="form-inline col-md-9">                                     
+                                        <div class="radio paddingLeft5">
+                                            <label class="radio-inline paddingRight4 ">
+                                                <input class="form-control input input-sm" [desactive]="mode" type="radio" name="dap"  [value]="'1'" [checked]="fc.dap=='1'" [(ngModel)]="fc.dap">
+                                                <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                Yes
+                                            </label>
+                                            <label class="text-nowrap radio-inline paddingRight4 ">
+                                                <input class="form-control input input-sm"  [desactive]="mode" type="radio" name="dap"  [value]="'0'" [checked]="fc.dap=='0'" [(ngModel)]="fc.dap">
+                                                <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                No
+                                            </label>                                            
+                                        </div>                                     
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Compliance risk -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label" [ngClass]="{'col-md-3':fc.type == 1, 'col-md-2':fc.type != 1}">Compliance risk</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control input-sm text-left" [(ngModel)]="fc.riskCat" id="riskCatId" name="riskCat" [desactive]="mode">
+                                            <option value=""></option>
+                                            <option *ngFor="let c of complianceRisks" [value]="c.keyValue">{{ c.description }}</option>
+                                        </select> 
+                                    </div>                                
+                                    <label class="text-nowrap col-md-2 control-label"> Last date of review</label>
+                                    <div class="col-md-4">
+                                        <datepicker [(date)]="fc.dateOfRevision" [disabled]="mode == stateMode.readonly"></datepicker>
+                                    </div>                                
+                                </div>
+                            </div>

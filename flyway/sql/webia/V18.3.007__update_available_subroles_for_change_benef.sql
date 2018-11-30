@@ -1,0 +1,1 @@
+update APPLI_PARAM set value = '17,29,30,31,32,33,24,25,34,35' where code like 'CHANGE_BENEF_AVAILABLE_SUB_ROLES';

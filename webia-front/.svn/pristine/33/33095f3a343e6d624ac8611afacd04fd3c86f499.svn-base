@@ -1,0 +1,39 @@
+<section subject="other-relations-input">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-1">
+            <button type="button" class="btn btn-xs btn-primary" (click)="addOtherClient()" [desactive]="mode">
+                <i class="fa fa-plus" aria-hidden="true"></i>Add other Relationships</button>
+        </div>
+    </div>
+
+    <div class="line-break-big"></div>
+    <!--other relationships-->
+    <div class="row client">
+        <ng-template ngFor let-otherCli [ngForOf]="otherClients" let-i="index" let-last="last">
+            <div class="col-md-4 col-md-offset-1 paddingTop">
+                <select class="form-control input-sm text-left" [(ngModel)]="otherCli.clientRelationTp" [desactive]="mode" aria-placeholder="Role">
+                    <option value=""></option>
+                    <option *ngFor="let role of cPRRoleList | orderBy : ['description']" [value]="role.number">{{role.description}}</option>
+                </select>
+            </div>
+            <div class="col-md-5 marginTop nopadding">
+                <search-client [(clientId)]="otherCli.clientId" [disabled]="mode == stateMode.readonly || mode == stateMode.waiting" [allowClear]="false">
+                    <button class="btn btn-sm btn-primary" (click)="removeIndex(i)" [desactive]="mode">
+                        <i class="fa fa-minus" aria-hidden="true"></i>
+                    </button>
+                </search-client>
+            </div>
+            <div class="col-md-2 marginTop" *ngIf="otherCli.clientRelationTp == cessionSurrenderRole">
+                <div class="row">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="">Max</label>
+                            <w-number [(number)]="otherCli.split" css="form-control input-sm text-right input-percent" [precision]="3" [mode]="mode"></w-number>
+                            <span>%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</section>

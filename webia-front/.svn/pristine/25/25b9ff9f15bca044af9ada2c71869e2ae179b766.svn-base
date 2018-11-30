@@ -1,0 +1,161 @@
+<div class="relative policy-transaction">
+  <div [ngBusy]="subs">
+    <div class="row">
+      <div class="col-md-2 col-lg-2 col-xs-12">
+        <label class="col-md-6 text-right marginTop">Transaction date</label>
+        <div class="col-md-6">
+          <datepicker [(date)]="transactionCriteria.dateEffectTo" (dateChange)="filter()"></datepicker>
+        </div>
+      </div>
+      <div class="checkbox col-md-9 col-lg-9 col-xs-12">
+        <div class="row">
+          <label class="col-md-3 col-lg-3 col-xs-12">
+            <input type="checkbox" [(ngModel)]="transactionCriteria.isAdminManagementHoldmail" (change)="filter()">
+            <span class="cr">
+              <i class="cr-icon">&#x2714;</i>
+            </span>Admin/Management/holdmail charges
+          </label>
+          <label class="col-md-2 col-lg-2 col-xs-12">
+            <input type="checkbox" [(ngModel)]="transactionCriteria.isMortality" (change)="filter()">
+            <span class="cr">
+              <i class="cr-icon">&#x2714;</i>
+            </span>Mortality
+          </label>
+          <label class="col-md-2 col-lg-2 col-xs-12">
+            <input type="checkbox" [(ngModel)]="transactionCriteria.isCancelled" (change)="filter()">
+            <span class="cr">
+              <i class="cr-icon">&#x2714;</i>
+            </span>Cancelled
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="marginTop4 row">
+      <div class="col-md-8 col-md-offset-1">
+        <ngx-datatable #myTable [limit]="defaultPageSize" class="wealins-theme" [rows]="filteredRows" [columnMode]="'flex'"
+          [sorts]="[defaultSort]" [footerHeight]="'auto'" [messages]=tableMessages (select)="onSelect($event)" >
+
+          <ngx-datatable-row-detail [template]="transactionDetailsContent"  [rowHeight]="'auto'" (toggle)="onDetailToggle($event)"></ngx-datatable-row-detail>
+
+          <!-- Column Templates -->
+          <ngx-datatable-column [width]="30" [resizeable]="false" [sortable]="false" [draggable]="false"
+            [canAutoResize]="false">
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <a href="javascript:void(0)" class="expand-icon" *ngIf="isSelectedTransactionCanHaveDetails(row)" [class.fa]="true" [class.fa-plus-square]="!expanded" [class.fa-minus-square]="expanded"
+                title="Display/Hide transaction's details" (click)="toggleExpandRow(row)">
+              </a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="effectiveDate" [resizeable]="false" [flexGrow]="3" [comparator]="compareByDate">
+            <ng-template ngx-datatable-header-template>Date</ng-template>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <span [class.row-onDetails-expanded]="expanded">{{row.effectiveDate | wdate}}</span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="eventName" [resizeable]="false" [flexGrow]="4">
+            <ng-template ngx-datatable-header-template>Transaction</ng-template>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <span  [class.row-onDetails-expanded]="expanded">{{row.eventName}}
+                <a *ngIf="row.event == 'CBN'" [routerLink]="['/workflow/changeBenef']" [queryParams]="{workflowItemId: row.lastTrnId}" target= '_blank'>({{row.lastTrnId}})</a>
+                <a *ngIf="row.event == 'CAP'" [routerLink]="['/workflow/changeBroker']" [queryParams]="{workflowItemId: row.lastTrnId}" target= '_blank'>({{row.lastTrnId}})</a>
+              </span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [sortable]="false" [resizeable]="false" [flexGrow]="4">
+            <ng-template ngx-datatable-header-template>Gross Amount</ng-template>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <span class="float-right" [class.row-onDetails-expanded]="expanded">{{ row.grossAmount |
+                currencyPipe:row.currency:"after" }}</span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [sortable]="false" [resizeable]="false" [flexGrow]="4">
+            <ng-template ngx-datatable-header-template>Fee Amount</ng-template>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <span [class.row-onDetails-expanded]="expanded" class="float-right" *ngIf="row.eventType !== transactionWithdrawalCode || row.feeAmount !== 0">{{
+                row.feeAmount
+                | currencyPipe:row.currency:"after" }}</span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [sortable]="false" [resizeable]="false" [flexGrow]="4">
+            <ng-template ngx-datatable-header-template>Tax Amount</ng-template>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <span class="float-right" [class.row-onDetails-expanded]="expanded">{{ row.taxAmount |
+                currencyPipe:row.currency:"after" }}</span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [sortable]="false" [resizeable]="true" [flexGrow]="4">
+            <ng-template ngx-datatable-header-template>Net Amount</ng-template>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <span class="float-right" [class.row-onDetails-expanded]="expanded">{{ row.netAmount |
+                currencyPipe:row.currency:"after" }}</span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [resizeable]="false" [flexGrow]="4">
+            <ng-template ngx-datatable-header-template>Status</ng-template>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <span [class.row-onDetails-expanded]="expanded">{{row.status}}</span>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+
+      <div class="col-md-6">
+        <div *ngIf="displayedTransfers?.length > 0" [@enterAnimation]>
+          <transaction-details [transfers]="displayedTransfers"></transaction-details>
+        </div>
+      </div>
+
+      <ng-template #transactionDetailsContent let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+        <div [@detailAnimation] class="relative" style="min-height:100px; width: 99.9%;">
+          <div id="transaction-details" [ngBusy]="[busyDetail]">
+            <!-- Transaction details template-->
+            <div *ngIf="!selectedTransactions.event">
+              <transaction-details-main [commission]="commission" [detailsIn]="detailsIn" [detailsOut]="detailsOut"
+                [transaction]="selectedTransactions" [switch]="isSwitch" [policy]="policy">
+              </transaction-details-main>
+            </div>
+            
+             <!-- Change beneficiary details template-->
+            <div *ngIf="PolicyChangeType[selectedTransactions.event] == PolicyChangeType.CBN && beneficiaryChange" class="row transactionsContainerDetails">
+              <div class="col-xs-12">
+                <policy-clients [product]="product" [policyHolders]="beneficiaryChange.policyHolders"
+                  [deathBeneficiaries]="beneficiaryChange.deathBeneficiaries" [lifeBeneficiaries]="beneficiaryChange.lifeBeneficiaries"
+                  [otherClients]="beneficiaryChange.otherClients"></policy-clients>
+              </div>
+              <div class="col-xs-12">
+                <policy-death-life-clauses [firstPolicyCoverages]="firstPolicyCoverages" [clauses]="policyClauses"></policy-death-life-clauses>
+              </div>
+            </div>
+
+            <!-- Change APorteur details template-->
+            <div *ngIf="PolicyChangeType[selectedTransactions.event] == PolicyChangeType.CAP && brokerChange && brokerChange.after && brokerChange.before">
+              <div class="col-xs-12 marginTop3">
+              <fieldset>   
+                  <legend >After Change</legend>
+                  <policy-partners  [broker] = "brokerChange.after.broker" [brokerContact] = "brokerChange.after.brokerContact" [subBroker] = "brokerChange.after.subBroker" [contactFunctions]="brokerChange.after.contactFunctions" [brokerRefContract]="brokerChange.after.brokerRefContract" [displayBusinessIntroducer]="false" [displayCountryManagers]="false" ></policy-partners>
+                    <div class="row">
+                        <label class="col-md-2 text-right">Admin Fees</label>
+                        <div class="col-md-8">{{brokerChange.after.policyValuation.holdings[0].feeRate}} %</div><!-- RVN: takes the first as they should be all equals-->
+                    </div>
+                  <policy-communication  [category]="brokerChange.after.category" [mailToAgent]="brokerChange.after.mailToAgent" [displayFaxAndMandateLine]="false" [displayNonSurrenderLine]="false" [displayPledgeLine]="false"></policy-communication>
+              </fieldset>
+              <fieldset> 
+                  <legend>Before Change</legend>
+                  <policy-partners  [broker] = "brokerChange.before.broker" [brokerContact] = "brokerChange.before.brokerContact" [subBroker] = "brokerChange.before.subBroker" [contactFunctions]="brokerChange.before.contactFunctions" [brokerRefContract]="brokerChange.before.brokerRefContract" [displayBusinessIntroducer]="false" [displayCountryManagers]="false" ></policy-partners>
+                    <div class="row">
+                        <label class="col-md-2 text-right">Admin Fees</label>
+                        <div class="col-md-8">{{brokerChange.before.policyValuation.holdings[0].feeRate}} %</div><!-- RVN: takes the first as they should be all equals-->
+                    </div>
+                  <policy-communication  [category]="brokerChange.before.category" [mailToAgent]="brokerChange.before.mailToAgent" [displayFaxAndMandateLine]="false" [displayNonSurrenderLine]="false" [displayPledgeLine]="false"></policy-communication>               
+              </fieldset>
+            </div>
+          </div>
+
+
+        </div>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+</div>

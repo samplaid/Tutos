@@ -1,0 +1,1 @@
+ alter table  ${schemaWorkflow}.dbo.workflow_process alter column TRIGGER_CRITERIA nvarchar(4000);

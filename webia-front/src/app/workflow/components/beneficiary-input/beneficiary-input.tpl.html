@@ -1,0 +1,70 @@
+<section id="beneficiaries-{{benefTypeSuffix}}-input">
+    <div class="client">
+        <ng-template ngFor let-client [ngForOf]="beneficiaries" let-i="index" let-last="last">
+            <div class="row {{benefTypeSuffix}}">
+                <label class="marginTop col-md-2 text-right paddingLeft"> Beneficiary of {{benefTypeSuffix}} ({{i+1}})</label>
+                <div class="{{benefTypeSuffix}}-form-group col-md-10 form-inline text-left">
+                    <div class="row"> 
+                        <div class="col-md-8 form-group">
+                            <search-client [disabled]="mode == stateMode.readonly" [includeDeceased]="false" [(clientId)]="client.clientId" [allowClear]="false">
+                                <button [desactive]="mode" class="btn btn-sm btn-primary" (click)="remove(client)"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                <button [desactive]="mode" *ngIf="last" class="btn btn-sm btn-primary" (click)="removeLastbenef()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                            </search-client> 
+                        </div> 
+                        <div class="col-md-4">
+                            <div class="{{benefTypeSuffix}}-input-group form-group">
+                                <label>Rank</label>
+                                <w-number [disabled]="mode == stateMode.readonly" [(number)]="client.rankNumber" (numberChange)="onRankChange(client)" css="rankWidth form-control input-sm text-right" [precision]="0"></w-number>
+                                <span class="checkbox checkbox-r" *ngIf="client.canShowEqualParts">
+                                    <label>
+                                        <input [desactive]="mode" name="equalPart" type="checkbox" [checked]="client.isEqualParts" [(ngModel)]="client.isEqualParts" (change)="onEqualPartChange(client)">
+                                        <span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                                        In equal parts
+                                    </label>
+                                </span>
+                                <label>Part</label>
+                                <w-number  [disabled]="mode == stateMode.readonly" [(number)]="client.split" css="form-control input-sm text-right input-percent" [precision]="3" [mode]="client.partMode" ></w-number><span>%</span>
+                            </div>
+                        </div>                   
+                    </div>
+                    <div class="row"> 
+                        <div class="{{benefTypeSuffix}}-cb col-md-offset-1 checkbox" *ngIf="benefActivationFlag">
+                            <label class="checkbox-inline" *ngIf="benefActivationFlag.activatedBenefUsuFructary"> 
+                                <input [desactive]="mode" type="checkbox" name="usufructuary" class="input-sm" [(ngModel)]="client.usufructuary"><span class="cr"><i class="cr-icon">&#x2714;</i></span>
+                                <span class="cb-caption">Usufructuary</span>
+                            </label>                            
+                            <label class="checkbox-inline" *ngIf="benefActivationFlag.activatedBenefBareOwner">
+                                <input [desactive]="mode" type="checkbox" name="bareOwner" class="input-sm" [(ngModel)]="client.bareOwner"><span class="cr"><i class="cr-icon">&#x2714;</i></span>
+                                <span class="cb-caption">Bare Owner</span>
+                            </label>                            
+                            <label class="checkbox-inline" *ngIf="benefActivationFlag.activatedIrrevocable"> 
+                                <input [desactive]="mode" type="checkbox" name="irrevocable" class="input-sm" [(ngModel)]="client.irrevocable"><span class="cr"><i class="cr-icon">&#x2714;</i></span>
+                                <span class="cb-caption">Irrevocable</span>
+                            </label>
+                            <label class="checkbox-inline" *ngIf="benefActivationFlag.activatedAcceptant"> 
+                                <input [desactive]="mode" type="checkbox" name="acceptant" class="input-sm" [(ngModel)]="client.acceptant"><span class="cr"><i class="cr-icon">&#x2714;</i></span>
+                                <span class="cb-caption">Acceptant</span>
+                            </label>                            
+                            <label class="checkbox-inline" *ngIf="benefActivationFlag.activatedSeparatePropertyRights"> 
+                                <input [desactive]="mode" type="checkbox" name="seppropsrights" class="input-sm" [(ngModel)]="client.separatePropertyRights" (change)="client.separatePropertyNoRights=false"><span class="cr"><i class="cr-icon">&#x2714;</i></span>
+                                <span class="cb-caption">Separate property Rights</span>
+                            </label>
+                            <label class="checkbox-inline" *ngIf="benefActivationFlag.activatedSeparatePropertyNoRights"> 
+                                <input [desactive]="mode" type="checkbox" name="seppropsnorights" class="input-sm" [(ngModel)]="client.separatePropertyNoRights" (change)="client.separatePropertyRights=false"><span class="cr"><i class="cr-icon">&#x2714;</i></span>
+                                <span class="cb-caption">Separate property NO Rights</span>
+                            </label>                       
+                        </div>               
+                    </div>
+                </div>
+            </div>                
+        </ng-template>
+        <div class="row" *ngIf="( !beneficiaries || beneficiaries.length==0 || showAdditional)">
+            <label class="marginTop col-md-2 text-right paddingLeft">Beneficiary of {{benefTypeSuffix}} ({{beneficiaries ? beneficiaries.length+1 : 1}})</label>
+            <div class="form-group col-md-10 nopadding form-inline">
+                <div class="col-md-8">
+                    <search-client [disabled]="mode == stateMode.readonly" [includeDeceased]="false" [(clientId)]="tmpBenef" (onChange)="tmpBenef=null;addBeneficiaries($event);" [allowClear]="false"></search-client>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

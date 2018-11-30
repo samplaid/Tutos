@@ -1,0 +1,46 @@
+<div class="relative">
+	<div [ngBusy]="[valuationBusy]">
+		<table class="table dataTable table-striped table-hover fullwidth" role="grid" >
+			<thead>
+				<tr role="row">
+					<th class="width-fluid-1">Policy</th>
+					<th *ngIf="fund.fundSubType=='FID' || fund.fundSubType=='FAS'" class="width-fluid-1">Status</th>
+					<th class="width-fluid-1">Date of effect</th>
+					<th class="width-fluid-1">Nb Units</th>
+					<th class="width-fluid-1">Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<ng-container *ngIf="!!page">
+					<tr *ngFor="let holding of (page.content); let i = index">
+						<td><a [attr.href]="'#/policy?id='+holding?.policyId" target="_blank">{{holding?.policyId}}</a></td>
+						<td *ngIf="fund.fundSubType=='FID' || fund.fundSubType=='FAS'">{{ holding?.policyStatusDescription }}</td>
+						<td><span class="text-nowrap">{{ holding?.effectiveDate | wdate }}</span></td>
+						<td class="text-right"><span class="text-nowrap">{{ holding?.unitsByPolicy | currencyFormatter:',':' ':'':'':6:false}}</span></td>
+						<td class="text-right"><span class="text-nowrap">{{ holding?.value | currencyFormatter:',':' ':'':'':6:false }} {{ holding?.currency }}</span></td>
+					</tr>
+					<tr *ngIf="!page.content || page.content.length == 0">
+						<td colspan="9" class="text-center">
+							<p>No result found </p>
+						</td>
+					</tr>
+				</ng-container>
+			</tbody>
+			<tfoot *ngIf="!!page && page.totalPageCount > 1">
+				<tr>
+					<td colspan="10" class="text-center">
+						<!-- <ngb-pagination *ngIf="page.totalPageCount > 1" class="text-center" (pageChange)="searchFundValuation($event)" [collectionSize]="page.totalRecordCount"
+						[pageSize]="page.pageSize" [(page)]="page.currentPage" [maxSize]="10" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination> -->
+
+						<pagination  class="text-center" [boundaryLinks]="true" 
+							[totalItems]="page.totalRecordCount" [itemsPerPage]="page.pageSize" [(ngModel)]="page.currentPage" (pageChanged)="searchFundValuation($event.page)" [maxSize]="10"
+							previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>                                                    
+
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+
+	</div>
+</div>
+

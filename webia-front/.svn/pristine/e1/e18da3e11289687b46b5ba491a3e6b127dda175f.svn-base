@@ -1,0 +1,128 @@
+<section subject="clients">
+    <div class="row" >
+        <div class="title col-md-5">Clients</div>
+    </div>
+
+    <!--/start policy holder-->
+    <div class="row " *ngFor="let policyHolder of policyHolders; let i=index">
+    <label class="{{labelClass}} text-right text-nowrap">Policyholder ({{ policyHolder?.displayNumber }})</label>
+        <div class="col-md-9 row">
+            <div class="col-md-12 popover-width-25">
+                <ng-template #popContent>
+                <div class="marginTop"><span> <strong>Date of death:</strong> {{ policyHolder?.deathClaim?.dateOfDeath | wdate }} </span></div>
+                </ng-template>
+
+                <a *ngIf="!policyHolder.dead" highlight="text-danger" [pattern]="clientRegXp" [routerLink]=" (policyHolder.type==3 ? '/client/moral/':'/client/physical/') + policyHolder.cliId"
+                target="_blank">
+                <span>
+                    {{ policyHolder?.displayName + ' - ' + policyHolder?.cliId }}
+                </span>
+                </a>
+                <a *ngIf="policyHolder.dead" [popover]="popContent" placement="top" triggers="mouseenter:mouseleave"  [routerLink]=" (policyHolder.type==3 ? '/client/moral/':'/client/physical/') + policyHolder.cliId"
+                target="_blank">
+                <span  highlight="text-danger" [pattern]="clientRegXp">
+                    {{ policyHolder?.displayName + ' - ' + policyHolder?.cliId }}
+                </span>
+                </a>
+            </div>
+            <div class="col-md-12" *ngIf="policyHolder.usufructuary || policyHolder.bareOwner || policyHolder.deathSuccessor || policyHolder.lifeSuccessor">
+                <ul class="list-inline paddingLeft10 reduced-margin">
+                <li *ngIf="policyHolder.usufructuary">+ Usufructuary</li>
+                <li *ngIf="policyHolder.bareOwner">+ Bare Owner</li>
+                <li *ngIf="policyHolder.deathSuccessor">+ {{product?.nlCountry!='FRA' ? 'Legalheirs':'Succession'}} (death)</li>
+                <li *ngIf="policyHolder.lifeSuccessor">+ {{product?.nlCountry!='FRA' ? 'Legalheirs':'Succession'}} (life)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--/end policy holder-->
+
+    <!--/start insured-->
+    <div class="section-client row" *ngFor="let insured of insureds; let i=index">
+        <label class="{{labelClass}} text-right">Insured ({{i+1}})</label>
+        <div class="col-md-9 row">
+            <div class="col-md-12 popover-width-25">
+                <ng-template #insuredPopContent>
+                <div class="marginTop"><span> <strong>Date of death:</strong> {{ insured?.deathClaim?.dateOfDeath | wdate }} </span></div>
+                </ng-template>
+
+                <a  *ngIf="!insured.dead" highlight="text-danger" [pattern]="clientRegXp" [routerLink]=" (insured.type==3 ? '/client/moral/':'/client/physical/') + insured.cliId"
+                target="_blank">
+                <span>{{ insured?.displayName + ' - ' + insured?.cliId }}</span>
+                </a>
+                <a *ngIf="insured.dead" [popover]="insuredPopContent" placement="top" triggers="mouseenter:mouseleave" [routerLink]=" (insured.type==3 ? '/client/moral/':'/client/physical/') + insured.cliId"
+                target="_blank">
+                <span highlight="text-danger" [pattern]="clientRegXp" >{{ insured?.displayName + ' - ' + insured?.cliId }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--/end insured-->
+
+    <!--/start death beneficiaries-->
+    <div class="section-client row" *ngFor="let deathBenef of deathBeneficiaries | orderBy : ['typeNumber']; let i=index">
+        <label class="{{labelClass}} text-right">Beneficiary at death ({{i+1}})</label>
+        <div class="col-md-9 row">
+            <div class="col-md-12">
+                <a highlight="text-danger" [pattern]="clientRegXp" [routerLink]=" (deathBenef.type==3 ? '/client/moral/':'/client/physical/') + deathBenef.cliId"
+                target="_blank">{{ deathBenef?.displayName + ' - ' + deathBenef?.cliId }}</a>
+                <span *ngIf="deathBenef.typeNumber || deathBenef.typeNumber === 0" class="marginLeft4">- rank {{deathBenef.typeNumber}}&nbsp;
+                <span *ngIf="deathBenef.exEqualParts !== true">({{deathBenef.percentageSplit}}%)</span>
+                <span *ngIf="deathBenef.exEqualParts === true">(in equal parts)</span>
+                </span>
+                
+            </div>
+            <div class="col-md-12" *ngIf="deathBenef.usufructuary || deathBenef.bareOwner || deathBenef.irrevocable || deathBenef.acceptant || deathBenef.separatePropertyRights || deathBenef.separatePropertyNoRights">
+                <ul class="list-inline paddingLeft10">
+                <li *ngIf="deathBenef.usufructuary">+ Usufructuary</li>
+                <li *ngIf="deathBenef.bareOwner">+ Bare Owner</li>
+                <li *ngIf="deathBenef.irrevocable">+ Irrevocable</li>
+                <li *ngIf="deathBenef.acceptant">+ Acceptant</li>
+                <li *ngIf="deathBenef.separatePropertyRights">+ Separate property Rights</li>
+                <li *ngIf="deathBenef.separatePropertyNoRights">+ Separate property NO Rights</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--/end death beneficiaries -->
+
+    <!--/start life beneficiaries-->
+    <div class="section-client row" *ngFor="let lifeBenef of lifeBeneficiaries | orderBy : ['typeNumber']; let i=index">
+        <label class="{{labelClass}} text-right">Beneficiary of maturity ({{i+1}})</label>
+        <div class="col-md-9 row">
+            <div class="col-md-12">
+                <a highlight="text-danger" [pattern]="clientRegXp" [routerLink]=" (lifeBenef.type==3 ? '/client/moral/':'/client/physical/') + lifeBenef.cliId"
+                target="_blank">{{ lifeBenef?.displayName + ' - ' + lifeBenef?.cliId }}</a>
+                <span *ngIf="lifeBenef.typeNumber || lifeBenef.typeNumber === 0" class="marginLeft4">- rank {{lifeBenef.typeNumber}}&nbsp;
+                    <span *ngIf="lifeBenef.exEqualParts !== true">({{lifeBenef.percentageSplit}}%)</span>
+                    <span *ngIf="lifeBenef.exEqualParts === true">(in equal parts)</span>
+                </span>
+            </div>
+            <div class="col-md-12" *ngIf="lifeBenef.usufructuary || lifeBenef.bareOwner || lifeBenef.irrevocable || lifeBenef.acceptant || lifeBenef.separatePropertyRights || lifeBenef.separatePropertyNoRights">
+                <ul class="list-inline paddingLeft10">
+                <li *ngIf="lifeBenef.usufructuary">+ Usufructuary</li>
+                <li *ngIf="lifeBenef.bareOwner">+ Bare Owner</li>
+                <li *ngIf="lifeBenef.irrevocable">+ Irrevocable</li>
+                <li *ngIf="lifeBenef.acceptant">+ Acceptant</li>
+                <li *ngIf="lifeBenef.separatePropertyRights">+ Separate property Rights</li>
+                <li *ngIf="lifeBenef.separatePropertyNoRights">+ Separate property NO Rights</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--/end life beneficiaries-->
+
+    <!--/start others clients-->
+    <div class="section-client row" *ngFor="let client of otherClients, let i=index">
+        <label class="{{labelClass}} text-right">{{codeMapper[client.roleNumber] || client.role}}</label>
+        <div class="col-md-9 row">
+            <div class="col-md-12">
+                <a [attr.href]=" (client.type==3 ? '#/client/moral/':'#/client/physical/') + client.cliId" target="_blank">
+                <span highlight="text-danger" [pattern]="clientRegXp">{{ client.displayName + ' - ' + client.cliId}}</span>
+                </a>
+                <span *ngIf="hasCessionRole(client) && client.percentageSplit" class="marginLeft4">- ({{ client.percentageSplit }}%)</span>
+            </div>
+        </div>
+    </div>
+    <!--/end others clients-->
+</section>

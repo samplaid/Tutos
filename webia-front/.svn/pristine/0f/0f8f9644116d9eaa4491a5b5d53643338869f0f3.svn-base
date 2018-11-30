@@ -1,0 +1,495 @@
+<ng-template ngbModalContainer *ngIf="!inModal"></ng-template>
+<div class="cli cli-phy">
+    <div class="split-screen relative" >
+    <div [ngBusy]="[busy]">
+        <div class="client-form container-fluid relative" >
+            <div [ngBusy]="subs">
+            <section class="form-horizontal" *ngIf="!inModal">
+                <div class="row menu marginLeft3 nomarginRight">
+                    <div class="row vertical-center-noline ">
+                        <div class="text-nowrap col-md-2 paddingLeft12">
+                            <h3>{{titleMode}}</h3>
+                        </div>
+                        <div class="text-nowrap col-md-8 paddingLeft12">
+                            <span *ngIf="fc.cliId" class="marginTop"><b>Code</b><span>&nbsp;&nbsp;{{ fc.cliId }}</span></span>                            
+                            <span *ngIf="fc.dead" class="label label-danger marginHorizontal15"><strong>Deceased: {{ fc?.deathClaim?.dateOfDeath | wdate }}</strong></span>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pull-right paddingRight7">
+                                <button type="submit" class="btn btn-xs marginRight8" (click)="notifyDeath()" *ngIf="!fc.dead && fc.cliId" [disabled]="!canSave"><i class="fa fa-user-times"></i>Notify death</button>
+                                <button type="submit" class="btn btn-xs btn-primary" (click)="saveIt()" [disabled]="!canSave"><i class="fa fa-floppy-o"></i>Save</button>
+                                <button type="button" class="btn btn-xs btn-primary" (click)="refresh()" [disabled]="!canSave"><i class="fa fa-refresh" aria-hidden="true"></i>Refresh</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            <section>  
+                <div class="form-horizontal" [ngClass]="{'form':!inModal}">
+                    <div class="row">
+						<div class="col-md-8 col-md-offset-2">
+							<ngbd-alert-container [ref]="'clientCpt'"></ngbd-alert-container>
+						</div>
+					</div>                    
+                    <div class="row">
+                        <!-- Left Side -->
+                        <div class="col-md-6">
+                            <!-- sex -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Sex</label>
+                                    <div class="col-md-9">
+                                        <div class="radio">
+                                            <label class="text-nowrap">
+                                                <input [desactive]="mode" type="radio" name="sex" value="2" [(ngModel)]="fc.sex">
+                                                <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                Male
+                                            </label>
+                                            <label class="text-nowrap">
+                                                <input [desactive]="mode" type="radio" name="sex" value="3" [(ngModel)]="fc.sex">
+                                                <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                Female
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>                        
+                            </div>
+
+                            <!-- Name -->
+                            <div class="row">                                
+                                <div class="form-group">     
+                                    <label class="text-nowrap control-label col-md-3">Name</label>                               
+                                    <div class="col-sm-1 nopaddingRight">
+                                        <select class="form-control input-sm" [(ngModel)]="fc.title" [desactive]="mode" (ngModelChange)="titleChoosen($event)">
+                                            <option value=""></option>
+                                            <option *ngFor="let t of titles" [value]="t.keyValue">{{t.description}}</option>
+                                        </select>                                                
+                                    </div>
+                                    <div class="col-sm-5 nopaddingRight">
+                                        <input type="text" class="form-control input-sm" maxlength="40" [(ngModel)]="fc.name" [desactive]="mode">
+                                    </div>
+                                </div>                                
+                            </div>
+
+                            <!-- first name -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">First Name</label>
+                                    <div class="col-md-3 nopaddingRight">
+                                        <input type="text" class="form-control input-sm cli-input-width" maxlength="30" [(ngModel)]="fc.firstName" [desactive]="mode"> 
+                                    </div>
+                                    <div class="col-md-3 nopadding">
+                                        <input type="text" class="form-control input-sm" maxlength="30" [(ngModel)]="fc.otherFornames" [desactive]="mode">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- maiden name -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Maiden Name</label>
+                                    <div class="col-md-9">
+                                        <div class="form-inline">
+                                        <input type="text" class="form-control input-sm cli-input-width" maxlength="30" [(ngModel)]="fc.maidenName" [desactive]="mode">                               
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- date of birth  -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Date of birth</label>
+                                    <div class="col-md-9">
+                                        <datepicker [(date)]="fc.dateOfBirth" [disabled]="mode == StateMode.readonly"></datepicker>                              
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Place of birth  -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Place of birth</label>
+                                    <div class="col-md-3">
+                                        <input name="placeOfBirth" type="text" class="form-control input-sm" maxlength="40" [(ngModel)]="fc.placeOfBirth" [desactive]="mode">                                                          
+                                    </div>
+                                    <label class="control-label col-md-1 nopaddingLeft" for="provinceOfBirth" *ngIf="fc.countryOfBirth=='ITA'">Province</label>
+                                    <div class="col-md-3" *ngIf="fc.countryOfBirth=='ITA'">
+                                        <input name="provinceOfBirth" type="text" class="form-control input-sm" maxlength="40" [(ngModel)]="fc.provinceOfBirth" [desactive]="mode">                               
+                                    </div>
+                                </div>
+                                        
+                            </div>
+
+                            <!-- Contry of birth  -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Country of birth</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control input-sm text-left" [(ngModel)]="fc.countryOfBirth" id="countryCd" name="countryCd" [desactive]="mode">
+                                            <option value=""></option>
+                                            <option *ngFor="let c of (allCountries | orderBy: ['name'])" [value]="c.ctyId">{{c.name}}</option>
+                                        </select>                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nationality  -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Nationality</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control input-sm text-left" [(ngModel)]="fc.nationality" id="nationalityCd" [desactive]="mode">
+                                            <option value=""></option>
+                                            <option *ngFor="let c of (allCountries | orderBy: ['nationality'])" [value]="c.ctyId">{{c.nationality}}</option>
+                                        </select>        
+                                    </div>
+                                    <label for="documentationLanguage" class="text-nowrap control-label col-md-1">Language</label>
+                                    <div class="col-md-3">
+                                        <select name="documentationLanguage" class="form-control input-sm text-left" [(ngModel)]="fc.documentationLanguage" id="langueCd" [desactive]="mode">
+                                            <option value=""></option>
+                                            <option *ngFor="let l of (languages | orderBy: ['description'])" [value]="l.number">{{l.description}}</option>
+                                        </select>
+                                    </div>  
+                                </div>
+                            </div>
+
+                            <!-- Id n°  -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">ID N°</label>
+                                    <div class="col-md-3">
+                                        <input name="idNumber" type="text" class="form-control input-sm" maxlength="40" [(ngModel)]="fc.idNumber.details" [desactive]="mode">                     
+                                    </div>
+                                    <label for="idExpiryDate" class="text-nowrap col-md-1 control-label nopaddingLeft">Expiry Date</label>
+                                    <div class="col-md-3">
+                                        <datepicker [(date)]="fc.idExpiryDate" [disabled]="mode == StateMode.readonly"></datepicker>                                    
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Marital Status -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Marital status</label>
+                                    <div class="col-md-3">
+                                    <select class="form-control input-sm text-left" [(ngModel)]="fc.maritalStatus" id="maritalStatusId" name="maritalStatus" [desactive]="mode">
+                                        <option value=""></option>
+                                        <option *ngFor="let m of martialStatusList" [value]="m.number">{{ m.description }}</option>
+                                    </select>            
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="healthDecDate" class="text-nowrap control-label col-md-3">Medical questionaire</label>
+                                    <div class="col-sm-3">                                    
+                                        <datepicker [(date)]="fc.healthDecDate" [disabled]="!hasEditRole"></datepicker>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line-break-big"></div>
+                            <div class="row">
+                                <div class="text-nowrap title col-md-7">Fiscal Info</div>
+                            </div>
+
+                            <!-- Last date Self-certification  -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Last date Self-certification</label>
+                                    <div class="col-md-2">
+                                        <datepicker [(date)]="fc.dateOfSelfCert" [disabled]="mode == StateMode.readonly"></datepicker>                
+                                    </div>
+                                    <label class="text-nowrap control-label col-md-2">Last date report CRS</label>
+                                    <div class="col-md-3">
+                                        <datepicker [disabled]="true" [(date)]="fc.crsDateOfLastDec"></datepicker>                
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- TN1 Country -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <tin [countries]="allCountries" [(tinModel)]="fc" [mode]="mode"></tin>
+                                </div>
+                            </div>
+                            
+                            <div class="line-break-big"></div>
+
+                            <div class="row">
+                                <div class="text-nowrap title col-md-7">Compliance Info</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="kycDate" class="col-sm-3 control-label">KYC Date</label>
+                                    <div class="col-sm-2">                                    
+                                        <datepicker [(date)]="fc.kycDate" [disabled]="!hasEditRole"></datepicker>
+                                    </div>                                    
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="gdprStartdate" class="col-sm-3 control-label">GDPR - Date of consent</label>
+                                    <div class="col-sm-2">                                        
+                                       <datepicker [(date)]="fc.gdprStartdate" [disabled]="!hasEditRole"></datepicker>
+                                    </div>
+                                    <label for="gdprEnddate" class="col-sm-2 control-label">GDPR - End of consent</label>
+                                    <div class="col-sm-3">
+                                        <datepicker [(date)]="fc.gdprEnddate" [disabled]="!hasEditRole"></datepicker>
+                                    </div>
+                                </div>                                                                
+                            </div>
+
+                            <!-- Function  -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Function</label>
+                                    <div class="col-md-3">
+                                        <select name="profession" class="form-control input-sm text-left" [(ngModel)]="fc.profession" id="professionCd" [desactive]="mode">
+                                             <option selected value=""></option>
+                                            <option *ngFor="let p of professions" [value]="p.keyValue" [class.risky]="p.keyValue.substring(2) < 100">{{p.description}}</option>
+                                        </select>                     
+                                    </div>
+                                    <label class="text-nowrap control-label col-md-1">Sector</label>
+                                    <div class="col-md-3">
+                                        <select name="sector" class="form-control input-sm text-left" [(ngModel)]="fc.activityRiskCat" id="activityRiskCat" [desactive]="mode">
+                                            <option selected value=""></option>
+                                            <option *ngFor="let s of sectors" [value]="s.keyValue" [class.risky]="s.keyValue < 100">{{ s.description }}</option>
+                                        </select>                     
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <!-- FATCA -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">FATCA</label>
+                                    <div class="col-md-9">
+                                        <div class="form-inline">
+                                            <div class="radio paddingLeft5">
+                                                <label class="text-nowrap radio-inline paddingRight4 ">
+                                                    <input class="form-control input input-sm" [desactive]="mode" type="radio" name="fatca"  [value]="'FATCA'" [checked]="fc.classification == 'FATCA'" [(ngModel)]="fc.classification">
+                                                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                    Yes
+                                                </label>
+                                                <label class="text-nowrap radio-inline paddingRight4 ">
+                                                    <input class="form-control input input-sm"  [desactive]="mode" type="radio" name="fatca"  [value]="'NO'" [checked]="fc.classification == 'NO'" [(ngModel)]="fc.classification" (ngModelChange)="clearClassificationDetails($event)">
+                                                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                    No
+                                                </label>                                                
+                                            </div>
+                                            <input *ngIf="fc.classification=='FATCA'" name="classificationDetails" type="text" class="width-fluid-f-47 form-control input-sm" maxlength="50" [(ngModel)]="fc.classificationDetails" [desactive]="mode">                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PEP -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">PEP</label>
+                                    <div class="col-md-9">
+                                        <div class="form-inline">
+                                            <div class="radio paddingLeft5">
+                                                <!-- TODO store the value of PEP as 'PEP YES or NO and not PEP_YES' -->
+                                                <label  class="text-nowrap radio-inline paddingRight4 ">
+                                                    <input class="form-control input input-sm" [desactive]="mode" type="radio" name="pep"  [value]="'PEP YES'" [checked]="fc.politicallyExposedPerson=='PEP YES'" [(ngModel)]="fc.politicallyExposedPerson">
+                                                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                    Yes
+                                                </label>
+                                                <label class="text-nowrap radio-inline paddingRight4 ">
+                                                    <input class="form-control input input-sm"  [desactive]="mode" type="radio" name="pep"  [value]="'NO'" [checked]="fc.politicallyExposedPerson=='NO'" [(ngModel)]="fc.politicallyExposedPerson" (ngModelChange)="clearPepFunction($event)">
+                                                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                    No
+                                                </label>                                                
+                                            </div>                                    
+                                            <input *ngIf="fc.politicallyExposedPerson=='PEP YES'" name="pepFunction" type="text" class="width-fluid-f-47 form-control input-sm" maxlength="50" [(ngModel)]="fc.pepFunction" [desactive]="mode">                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MEP -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">MEP</label>
+                                    <div class="col-md-9">
+                                        <div class="form-inline">
+                                            <div class="radio paddingLeft5">
+                                                <!-- TODO store the value of MEP as 'MEP YES or NO and not MEP_YES' -->
+                                                <label class="text-nowrap radio-inline paddingRight4 ">
+                                                    <input class="form-control input input-sm" [desactive]="mode" type="radio" name="mep"  [value]="'Y'" [checked]="fc.mediaExposedPerson=='Y'" [(ngModel)]="fc.mediaExposedPerson">
+                                                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                    Yes
+                                                </label>
+                                                <label class="text-nowrap radio-inline paddingRight4 ">
+                                                    <input class="form-control input input-sm"  [desactive]="mode" type="radio" name="mep"  [value]="'N'" [checked]="fc.mediaExposedPerson=='N'" [(ngModel)]="fc.mediaExposedPerson" (ngModelChange)="clearMepDetails($event)">
+                                                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                    No
+                                                </label>                                                
+                                            </div>
+                                            <input *ngIf="fc.mediaExposedPerson=='Y'" name="mepDetail" type="text" class="width-fluid-f-47 form-control input-sm" maxlength="50" [(ngModel)]="fc.mepDetail" [desactive]="mode">                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RCA -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">RCA</label>
+                                    <div class="col-md-9">
+                                        <div class="form-inline">
+                                            <div class="radio paddingLeft5">
+                                                <label class="text-nowrap radio-inline paddingRight4 ">
+                                                    <input class="form-control input input-sm" [desactive]="mode" type="radio" name="rca"  [value]="'Y'" [checked]="fc.relativeCloseAssoc=='Y'" [(ngModel)]="fc.relativeCloseAssoc">
+                                                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                    Yes
+                                                </label>
+                                                <label class="text-nowrap radio-inline paddingRight4 ">
+                                                    <input class="form-control input input-sm"  [desactive]="mode" type="radio" name="rca"  [value]="'N'" [checked]="fc.relativeCloseAssoc=='N'" [(ngModel)]="fc.relativeCloseAssoc" (ngModelChange)="clearRcaDetail($event)">
+                                                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                                                    No
+                                                </label>                                                
+                                            </div>
+                                            <input *ngIf="fc.relativeCloseAssoc=='Y'" name="rcaDetail" type="text" class="width-fluid-f-47 form-control input-sm" maxlength="50" [(ngModel)]="fc.rcaDetail" [desactive]="mode">                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <client-insider-trading [(fc)]="fc"></client-insider-trading>
+
+                            <client-compliance [(fc)]="fc" (allowCanSave)="allowCanSave()"></client-compliance >
+
+                            <div class="line-break-big"></div>
+                            <div class="row">
+                                <div class="text-nowrap title col-md-7">Investment Categorisation</div>
+                            </div>
+                            <!-- Investisment risk -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="text-nowrap control-label col-md-3">Investment risk</label>
+                                    <div class="col-md-3">
+                                        <div class="form-inline">
+                                            <select class="form-control input-sm text-left" [(ngModel)]="fc.profile" id="profileId" name="profile" [desactive]="mode">
+                                                <option value=""></option>
+                                                <option *ngFor="let c of profiles" [value]="c.keyValue">{{ c.description }}</option>
+                                            </select>
+                                            <div class="checkbox marginLeft5">
+                                                <label>
+                                                    <input id="exceptRiskId" name="exceptRisk" type="checkbox" [(ngModel)]="fc.exceptRisk" desactive [forRoles]="[roles.CLIENT_EDIT]"  [outerRole]="true">
+                                                    <span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                                                    Derogation
+                                                </label>
+                                            </div>                                        
+                                        </div>
+                                    </div>                                   
+                                    <label class="text-nowrap control-label col-md-1 marginRight10"> Circular Letter</label>
+                                    <div class="form-inline">
+                                        <select class="form-control input-sm text-left" [(ngModel)]="fc.circularLetter" id="circularLetterId" name="circularLetter" [desactive]="mode">
+                                            <option value=""></option>
+                                            <option *ngFor="let c of circularLetters" [value]="c.keyValue">{{ c.description }}</option>
+                                        </select>
+                                        <select class="form-control input-sm text-left" [(ngModel)]="fc.classOfRisk" id="classOfRisk" name="classOfRisk" [desactive]="mode">
+                                            <option value=""></option>
+                                            <option *ngFor="let e of riskClassList" [value]="e.keyValue">{{e.description}}</option>
+                                        </select>
+                                        <div class="checkbox marginLeft5">
+                                            <label>
+                                                <input id="exceptActivityRiskId" name="exceptActivityRisk" type="checkbox" [(ngModel)]="fc.exceptActivityRisk" desactive [forRoles]="[roles.CLIENT_EDIT]" [outerRole]="true" >
+                                                <span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                                                Derogation
+                                            </label>
+                                        </div>
+                                    </div>                                                                   
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- right Side -->
+                        <div class="col-md-6">    
+                            <div class="row">                      
+                                <client-contact [(clientContact)]="fc" [countries]="allCountries" [mode]="mode"></client-contact>  
+                            </div>                 
+                            <!-- Notes -->
+                            <div class="row">
+                                <div class="text-nowrap title">Notes</div>
+                            </div>
+                            <div class="row">                       
+                                <div class="col-md-7">
+                                    <!-- Type == 1. individual -->
+                                    <textarea name="notes" id="notes" class="form-control" rows="4" [desactive]="mode" [(ngModel)]="fc.clientNote.details" maxlength="100"></textarea>							
+                                </div>
+                            </div><!-- End of Notes -->
+
+                             <!-- Linked entities-->
+                                <div class="row">
+                                    <div class="text-nowrap title">Linked entities</div>
+                                </div> 
+                               
+                                <div class="col-md-8">
+                                <table class="table dataTable table-striped table-hover nomargin fullwidth" role="grid">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Entity</th>
+                                            <th>Relationship</th>
+                                            <th>Type of controlling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let c of clientRoles">
+                                            <td><a [attr.href]="'#/client/moral/'+c?.entity" target="_blank">{{c.entityLabel}}</a></td>
+                                            <td *ngIf="c.type == 'CTRL'">Controlling Person</td>
+                                            <td *ngIf="c.type != 'CTRL'">{{c.label}}</td>
+                                            <td *ngIf="c.type == 'CTRL'">{{c.label}}</td>
+                                            <td *ngIf="c.type != 'CTRL'"> </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            <!-- end of Linked entities-->
+
+                            <div *ngIf="fc.clientAccounts.length > 0">
+                                <div class="row">
+                                    <div class="text-nowrap title">Bank Accounts</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <client-accounts [accounts]="fc.clientAccounts" [status]="accountStatus" [hasEditRoles]="hasEditRole || hasComplianceEditRole"></client-accounts>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="showInModal">                      
+                        <div class="row">                     
+                            <div class="col-xs-10 col-xs-offset-1">
+                                <client-policies [cliId]="fc.cliId">
+                                    <div class="line-break-big" caption></div> 
+                                    <div class="text-nowrap title table-caption-left" caption>Policies</div>
+                                </client-policies>
+                            </div>
+                        </div>                       
+                        <div class="row marginTop4" >
+                            <div class="col-md-4 col-md-offset-1">
+                                <operation-entry [ownerId]="fc.cliId" [ownerType]="ownerType">
+                                    <div class="line-break-big" caption></div>
+                                    <div class="title" caption>New business</div>
+                                </operation-entry>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </section>
+        </div>            
+        </div>
+    </div>
+    </div>
+</div>

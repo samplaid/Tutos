@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://tempuri.org/Wsspfhwd/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="WSSPFHWD" targetNamespace="http://tempuri.org/Wsspfhwd/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/Wsspfhwd/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://tempuri.org/Wsspfhwd/">
+  <xs:element name="Wsspfhwdcall" type="tns:Wsspfhwdcall"/>
+  <xs:element name="WsspfhwdcallResponse" type="tns:WsspfhwdcallResponse"/>
+  <xs:complexType name="Wsspfhwdcall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WsspfhwdImport" type="tns:WsspfhwdImport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WsspfhwdImport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ImpPasPolicyAgentShares">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Agent" type="xs:string"/>
+            <xs:element name="Percentage" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpPocPolicyCoverages">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Policy" type="xs:string"/>
+            <xs:element name="Coverage" type="xs:short"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpGrpPfi">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="row">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="ImpItmPfiPolicyFundInstructions">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Policy" type="xs:string"/>
+                        <xs:element name="Holding" type="xs:short"/>
+                        <xs:element name="Type" type="xs:short"/>
+                        <xs:element name="Fund" type="xs:string"/>
+                        <xs:element name="MovementType" type="xs:short"/>
+                        <xs:element name="MovementValue" type="xs:string"/>
+                        <xs:element name="MovementCcy" type="xs:string"/>
+                        <xs:element name="SwitchFee" type="xs:string"/>
+                        <xs:element name="SwitchFeeCcy" type="xs:string"/>
+                        <xs:element name="InstructionDate" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element minOccurs="0" name="ItmSelPfiIefSupplied">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="SelectChar" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpValidationUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Password" type="xs:string"/>
+            <xs:element name="LoginId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpUseridUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UsrId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="clientId" type="xs:string"/>
+    <xs:attribute name="clientPassword" type="xs:string"/>
+    <xs:attribute name="nextLocation" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="dialect" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="WsspfhwdcallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WsspfhwdExport" type="tns:WsspfhwdExport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WsspfhwdExport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EcommsCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorParameters" type="xs:string"/>
+            <xs:element name="ErrorNo" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpErrormessageBrowserFields">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorMessage" type="xs:string"/>
+            <xs:element name="ErrorTxt" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateType" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateMsg" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="Exception" type="tns:Exception"/>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Exception">
+    <wsdl:part element="tns:Exception" name="Exception">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Wsspfhwdcall">
+    <wsdl:part element="tns:Wsspfhwdcall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WsspfhwdcallResponse">
+    <wsdl:part element="tns:WsspfhwdcallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="WSSPFHWD">
+    <wsdl:operation name="Wsspfhwdcall">
+      <wsdl:input message="tns:Wsspfhwdcall" name="Wsspfhwdcall">
+    </wsdl:input>
+      <wsdl:output message="tns:WsspfhwdcallResponse" name="WsspfhwdcallResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSSPFHWDSoapBinding" type="tns:WSSPFHWD">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Wsspfhwdcall">
+      <soap:operation soapAction="http://tempuri.org/Wsspfhwdcall/" style="document"/>
+      <wsdl:input name="Wsspfhwdcall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="WsspfhwdcallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WSSPFHWD">
+    <wsdl:port binding="tns:WSSPFHWDSoapBinding" name="WSSPFHWDPort">
+      <soap:address location="http://swul-lismgr-13.rh.olympe.loc:8080/XWSPFHWD/WSSPFHWD/WSSPFHWD"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

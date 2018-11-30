@@ -1,0 +1,54 @@
+<div class="client-policies">
+            <div class="row">
+                <div class="checkbox col-xs-4">          
+                    <label><input type="checkbox" [(ngModel)]="sc.withActive" (change)="searchPolicies(1)"> <span class="cr"><i class="cr-icon">&#x2714;</i></span>Active</label>
+                    <label><input type="checkbox" [(ngModel)]="sc.withPending" (change)="searchPolicies(1)"> <span class="cr"><i class="cr-icon">&#x2714;</i></span>Pending</label>
+                    <label><input type="checkbox" [(ngModel)]="sc.withInactive" (change)="searchPolicies(1)"> <span class="cr"><i class="cr-icon">&#x2714;</i></span>Terminated</label>
+                </div>
+                <div class="col-xs-3 text-right" >Total Portfolio</div>
+                <div class="col-xs-3">
+                    <span *ngIf="portfolio || portfolio == 0">{{ portfolio | currencyFormatter}} {{currency}}</span>
+                    <span *ngIf="!portfolio && portfolio != 0">Loading...</span>
+                </div>     
+            </div>
+            <div class="line-break"></div>
+            <div class="relative">
+                <div [ngBusy]="[busy]">
+                    <table class="table dataTable table-striped table-hover nomargin fullwidth" role="grid">
+                        <thead>
+                            <tr role="row">
+                                <th>Policy</th>
+                                <th>Date of effect</th>
+                                <th>Policyholder(s)</th>
+                                <th>Amount</th>
+                                <th>Product</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let p of page.content ">
+                                <td><a [attr.href]="'#/policy?id='+p.polId" target="_blank">{{p.polId }}</a></td>
+                                <td>{{p.dateOfCommencement | date:'dd/MM/yyyy' }}</td>
+                                <td><div *ngFor="let ph of p.policyHolders"><a [attr.href]="'#/client/'+(ph.type==3?'moral':'physical')+'/'+ph.cliId" target="_blank"  highlight="text-danger"  [pattern]="regXp">{{ph.displayName}}</a></div></td>
+                                <td class="text-right">{{p.amount | currencyFormatter }} {{p.currency }}</td>
+                                <td>{{p.productName }}</td>
+                                <td>{{p.policyStatus?.description }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot *ngIf="page.totalPageCount>1">
+                            <tr>
+                                <td colspan="10" class="text-center">
+                                    <!-- <ngb-pagination *ngIf="page.totalPageCount>1" class="text-center" (pageChange)="searchPolicies($event)"
+                                            [collectionSize]="page.totalRecordCount" [pageSize]="page.pageSize" [(page)]="page.currentPage" [maxSize]="10" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination> -->
+                                    <pagination *ngIf="page.totalPageCount>1" class="text-center" [boundaryLinks]="true" 
+                                        [totalItems]="page.totalRecordCount" [itemsPerPage]="page.pageSize" [(ngModel)]="page.currentPage" (pageChanged)="searchPolicies($event.page)" [maxSize]="10"
+                                        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+                                </td>
+                            </tr>
+                        </tfoot> 
+                    </table>
+                
+
+                </div>
+            </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="form relative" >
+  <div [ngBusy]="subs">
+    <div class="row">
+        <div class="title col-md-6 col-md-offset-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">	
+            <ngbd-alert-container ref='mgtMandateReq'></ngbd-alert-container>
+        </div>
+    </div>
+
+        <!--Investment-->
+        <analysis-invest
+            [(fundForms)]="a.fundForms" 
+            [formId]="a.formId"
+            [broker]="a.broker"
+            [totalInvestment] = "a.paymentAmt"
+            [mode]="mode"
+            [generateMandatDeGestion]="true"
+            (generateMandateChange)="applyManagementMandateDocRequest($event)">
+        </analysis-invest>
+
+    <analysis [(analysis)]="a" [productCd]="a.productCd" [mode]="mode" [stepName]="stepName" [useFormClass]="false"></analysis>
+  </div>  
+</div>
+

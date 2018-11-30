@@ -1,0 +1,18 @@
+<div class="form-inline" *ngIf="agent && selectedAgent && agent.agtId != wealinsId">
+        
+    <ng-container>
+        <select [ngClass]="css +( !isActive ? ' text-select-danger':'')" [ngModel]="selectedAgent.agtId" (ngModelChange)="selectContact($event)" [desactive]="editMode">
+            <option value=""></option>
+            <ng-container *ngIf="!!agentOwner"> 
+                <ng-container *ngFor="let ac of (agentOwner.agentContacts | orderBy: ['contactDisplayName'])" >
+                    <option *ngIf="ac && ac.contact" [ngClass]="(ac.contactEnabled) ? 'text-grey-darken': 'text-danger'" [innerHTML]="ac.contactDisplayName" [value]="ac.contact.agtId"></option>
+                </ng-container>
+            </ng-container>
+        </select>
+        <agc-modal *ngIf="showAddContact==true" [initialFunction]="initialFunction" [title]="title" (close)="addContact($event)" [agent]="agentOwner"><i class="fa fa-plus" aria-hidden="true"></i></agc-modal>
+    </ng-container>
+</div>
+
+
+
+

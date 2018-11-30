@@ -1,0 +1,88 @@
+<div class="search-policy">
+
+    <search-menu path='..'></search-menu>
+
+    <div class="line-break"></div>
+    <div class="split-screen">
+        <div class="form">
+            <form (ngSubmit)="search(1)" #searchForm="ngForm">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-1">
+                            <div class="checkbox checkbox-r">
+                                <label>
+                                    <input name="status" class="input-sm form-control" type="checkbox" (change)="statusChange($event)" [checked]="frmStatus==1">
+                                    <span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                                    Active only
+                                </label>
+                            </div>
+                        </div>
+                         <label class="col-md-1 control-label">Name / Code</label>
+                         <div class="col-md-2">
+                            <input type="text" id="searchTxt" name="searchTxt" class="input-sm form-control" [(ngModel)]="frmFilter" [autofocus]>
+                        </div>
+                        <label class="col-md-1 control-label">Partner role</label>
+                        <div class="col-md-2 marginTop">
+                            <select class="form-control input-sm text-left" [(ngModel)]="frmPartnerRole" name="frmPartnerRole">
+                                <option [value]="''"></option>
+                                <option [value]="cat.acaId" *ngFor="let cat of (categories$ | async | orderBy: ['name'] | filter: 'item.status!=2')" > {{ cat.name }}</option>  
+                            </select>
+                        </div>
+                        <div class="col-md-2 col-md-offset-2">
+                            <button class="btn btn-primary btn-xs" [disabled]="!frmFilter && !frmPartnerRole" type="submit"><span aria-hidden="true" class="glyphicon glyphicon-search"></span>Search</button>
+                            <button class="btn btn-primary btn-xs" type="button" [disabled]="!frmFilter && !frmPartnerRole" (click)="eraseFields()"><i class="fa fa-eraser" aria-hidden="true"></i> Clear</button> 
+                        </div>
+                        <div class="col-md-1" *ngIf="page.totalRecordCount > 0">{{ page.totalRecordCount }} Result(s)</div> 
+                    </div>                    
+                </div>                           
+            </form>
+
+            <div class="line-break-big"></div>
+            <div class="relative">
+                <div [ngBusy]="[busy]">
+                  <table class="table dataTable table-striped table-hover nomargin fullwidth" role="grid" *ngIf="page.content">
+                        <thead>
+                            <tr role="row">
+                                <th class="width-fluid-1 text-nowrap">Code</th>
+                                <th>Name</th>
+                                <th class="width-fluid-1  text-nowrap">Role</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let agent of page.content">
+                                <td class="text-nowrap">{{ agent.agtId }}</td>
+                                <td class="text-nowrap">
+                                    <a *ngIf="canOpenInTab(agent)" [routerLink]="'/agent/' + agent.agtId" target="_blank">{{ agent.name }}</a>
+                                    <agt-basic-modal-button *ngIf="canOpenInPopup(agent)" [agentId]="agent.agtId" [asLink]="true" [title]="agent.name" [disabled]="mode==stateMode.readonly">
+                                        <span asLink>{{ agent.name}}</span>
+                                    </agt-basic-modal-button>
+                                    <span *ngIf="!canOpenInTab(agent) && !canOpenInPopup(agent)">{{ agent.name }}</span>                                    
+                                </td>
+                                <td>
+                                    <agt-label [categoryCode]="agent.category"></agt-label>
+                                </td>
+                                <td class="text-nowrap">{{ agent | address }}</td>
+                            </tr>
+                            <tr *ngIf="noResult"><td colspan="4" class="text-center"><p style="padding: 300px">No result found </p></td></tr>
+                        </tbody>
+                        <tfoot *ngIf="!!page && page.totalPageCount > 1">
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                    <!-- <ngb-pagination *ngIf="page.totalPageCount>1" class="text-center" (pageChange)="search($event)"
+                        [collectionSize]="page.totalRecordCount" [pageSize]="page.pageSize" [(page)]="page.currentPage" [maxSize]="10" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination> -->
+
+                                        <pagination class="text-center" [boundaryLinks]="true" 
+                                                    [totalItems]="page.totalRecordCount" [itemsPerPage]="page.pageSize" [(ngModel)]="page.currentPage" (pageChanged)="search($event.page)" [maxSize]="10"
+                                                    previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                    </table>
+
+ 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

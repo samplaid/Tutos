@@ -1,0 +1,73 @@
+<section subject="investment">
+    <div class="row">
+        <div class="title col-md-6 col-md-offset-1">Investment</div>
+    </div>
+    <div class="row">
+        <div class="margin4">
+            <div *ngIf="!!fundForms && fundForms.length > 0">
+                <table cellspacing="0" cellpadding="0" border="0" class="table dataTable table-striped table-hover nomargin fullwidth" role="table">
+                    <thead>
+                        <th width="10"></th>
+                        <th>Fund</th>
+                        <th width="50" *ngIf="">Valuation</th>
+                        <th width="50">Currency</th>
+                        <th width="50">Part %</th>
+                        <th width="10"></th>
+                    </thead>
+                    <tbody>
+                        <ng-template ngFor let-f [ngForOf]="fundForms" let-i="index">
+                            <tr>
+                                <td><span class="fund-badge">{{ f.fund?.fundSubType }}</span></td>
+                                <td style="word-wrap: break-word">
+                                    <a class="analyis-invest-fund" (click)="openFundDetail(f.fund)" highlight="text-danger" [pattern]="fundRegXp">{{ ((!!f?.fund?.displayName) ? f?.fund?.displayName : f?.fund?.fdsId)}}</a>
+                                                                
+                                    <div class="row marginTop2" *ngIf="f.fund?.fundSubType == 'FID' || f.fund?.fundSubType == 'FAS'">
+
+                                        <ng-container *ngIf="f.split != 0">
+                                            <!-- Encashment form in case of FID/FAS -->
+                                            <label class="marginTop col-md-2 text-right">Cash received on</label>
+                                            <div class="form-group col-md-3 form-inline">
+                                                <select class="form-control input-sm text-left" [(ngModel)]="f.isCashFundAccount" id="isCashFundAccount" name="isCashFundAccount" 
+                                                                    [desactive]="valuationMode" [disabled]="!f.fund.accountRoot"> 
+                                                    <option [value]="false">Wealins Account</option>
+                                                    <option [value]="true" *ngIf="f.fund.accountRoot" >{{f.fund.accountRoot}}</option>
+                                                </select>
+                                            </div>
+
+                                            <label class="marginTop col-md-1 nopadding text-right">Cash split</label>
+                                            <div class="marginTop col-md-2">
+                                                {{totalInvestment * f.split /100 | currencyFormatter:',':' ':'':'':2}} {{currency}}
+                                            </div>
+                                        </ng-container>
+
+                                        <!-- Valuation FID/FAS -->
+                                        <ng-container *ngIf="showValuationAmount && f.addOnValuableAmount">
+                                            <label class="marginTop col-md-2 text-right">Valuation amount</label>
+                                            <div class="marginTop col-md-2">
+                                                <w-number [(number)]="f.valuationAmt" [precision]="6" css="form-control input-sm text-right input-amount" [mode]="valuationMode" ></w-number>
+                                            </div>
+                                        </ng-container>
+                                    </div>                  
+                                </td>
+                                <td>{{ f.fund?.currency }}</td>
+                                <td>
+                                    <w-number [(number)]="f.split" [precision]="6" css="form-control input-sm text-right input-percent" [mode]="valuationMode" ></w-number>
+                                </td>
+                                <td>
+                                    <button type="button" (click)="remove(i)" class="btn btn-sm btn-primary" [desactive]="undeletableFundIds?.includes(f.fundId) ? StateMode.readonly : mode"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                    <button *ngIf="generateMandatDeGestion == true && (f.fund?.fundSubType == 'FID' || (f.fund?.fundSubType == 'FAS' && f.fund?.financialAdvisorCategory == 'PSI'))" title="Mandate document generation request" type="button" (click)="generateMandate(f.fund)" class="btn btn-sm btn-primary marginTop" ><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="row marginTop4" [desactive]="mode">
+                <div class="col-md-11 col-md-offset-1">
+                    <search-fund (selectItemsChange)="select($event)" [brokerId]="brokerId"></search-fund>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

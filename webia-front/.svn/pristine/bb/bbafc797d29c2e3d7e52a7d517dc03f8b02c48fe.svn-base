@@ -1,0 +1,36 @@
+<div class="tin">
+    <!-- TN1 Country -->
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-3" for="natIdCountry">TIN 1 Country</label>
+            <div class="col-md-9">
+                <div class="form-inline">
+                    <label class="sr-only"></label>
+                    <select id="natIdCountry" class="form-control input-sm text-left cli-input-width" (ngModelChange)="handleChange($event)" [(ngModel)]="tin.natIdCountry" id="natIdCountryId" name="natIdCountry" [desactive]="mode">
+                        <option value=""></option>
+                        <option *ngFor="let c of (countries | orderBy: ['name'])" [value]="c.ctyId">{{ c.name }}</option>
+                    </select> 
+                    <input style="min-width: 209px;" name="nationalIdNo" type="text" class="form-control input-sm" maxlength="20" (ngModelChange)="handleChange($event)" [(ngModel)]="tin.nationalIdNo" [desactive]="mode">
+                </div>     
+            </div>
+        </div>       
+    </div>
+
+    <!-- TN2 Country -->
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-3" for="natId2Country">TIN 2 Country</label>
+            <div class="col-md-9">
+                <div class="form-inline">
+                   <label class="sr-only"></label>                
+                    <select id="natId2Country" class="form-control input-sm text-left cli-input-width" (ngModelChange)="handleChange($event)" [(ngModel)]="tin.natId2Country" id="natId2CountryId" name="natId2Country" [desactive]="mode">
+                        <option value=""></option>
+                        <option *ngFor="let c of (countries | orderBy: ['name'])" [value]="c.ctyId">{{ c.name }}</option>
+                    </select>
+                    <input style="min-width: 209px;" name="nationalId2" type="text" class="form-control input-sm" maxlength="20" (ngModelChange)="handleChange($event)" [(ngModel)]="tin.nationalId2" [desactive]="mode">                          
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</div>

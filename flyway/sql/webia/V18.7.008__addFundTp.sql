@@ -1,0 +1,1 @@
+Alter table FUND_TRANSACTION_FORM add FUND_TP varchar(3);

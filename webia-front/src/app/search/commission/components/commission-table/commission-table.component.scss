@@ -1,0 +1,24 @@
+.commission {
+    
+    
+    
+    table>tbody>tr.grey {
+        background-image: linear-gradient(to bottom left, #fdfdfd 0%, #d8d8d8 100%);
+        td:first-child {
+            padding: 10px 0px 0px 2px; // fixe for checkbox
+        }
+    }
+
+    .tr-commission > td {
+        line-height: 1;
+    }
+
+    .tr-commission > td:first-child,  .tr-commission > td:last-child{
+         border: none;
+    }
+
+    .done {
+        cursor: pointer;
+    }
+
+}

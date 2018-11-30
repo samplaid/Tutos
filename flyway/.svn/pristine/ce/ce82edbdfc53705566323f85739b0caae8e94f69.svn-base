@@ -1,0 +1,9 @@
+The scripts under this directory should be only applied to DEV, TEST and UAT databases. 
+
+The file name must follow the flyway convention: 
+
+beforeMigrate
+afterMigrate
+etc.
+
+https://flywaydb.org/documentation/callbacks

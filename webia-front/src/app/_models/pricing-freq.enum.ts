@@ -1,0 +1,11 @@
+export enum PricingFrequency {
+    DAILY_FWD_PRICED = 1,
+    WEEKLY_FWD_PRICED = 2,
+    MONTHLY_FWD_PRICED = 3,
+    DAILY_HISTORICAL = 4,
+    DAILY_TIMED_FWD = 5,
+    CALENDAR_FWD_PRICED = 6,
+    HISTORICAL_SEARCH = 7,
+    PRICE_1 = 8,
+    WEEKLY_CALENDAR = 2
+}

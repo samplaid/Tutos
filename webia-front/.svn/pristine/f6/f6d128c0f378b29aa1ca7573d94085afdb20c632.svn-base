@@ -1,0 +1,12 @@
+<div class="details">
+    <ul>
+        <li *ngFor="let transferType of Object.keys(groupedTransfers)">
+            {{transferType | transferType}} from policies 
+            <span *ngFor="let transfer of groupedTransfers[transferType]">
+                <i>{{transfer.fromPolicy}}</i> ({{transfer.fromPolicyEffectDt | wdate}})
+            </span>
+        </li>
+    </ul>
+</div>
+
+

@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://tempuri.org/Wssupers/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="WSSUPERS" targetNamespace="http://tempuri.org/Wssupers/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/Wssupers/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://tempuri.org/Wssupers/">
+  <xs:element name="Wssuperscall" type="tns:Wssuperscall"/>
+  <xs:element name="WssuperscallResponse" type="tns:WssuperscallResponse"/>
+  <xs:complexType name="Wssuperscall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssupersImport" type="tns:WssupersImport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssupersImport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ImpPonIdnumberGeneralNotes">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Details" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpPonGeneralNotes">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Details" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpCreateModifyDatesCreateModify">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ModifyTime" type="xs:string"/>
+            <xs:element name="ModifyDate" type="xs:string"/>
+            <xs:element name="CreatedDate" type="xs:string"/>
+            <xs:element name="CreatedTime" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpGrpClp">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="row">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="ImpItmClpClientLinkedPersons">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="ClpId" type="xs:long"/>
+                        <xs:element name="Entity" type="xs:int"/>
+                        <xs:element name="ControllingPerson" type="xs:int"/>
+                        <xs:element name="Status" type="xs:short"/>
+                        <xs:element name="Type" type="xs:string"/>
+                        <xs:element name="SubType" type="xs:string"/>
+                        <xs:element name="StartDate" type="xs:string"/>
+                        <xs:element name="EndDate" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpCallMethodCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CallFunction" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpGrpClc">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="row">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="ImpItmClcClientContactDetails">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="AddressLine1" type="xs:string"/>
+                        <xs:element name="AddressLine2" type="xs:string"/>
+                        <xs:element name="AddressLine3" type="xs:string"/>
+                        <xs:element name="AddressLine4" type="xs:string"/>
+                        <xs:element name="Town" type="xs:string"/>
+                        <xs:element name="County" type="xs:string"/>
+                        <xs:element name="Country" type="xs:string"/>
+                        <xs:element name="Postcode" type="xs:string"/>
+                        <xs:element name="Fax" type="xs:string"/>
+                        <xs:element name="HomePhone" type="xs:string"/>
+                        <xs:element name="ContactType" type="xs:string"/>
+                        <xs:element name="DateOfCountryChange" type="xs:string"/>
+                        <xs:element name="PreviousCountry" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpCliClients">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="CliId" type="xs:int"/>
+            <xs:element name="Type" type="xs:short"/>
+            <xs:element name="MaidenName" type="xs:string"/>
+            <xs:element name="DocumentationLanguage" type="xs:short"/>
+            <xs:element name="Title" type="xs:string"/>
+            <xs:element name="DateOfBirth" type="xs:string"/>
+            <xs:element name="Sex" type="xs:short"/>
+            <xs:element name="MaritalStatus" type="xs:short"/>
+            <xs:element name="Nationality" type="xs:string"/>
+            <xs:element name="OtherFornames" type="xs:string"/>
+            <xs:element name="FirstName" type="xs:string"/>
+            <xs:element name="Profile" type="xs:string"/>
+            <xs:element name="MobileTelNo" type="xs:string"/>
+            <xs:element name="WorkTelNo" type="xs:string"/>
+            <xs:element name="Classification" type="xs:string"/>
+            <xs:element name="Email" type="xs:string"/>
+            <xs:element name="IdExpiryDate" type="xs:string"/>
+            <xs:element name="PlaceOfBirth" type="xs:string"/>
+            <xs:element name="PoliticallyExposedPerson" type="xs:string"/>
+            <xs:element name="PepFunction" type="xs:string"/>
+            <xs:element name="InsiderTrading" type="xs:string"/>
+            <xs:element name="InsiderTradingDetails" type="xs:string"/>
+            <xs:element name="Dap" type="xs:string"/>
+            <xs:element name="CountryOfBirth" type="xs:string"/>
+            <xs:element name="ProvinceOfBirth" type="xs:string"/>
+            <xs:element name="Profession" type="xs:string"/>
+            <xs:element name="DateOfRevision" type="xs:string"/>
+            <xs:element name="Fiduciary" type="xs:short"/>
+            <xs:element name="VatNumber" type="xs:string"/>
+            <xs:element name="CircularLetter" type="xs:string"/>
+            <xs:element name="ClassOfRisk" type="xs:string"/>
+            <xs:element name="StatementByEmail" type="xs:string"/>
+            <xs:element name="MediaExposedPerson" type="xs:string"/>
+            <xs:element name="MepDetail" type="xs:string"/>
+            <xs:element name="RelativeCloseAssoc" type="xs:string"/>
+            <xs:element name="RcaDetail" type="xs:string"/>
+            <xs:element name="CrsStatus" type="xs:string"/>
+            <xs:element name="CrsExactStatus" type="xs:string"/>
+            <xs:element name="CommercialEntity" type="xs:string"/>
+            <xs:element name="NationalIdNo" type="xs:string"/>
+            <xs:element name="NatIdCountry" type="xs:string"/>
+            <xs:element name="NationalId2" type="xs:string"/>
+            <xs:element name="NatId2Country" type="xs:string"/>
+            <xs:element name="ActivityRiskCat" type="xs:short"/>
+            <xs:element name="ClassificationDetails" type="xs:string"/>
+            <xs:element name="RiskCat" type="xs:string"/>
+            <xs:element name="DateOfSelfCert" type="xs:string"/>
+            <xs:element name="CrsDateOfLastDec" type="xs:string"/>
+            <xs:element name="HealthDecDate" type="xs:string"/>
+            <xs:element name="HealthDeclaration" type="xs:string"/>
+            <xs:element name="KnowYourCustomer" type="xs:string"/>
+            <xs:element name="KycDate" type="xs:string"/>
+            <xs:element name="GdprStartdate" type="xs:string"/>
+            <xs:element name="GdprEnddate" type="xs:string"/>
+            <xs:element name="ExceptRisk" type="xs:string"/>
+            <xs:element name="ExceptActivityRisk" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpValidationUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Password" type="xs:string"/>
+            <xs:element name="LoginId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpUseridUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UsrId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="clientId" type="xs:string"/>
+    <xs:attribute name="clientPassword" type="xs:string"/>
+    <xs:attribute name="nextLocation" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="dialect" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="WssuperscallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssupersExport" type="tns:WssupersExport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssupersExport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExpCliClients">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CliId" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpErrorCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorNo" type="xs:string"/>
+            <xs:element name="ErrorParameters" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpErrorMessageBrowserFields">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorMessage" type="xs:string"/>
+            <xs:element name="ErrorTxt" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateType" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateMsg" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="Exception" type="tns:Exception"/>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Wssuperscall">
+    <wsdl:part element="tns:Wssuperscall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WssuperscallResponse">
+    <wsdl:part element="tns:WssuperscallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part element="tns:Exception" name="Exception">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="WSSUPERS">
+    <wsdl:operation name="Wssuperscall">
+      <wsdl:input message="tns:Wssuperscall" name="Wssuperscall">
+    </wsdl:input>
+      <wsdl:output message="tns:WssuperscallResponse" name="WssuperscallResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSSUPERSSoapBinding" type="tns:WSSUPERS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Wssuperscall">
+      <soap:operation soapAction="http://tempuri.org/Wssuperscall/" style="document"/>
+      <wsdl:input name="Wssuperscall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="WssuperscallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WSSUPERS">
+    <wsdl:port binding="tns:WSSUPERSSoapBinding" name="WSSUPERSPort">
+      <soap:address location="http://sv-lvd46.rh.olympe.loc:8080/XWSUPERS/WSSUPERS/WSSUPERS"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

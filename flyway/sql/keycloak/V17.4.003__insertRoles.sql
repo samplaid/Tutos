@@ -1,0 +1,1 @@
+insert into GROUP_ROLE_MAPPING  (ROLE_ID, GROUP_ID) select 'd6bbf8e0-0b62-4eff-884d-b03d41a8f882', ID  from KEYCLOAK_GROUP where name ='GG_CPS_PartnerRelations' and REALM_ID='Wealins';

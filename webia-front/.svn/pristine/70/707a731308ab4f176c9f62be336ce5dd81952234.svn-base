@@ -1,0 +1,30 @@
+<div class="form-horizontal" *ngIf="agent">
+    <div class="form-group">
+        <label class="text-nowrap control-label col-md-2">Name</label>                               
+        <div class="col-sm-10">
+            <div class="row">
+                <div class="col-sm-2 nopaddingRight">
+                    <select class="form-control input-sm" [(ngModel)]="agent.title" [desactive]="mode" [disableFor]="disabledMode">
+                        <option value=""></option>
+                        <ng-container *ngFor="let t of titles" >
+                            <option [value]="t.keyValue">{{ t.description }}</option>
+                        </ng-container>                        
+                    </select>                                                
+                </div>
+                <div class="col-sm-10 nopadding">
+                    <input type="text" class="form-control input-sm" maxlength="40" [(ngModel)]="agent.name" [desactive]="mode" [disableFor]="disabledMode" maxlength="150">
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!-- / Name  -->
+
+    <div class="form-group" *ngIf="agent.category == 'PR'">
+        <label for="name" class="col-md-2 control-label">Firstname</label>
+        <div class="col-md-7">
+            <input [disabled]="mode==stateMode.readonly" id="agtNameId" class="form-control input-sm" type="text" name="name" [(ngModel)]="agent.firstname" maxlength="30"  [desactive]="mode" [disableFor]="disabledMode">
+        </div>
+    </div> <!-- / Firstname  -->
+
+    <ng-content></ng-content>
+</div>

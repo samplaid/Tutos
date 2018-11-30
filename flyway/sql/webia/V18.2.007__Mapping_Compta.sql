@@ -1,0 +1,1 @@
+insert into SAP_MAPPING VALUES ('ACCOUNT','PREMRN_4','7014000');

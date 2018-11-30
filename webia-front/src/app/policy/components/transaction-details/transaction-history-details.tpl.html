@@ -1,0 +1,47 @@
+<div class="trans-history-details" id="historyDetails">
+  <div class="outer-table">  
+
+    <div class="inner-table">
+      <table class="table  fullwidth" role="grid">
+        <thead class="details-table-header">
+          <ng-container *ngFor="let column of allColumns">
+            <th class="width-fluid-1 details-table-header" [attr.title]="column.title" *ngIf="!column.hidden"><span>{{ column.label }}</span></th>
+          </ng-container>
+        </thead>
+        <tbody class= "details-row">
+          <tr *ngFor="let detail of historyDetails" > 
+            <ng-container *ngFor="let column of allColumns">
+              <ng-container *ngIf="!column.hidden">
+                <td>
+                  <span [ngSwitch]="column.name">
+
+                      <ng-template #popexchangeRate ><span>Exchange rate: {{ detail['exchangeRate'] }}</span> </ng-template>
+
+                      <span class="fund-badge" *ngSwitchCase=" 'fundSubType'" [popover]="popexchangeRate" triggers="mouseenter:mouseleave" placement="right">{{ detail[column.name] }} </span>
+                      <span class="word-wrap " *ngSwitchCase=" 'fundName'" >
+                        <a highlight="text-danger" target="_blank" [href]="'#/fund/'+ detail['fundSubType'].trim() + '/' + detail['fundId'].trim()">{{ detail['fundId'] }} - {{ detail[column.name] }}</a>  
+                      </span> 
+                      <span class="text-nowrap float-right " *ngSwitchCase=" 'units' ">{{ detail[column.name]  | currencyPipe:"":"after":".":" ":6:false }}</span>              
+                      <span class="text-nowrap float-right" *ngSwitchCase=" 'valueFund' ">{{ detail[column.name] | currencyPipe:detail.fundCurrency:"after":".":" ":6:false  }}</span>
+                      <span class="text-nowrap float-right " *ngSwitchCase=" 'valuePol' ">{{ detail[column.name] | currencyPipe:detail.policyCurrency:"after":".":" ":6:false }}</span>
+                      <span class="text-nowrap float-right " *ngSwitchCase=" 'price' ">{{ detail[column.name]  | currencyPipe:detail.fundCurrency:"after":".":" ":6:true  }}</span>
+                      <span class="text-nowrap float-right" *ngSwitchCase=" 'effectiveDate' "> {{detail[column.name] | wdate }}</span>
+                      <span class="text-nowrap float-right " *ngSwitchCase=" 'split' "> 
+                        <span *ngIf=" detail[column.name] >= 100"> 100.00 %</span>
+                        <span *ngIf=" detail[column.name] < 100"> {{ detail[column.name]  | currencyPipe:"":"after":".":" ":2:true }}%</span>     
+                      </span> 
+                      <span class="text-nowrap float-right " *ngSwitchDefault >{{ detail[column.name] }}</span>
+                  </span>
+                </td>
+              </ng-container>
+            </ng-container>
+          </tr>
+        </tbody>
+        <tfoot >
+         
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+</div>

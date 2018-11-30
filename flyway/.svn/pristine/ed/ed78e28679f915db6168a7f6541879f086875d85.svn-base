@@ -1,0 +1,46 @@
+/****** Object:  Table [dbo].[SAP_OPEN_BALANCE]    Script Date: 21/06/2018 08:12:29 ******/
+IF OBJECT_ID('[dbo].[SAP_OPEN_BALANCE]', 'U') IS NOT NULL DROP TABLE [dbo].[SAP_OPEN_BALANCE];
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SAP_OPEN_BALANCE](
+	[SAP_OPENBAL_ID] [numeric](20, 0) NOT NULL,
+	[COMPANY] [varchar](4) NULL,
+	[ACCOUNT] [varchar](10) NULL,
+	[ASSIGNMENT] [varchar](50) NULL,
+	[REFERENCE] [varchar](50) NULL,
+	[DOCUMENT_NUMBER] [varchar](10) NULL,
+	[DOCUMENT_TYPE] [varchar](2) NULL,
+	[POSTING_KEY] [varchar](2) NULL,
+	[CLEARING_DOCUMENT_NUMBER] [varchar](10) NULL,
+	[DOCUMENT_DESC] [varchar](50) NULL,
+	[COST_CENTER] [varchar](50) NULL,
+	[ORDER_CD] [varchar](50) NULL,
+	[AGENT] [varchar](8) NULL,
+	[OPERATION] [varchar](50) NULL,
+	[COUNTRY_CD] [varchar](3) NULL,
+	[POLICY_ID] [varchar](14) NULL,
+	[PRODUCT] [varchar](2) NULL,
+	[SUPPORT] [varchar](2) NULL,
+	[FUND] [varchar](100) NULL,
+	[DOCUMENT_DATE] [date] NULL,
+	[INPUT_DATE] [date] NULL,
+	[ACCOUNTING_DATE] [date] NULL,
+	[AMOUNT_EUR] [numeric](18, 2) NULL,
+	[CURRENCY] [varchar](3) NULL,
+	[AMOUNT_CCY] [numeric](18, 2) NULL,
+	[EXTRACTION_DATE] [date] NULL,
+	[EXTRACTION_TIME] [time](7) NULL,
+	COMMISSION_TYPE [varchar](15) NULL,
+	[LOAD_DATE] [datetime] NULL,
+	ORIGIN	varchar(50) NULL,
+ CONSTRAINT [PK_SAP_OPEN_BALANCE] PRIMARY KEY CLUSTERED 
+(
+	[SAP_OPENBAL_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+

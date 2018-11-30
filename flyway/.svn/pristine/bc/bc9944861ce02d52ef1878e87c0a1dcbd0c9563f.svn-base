@@ -1,0 +1,11 @@
+flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+flyway.url=jdbc:sqlserver://10.45.7.25:1433;databaseName=TST_COMMON
+flyway.baselineOnMigrate=true
+flyway.user=dworkflow-svc
+flyway.password=e5wVVzzA
+flyway.locations=filesystem:./sql/elissia-common,filesystem:./callback/elissia-common
+flyway.cleanDisabled=true
+flyway.placeholderPrefix=$[
+flyway.placeholderSuffix=]
+flyway.placeholders.CLIENT_ENV=DE2
+flyway.table=flyway_PRD_COMMON

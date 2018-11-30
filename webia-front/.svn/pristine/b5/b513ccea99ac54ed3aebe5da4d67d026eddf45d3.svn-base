@@ -1,0 +1,411 @@
+<ng-template ngbModalContainer *ngIf="!inModal"></ng-template>
+<ng-container *ngIf="agent">
+    <div class="agent relative" >
+        <div [ngBusy]="[busy]">
+        <div class="split-screen relative">
+            <div class="agent-form container-fluid" [ngBusy]="subs">
+                <section class="form-horizontal">
+                    <div class="row menu marginLeft3 nomarginRight">
+                        <div class="row vertical-center-noline ">
+                            <div class="text-nowrap col-md-10 marginVertical5">
+                                <label class="header-form-title">{{ title }}</label>
+                                <label class="header-form-status">
+                                    <span class="label label-primary w-label" *ngIf="agentId && agent && agent.status && agent.status == 1">Active</span>                
+                                    <span class="label label-primary w-label" *ngIf="agentId && agent && agent.status && agent.status !=1 ">Inactive</span>
+                                </label>
+                                <label class="form-inline paddingLeft12" *ngIf="agent">
+                                    <agt-label [categoryCode]="agent.category"></agt-label>
+                                </label>
+                                <label class="header-form-code" *ngIf="agent && agent.agtId"><b>Code</b><span class="paddingHorizontal2">{{ agent?.agtId }}</span></label>
+                                <label class="header-form-code" *ngIf="agent && agent.crmRefererence"><b>CRM Id</b><span class="paddingHorizontal2">{{ agent?.crmRefererence }}</span></label>
+                                <label class="header-form-code" *ngIf="agent && agent.crmStatus"><b>CRM Status</b><span class="paddingHorizontal2">{{ agent?.crmStatus }}</span></label>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="pull-right paddingRight7">
+                                    <button type="submit" class="btn btn-xs btn-primary" [disabled]="mode==='readOnly' || saving" (click)="save()">
+                                    <i class="fa fa-floppy-o"></i>Save</button>
+                                    <button type="button" class="btn btn-xs btn-primary" (click)="refresh()">
+								    <i class="fa fa-refresh" aria-hidden="true"></i>Refresh</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form">
+                    <div class="row">
+						<div class="col-md-8 col-md-offset-2">	
+							<ngbd-alert-container ref='agentCpt'></ngbd-alert-container>
+						</div>
+					</div>
+                    <div class="row">
+                        <!-- left side -->
+                        <div class="col-sm-8">
+                            <div class="form-horizontal">  
+
+                                <div class="row">
+                                    <label class="title col-md-2">Contacts</label>
+                                </div>
+                                <div class="row marginTop4">
+                                    <div class="col-md-12">
+                                        <table cellspacing="0" cellpadding="0" border="0" class="table dataTable table-striped table-hover nomargin" role="table">
+                                            <caption class="nopadding paddingBottom2">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <ng-container *ngIf="isCategoryIn(agent.category, [agtCat.ASSET_MANAGER, agtCat.BROKER])">
+                                                            <div class="row" [hasRoles]="[appRoles.CLIENT_EDIT]" [allRoles]="true">
+                                                                <div class="checkbox checkbox-r">
+                                                                    <label>
+                                                                        <input id="centralizedCommunicationId" name="centralizedCommunication" type="checkbox" [(ngModel)]="agent.centralizedCommunication" [desactive]="mode" >
+                                                                        <span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                                                                        Centralized Communication
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                    </div>
+
+                                                    <div class="col-md-2 col-md-offset-6">
+                                                        <div class="input-group input-group-sm">
+                                                            <input #inputSearchAgc aria-describedby="addon-basic" (keyup)="searchAgc($event.target.value)" placeholder="Search by name..." type="text" class="form-control input-sm">
+                                                            <span class="input-group-btn">
+                                                                <button class="btn btn-xs btn-primary" type="button" (click)="clearSearchAgc(inputSearchAgc)"><i class="fa fa-eraser" aria-hidden="true"></i></button>
+                                                            </span>                                                
+                                                        </div>
+                                                    </div>                                                    
+                                                </div>
+                                            </caption>
+                                            <thead>
+                                                <th width="5%">Code</th>
+                                                <th width="30%">Contact's name</th>
+                                                <th width="20%">Function</th>
+                                                <th>Address</th>
+                                                <th width="10%">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input name="agc" type="checkbox" (change)="contactActiveChange($event)" [checked]="agentContactStatus == '1'"><span class="cr"><i class="cr-icon">&#x2714;</i></span>
+                                                            Active Only
+                                                        </label>
+                                                    </div>
+                                                </th>
+                                                <th width="5%"  *ngIf="mode!=stateMode.readonly"></th>
+                                            </thead>
+                                            <tbody> 
+                                                <ng-container *ngFor="let agc of (agentContactPage.content | filter:filterAgc()); let i=index">
+                                                    <tr *ngIf="!!agc && !!agc.contact">                                                    
+                                                        <td >{{ agc.contact.agtId}}</td>
+                                                        <td style="word-wrap: break-word">
+                                                            <agc-modal [isNews]="false"  [asLink]="true" [title]="'Contact of ' + agent.name" (close)="contactChange($event)" (agentChange)="agentChange($event)" [agent]="agent" [contact]="agc" [desactive]="mode">{{ agc.contact.name }} {{ agc.contact.firstname }}</agc-modal>
+                                                        </td>
+                                                        <td>{{ translateFunction(agc.contactFunction)  }}</td>                                                   
+                                                        <td style="word-wrap: break-word">{{ agc.contact | address }}</td>
+                                                        <td class="text-center">{{ agc.status == 1 ? 'Active':'Inactive'}}</td>
+                                                        <td class="text-center" *ngIf="mode!=stateMode.readonly">                                                            
+                                                            <!-- <button type="button" (click)="removeContact(i)" class="btn btn-sm btn-primary" [desactive]="mode"><i class="fa fa-minus" aria-hidden="true"></i></button> -->                                                            
+                                                            <button title="Deactivate" *ngIf="agc && agc.status == 1" class="btn btn-xs btn-primary" type="button" (click)="deactiveContact(agc)"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>                                                 
+                                            </tbody>
+                                            <tfoot>
+                                                <tr *ngIf="agentContactPage.totalPageCount>1">
+                                                    <td class="text-center" colspan="10">
+                                                        <!-- <ngb-pagination class="text-center" (pageChange)="goToContactPage($event)" [collectionSize]="agentContactPage.totalRecordCount"
+                                                        [pageSize]="agentContactPage.size" [(page)]="agentContactPage.number" [maxSize]="10" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination>
+                                                     -->
+                                                        <pagination class="text-center" [boundaryLinks]="true" 
+                                                            [totalItems]="agentContactPage.totalRecordCount" [itemsPerPage]="agentContactPage.size" [(ngModel)]="agentContactPage.number" (pageChanged)="goToContactPage($event.page)" [maxSize]="10"
+                                                            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngIf="mode!=stateMode.readonly">
+                                                    <tr aria-rowspan="10">
+                                                        <td colspan="10" class="text-center">
+                                                            <agc-modal [isNews]="true"[title]="'Contact of ' + agent.name" [agent]="agent" (close)="contactChange($event)" (agentChange)="agentChange($event)"><i class="fa fa-plus" aria-hidden="true"></i>Add New Contact</agc-modal>                                                      
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                                
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- / agent contact -->
+                            </div>
+                        </div>
+                        <!-- right side -->
+                        <div class="col-sm-4">
+                            <div class="row">
+                                <div class="title col-md-12">Address</div>
+                            </div>
+                            <div class="row marginTop4">  
+                                <div class="container-fluid">
+                                    <div class="broker-address">
+                                        <agent-address-form [agent]="agent" mode="readOnly">
+                                            <ng-container *ngIf="isCategoryIn(agent.category, [agtCat.ASSET_MANAGER])">
+                                                <div class="form-horizontal marginTop5" [hasRoles]="[appRoles.CLIENT_EDIT]" [allRoles]="true">
+                                                    <div class="form-group">
+                                                        <div class="checkbox checkbox-r">
+                                                            <label>
+                                                                <input id="statementByEmailId" name="statementByEmail" type="checkbox" [(ngModel)]="agent.statementByEmail" [desactive]="mode" >
+                                                                <span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                                                                Send statement by email
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>                                            
+                                        </agent-address-form>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+
+                     <section *ngIf="agent && agent.category =='AM'">
+                        <div class="row marginTop4">
+                            <label class="title col-md-2">Asset Manager Strategies</label>
+                        </div>
+                        <div class="row marginTop4">
+                            <div class="col-md-8">
+                                <am-strategies [(amStrategies)]="agent.assetManagerStrategies" [agentId]="agent.agtId"></am-strategies>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="line-break-big"></div>
+                        <div class="agent-bank-account">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row marginTop4">
+                                        <label class="title col-md-2">Bank Accounts</label>
+                                    </div>
+                                    <div class="row marginTop4">
+                                        <div class="col-md-12">
+                                            <table cellspacing="0" cellpadding="0" border="0" class="table dataTable table-striped table-hover nomargin" role="table">
+                                                <thead>
+                                                    <th>Account Name</th>
+                                                    <th width="20%">Bank</th>
+                                                    <th width="15%">Bic</th>
+                                                    <th width="20%">Iban</th>
+                                                    <th width="5%">Currency</th>
+                                                    <th width="8%">
+                                                        <div class="checkbox">
+                                                            <label style="padding: 0px 15px;">
+                                                                <input name="agb" type="checkbox" (change)="bankAccountActive($event)" [checked]="agentBankAccountStatus == 1"><span class="cr"><i class="cr-icon">&#x2714;</i></span>
+                                                                Active Only
+                                                            </label>
+                                                        </div>
+                                                    </th>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container *ngFor="let agb of (paymentPage.content | filter: filterAgb()); let i=index">
+                                                        <tr *ngIf="!!agb">                                     
+                                                            <td style="word-wrap: break-word">{{ agb.accountName }}</td>
+                                                            <td style="word-wrap: break-word">{{ agb.bankName }}</td>
+                                                            <td style="word-wrap: break-word">{{ agb.bic }}</td>                                                    
+                                                            <td style="word-wrap: break-word">{{ agb.iban | iban }}</td>
+                                                            <td style="word-wrap: break-word">{{ agb.commPaymentCurrency }}</td>
+                                                            <td class="text-center">
+                                                                <span *ngIf="agb.status == 1">Active</span>
+                                                                <span *ngIf="agb.status == 0">Inactive</span>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr *ngIf="paymentPage.totalPageCount>1" >
+                                                        <td colspan="6">
+                                                            <!-- <ngb-pagination class="text-center" (pageChange)="goToPage($event, agent.bankAccounts)" [collectionSize]="paymentPage.totalRecordCount"
+                                                                [pageSize]="paymentPage.size" [(page)]="paymentPage.number" [maxSize]="10" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination></td> -->
+                                                        
+                                                            <pagination class="text-center" [boundaryLinks]="true" 
+                                                                [totalItems]="paymentPage.totalRecordCount" [itemsPerPage]="paymentPage.size" [(ngModel)]="paymentPage.number" (pageChanged)="goToPage($event.page, agent.bankAccounts)" [maxSize]="10"
+                                                                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+                                                        </td>
+                                                        <td colspan="10" class="text-center" *ngIf="paymentPage.totalPageCount == 0">
+                                                            <p>No result found </p>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- / pay -->
+                                </div>
+
+                                <ng-container>
+                                    <div class="col-md-4" *ngIf="agent && agent.category =='DB'">
+                                        <div class="row marginTop4">
+                                            <label class="title col-md-2">BIC</label>
+                                        </div>
+                                        <div class="row marginTop4">
+                                            <div class="col-sm-6">
+                                                <input [disabled]="" id="paymentAccountBicId" name="paymentAccountBic" class="form-control input-sm" type="text" [(ngModel)]="agent.paymentAccountBic"  [desactive]="disabledMode"  maxlength="35">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <div class="col-md-4" *ngIf="agent && (agent.category !='AM' && agent.category !='DB')">
+                                    <div class="row marginTop4">
+                                        <label class="title col-md-2">Commissions</label>
+                                    </div>
+                                    <div class="row marginTop4">
+                                        <div class="col-sm-6">
+                                            <div class="form-horizontal">
+                                                <div class=" form-group">
+                                                    <label class="col-sm-6 control-label">Payment Mode</label>
+                                                    <div class="col-sm-6">
+                                                        <select class="form-control input-sm text-left" [(ngModel)]="agent.paymentMethod" [desactive]="disabledMode" >
+                                                            <option *ngFor="let pay of payments" [ngValue]="pay.number">{{pay?.description}}</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-horizontal">
+                                                <div class=" form-group">
+                                                    <label class="col-sm-6 control-label">Account of payment</label>
+                                                    <div class="col-sm-6">
+                                                        <select class="form-control input-sm text-left" [(ngModel)]="agent.paymentAccountBic" [desactive]="disabledMode">
+                                                            <option *ngFor="let bic of (orderAccounts)" [ngValue]="bic">{{bic}}</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row marginTop4">
+                                        <div class="col-sm-6">
+                                            <div class="form-horizontal">
+                                                <div class=" form-group">
+                                                    <label class="col-sm-6 control-label">Report commission</label>
+                                                    <div class="col-md-6 radio"> 
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="desiredReport" id="YesdesiredReport" value="1" [desactive]="disabledMode" (change)="agent.desiredReport = 1" [checked]="agent.desiredReport == 1"> 
+                                                            <span class="cr"><i class="cr-icon fa fa-circle"></i></span> Yes
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="desiredReport" id="NodesiredReport" value="0" [desactive]="disabledMode" (change)="agent.desiredReport = 0" [checked]="agent.desiredReport == 0"> 
+                                                            <span class="cr"><i class="cr-icon fa fa-circle"></i></span> No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-horizontal">
+                                                <div class=" form-group">
+                                                    <label class="col-sm-6 control-label">Payment authorized</label>
+                                                    <div class="col-md-6 radio"> 
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="paymentCommission" id="YesPaymentCommission" value="1" [desactive]="disabledMode" (change)="agent.paymentCommission = 1" [checked]="agent.paymentCommission == 1"> 
+                                                            <span class="cr"><i class="cr-icon fa fa-circle"></i></span> Yes
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="paymentCommission" id="NoPaymentCommission" value="0" [desactive]="disabledMode" (change)="agent.paymentCommission = 0" [checked]="agent.paymentCommission == 0"> 
+                                                            <span class="cr"><i class="cr-icon fa fa-circle"></i></span> No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                                    
+                        </div>
+                    </section>
+
+                    <section *ngIf="agent.category == 'BK' || agent.category == 'DB' || agent.category == 'AM'">
+                        <div class="line-break-big"></div>
+                        <div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row marginTop4">
+                                        <label class="title col-md-2">Open Items</label>
+                                    </div>
+                                    <div class="row marginTop4">
+                                        <div class="col-md-12">
+                                            <table cellspacing="0" cellpadding="0" border="0" class="table dataTable table-striped table-hover nomargin" role="table">
+                                                <thead>
+                                                    <th width="10%">Reference</th>
+                                                    <th width="20%">Type</th>
+                                                    <th width="20%">Step</th>
+                                                    <th width="10%">Product</th>
+                                                    <th width="20%">Policy number</th>
+                                                    <th width="20%">Client name</th>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container *ngFor="let afe of (operationEntriesPage.content | slice:(operationEntriesPage.currentPage-1)*operationEntriesPage.pageSize:(operationEntriesPage.pageSize*operationEntriesPage.currentPage)); let i=index">
+                                                        <tr *ngIf="!!afe">                                     
+                                                            <td style="word-wrap: break-word" class="text-right">{{ afe.workflowItemId }}</td>
+                                                            <td style="word-wrap: break-word">{{ afe.actionOther }}</td>
+                                                            <td style="word-wrap: break-word">{{ afe.currentStepName }}</td>                                                    
+                                                            <td style="word-wrap: break-word">{{ afe.productCd }}</td>
+                                                            <td style="word-wrap: break-word">{{ afe.policyId }}</td>
+                                                            <td style="word-wrap: break-word">{{ afe.clientName }}</td>
+                                                        </tr>
+                                                    </ng-container>
+                                                    <td colspan="10" class="text-center" *ngIf="operationEntriesPage.totalRecordCount == 0">
+                                                        <p>No result found </p>
+                                                    </td>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr *ngIf="operationEntriesPage && operationEntriesPage.totalRecordCount>operationEntriesPage.pageSize" >
+                                                        <td colspan="6" class="text-center">
+                                                            <pagination class="text-center" [boundaryLinks]="true" 
+                                                                [totalItems]="operationEntriesPage.totalRecordCount" [itemsPerPage]="operationEntriesPage.pageSize" [(ngModel)]="operationEntriesPage.currentPage" [maxSize]="10"
+                                                                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- / pay -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="line-break-big"></div>
+                        <div *ngIf="agent">
+                            <div class="row">
+                                <label class="title col-md-2" *ngIf="agent.category == 'BK'">Policies</label>
+                                <label class="title col-md-2" *ngIf="agent.category == 'PSI' || agent.category == 'IFI' || agent.category == 'AM' || agent.category == 'DB'">Funds</label>
+                            </div>                               
+                            <div class="row">
+                                <div class="col-md-12"> 
+                                    <broker-policies *ngIf="agent.category == 'BK'" [agtId]="agent.agtId"></broker-policies>
+                                    <agent-funds [statusArray]="'[0,1]'" *ngIf="agent.category == 'PSI' || agent.category == 'IFI' || agent.category == 'AM' || agent.category == 'DB'" [agent]="agent"></agent-funds>
+                                </div>   
+                            </div>              
+                        </div>
+                    </section>
+
+                    <section *ngIf="agent && (agent.category !='AM' && agent.category !='DB')">
+                        <div class="line-break-big"></div>
+                        <div class="row marginTop4">
+                            <label class="title col-md-2">Agents/Sub-broker</label>
+                        </div>                                                      
+                        <div class="row marginTop4">
+                            <div class="col-md-12">
+                                <agt-hierachy-table [(agentHierachies)]="agent.agentHierarchies" [(masterBroker)]="agent" [mode]="subBrokerMode"></agt-hierachy-table>
+                            </div>
+                        </div>  
+                    </section>
+                    <!-- end agent broker-->                      
+                </section>
+            </div>
+        </div>
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,196 @@
+<div class="cli cli-contact">
+    <!-- Home Address -->
+    <div class="row">
+      <div class="title col-md-12">Home Address</div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="homeAddressStreat1" [(ngModel)]="cm.homeAddress.addressLine1" maxlength="50">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="homeAddressStreat2" [(ngModel)]="cm.homeAddress.addressLine2" maxlength="50">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="homeAddressStreat3" [(ngModel)]="cm.homeAddress.addressLine3" maxlength="50">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="homeAddressStreat4" [(ngModel)]="cm.homeAddress.addressLine4" maxlength="50">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label">Town</label>
+        <div class="col-md-6">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="homeAddressTown" [(ngModel)]="cm.homeAddress.town"  maxlength="30">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label">Country</label>
+        <div class="col-md-2">
+          <select class="form-control input-sm text-left" [(ngModel)]="cm.homeAddress.country" (ngModelChange)="countryChanged($event,'CORRESP')"
+            id="homeAddressCountryId" name="homeAddressCountry" [desactive]="mode">
+              <option value=""></option>
+              <option *ngFor="let c of (countries | orderBy: ['name'])" [value]="c.ctyId">{{c.name}}</option>
+            </select>
+        </div>
+        <label class="col-md-2 control-label">Postcode </label>
+        <div class="col-md-2">
+          <div class="input-group input-group-sm">
+            <span *ngIf="_correspPtCode" class="input-group-addon">{{ _correspPtCode}}-</span>
+            <input class="form-control input-sm" [desactive]="mode" type="text" name="postcode" [(ngModel)]="cm.homeAddress.postcode"  maxlength="12">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- End of Home Address -->
+
+    <div class="row">
+      <div class="form-group">
+        <ng-container *ngIf="cm.homeAddress.dateOfCountryChange || tmpHomeCtry != cm.homeAddress.country">
+          <label class="col-md-2 control-label nopadding" *ngIf="homePreviousCountry">Date of change of country</label>
+          <div class="w-col-md-3" *ngIf="homePreviousCountry">
+             <datepicker [(date)]="cm.homeAddress.dateOfCountryChange" [disabled]="(mode ==='readOnly')"></datepicker> 
+          </div> 
+        </ng-container>
+        <ng-container *ngIf="homePreviousCountry">
+          <label class="w-col-md-3 control-label">Previous Country</label>        
+          <div class="col-md-2">         
+                <input class="form-control input-sm" disabled type="text" name="homePreviousCountry" [(ngModel)]="homePreviousCountry">
+          </div>    
+        </ng-container>                 
+      </div>
+
+    </div>
+    <!-- End Date of change of country -->
+
+
+    <!-- Correspondence Address -->
+    <div class="row">
+      <div class="title col-md-7">Correspondence Address</div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="coorespAdrStreat1" [(ngModel)]="cm.correspondenceAddress.addressLine1" maxlength="50">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="coorespAdrStreat2" [(ngModel)]="cm.correspondenceAddress.addressLine2" maxlength="50">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="coorespAdrStreat3" [(ngModel)]="cm.correspondenceAddress.addressLine3" maxlength="50">
+      </div>
+    </div>
+    <div *ngIf="!isPhysicalClientType(cm.type)" class="row">
+      <div class="col-md-7">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="coorespAdrStreat4" [(ngModel)]="cm.correspondenceAddress.addressLine4" maxlength="50">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label">Town</label>
+        <div class="col-md-6">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="coorespAdrTown" [(ngModel)]="cm.correspondenceAddress.town"  maxlength="30">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label" for="coorespAdrCountry">Country</label>
+        <div class="col-md-2">
+          <select (ngModelChange)="countryChanged($event, 'CORRESP1')" class="form-control input-sm text-left" [(ngModel)]="cm.correspondenceAddress.country"
+            id="correspAdrCountryId" name="correspAdrCountry" [desactive]="mode">
+              <option value=""></option>
+              <option *ngFor="let c of (countries | orderBy: ['name'])" [value]="c.ctyId">{{c.name}}</option>
+            </select>
+        </div>
+        <label class="col-md-2 control-label">Postcode </label>
+        <div class="col-md-2">
+          <div class="input-group input-group-sm">
+            <span *ngIf="_corresp1PtCode" class="input-group-addon">{{ _corresp1PtCode}}-</span>
+            <input class="form-control input-sm" [desactive]="mode" type="text" name="postcode" [(ngModel)]="cm.correspondenceAddress.postcode" maxlength="12">
+          </div>
+        </div>
+      </div>
+    </div>
+	<div *ngIf="isPhysicalClientType(cm.type)" class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label">Email</label>
+        <div class="col-md-6">
+        <input class="form-control input input-sm" [desactive]="mode" type="text" name="coorespAdrStreat4" [(ngModel)]="cm.correspondenceAddress.addressLine4" maxlength="50">
+        </div>
+      </div>
+    </div>
+    <!-- End of Correspondance Address -->
+
+    <!-- Phone -->
+    <div class="row">
+      <div class="title col-md-12">Phone</div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label">Home</label>
+        <div class="col-md-2">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="hmAdrPhone" [(ngModel)]="cm.homeAddress.homePhone" maxlength="20">
+        </div>
+        <label class="col-md-2 control-label">2nd Address</label>
+        <div class="col-md-2">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="correspAdrPhone" [(ngModel)]="cm.correspondenceAddress.homePhone" maxlength="20">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label">Fax</label>
+        <div class="col-md-2">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="hmAdrFax" [(ngModel)]="cm.homeAddress.fax" maxlength="20">
+        </div>
+        <label class="col-md-2 control-label">Fax 2nd Address</label>
+        <div class="col-md-2">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="correspAdrFax" [(ngModel)]="cm.correspondenceAddress.fax" maxlength="20">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label">Mobile</label>
+        <div class="col-md-2">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="mobileTelNo" [(ngModel)]="cm.mobileTelNo" maxlength="20">
+        </div>
+        <label class="col-md-2 control-label">Work</label>
+        <div class="col-md-2">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="workTelNo" [(ngModel)]="cm.workTelNo" maxlength="20">
+        </div>
+      </div>
+    </div>
+    <!-- End of Phone -->
+
+    <!-- Email -->
+    <div class="row">
+      <div class="form-group">
+        <label class="nopadding col-md-1 control-label">Email</label>
+        <div class="col-md-6">
+          <input class="form-control input input-sm" [desactive]="mode" type="text" name="email" [(ngModel)]="cm.email" maxlength="100">
+        </div>
+      </div>
+      <div class="checkbox checkbox-r">
+        <label>
+                <input id="statementByEmailId" name="statementByEmail" type="checkbox" [checked]="cm.statementByEmail=='Y'" (change)="handleChange($event)" [desactive]="mode" >
+                <span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                Send statement by email
+            </label>
+      </div>
+    </div>
+    <!-- End of email -->
+</div>

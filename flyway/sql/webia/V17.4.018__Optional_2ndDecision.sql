@@ -1,0 +1,7 @@
+Alter table CHECK_STEP alter column VISIBLEIF varchar(9);
+
+-- 123 -- 125
+
+UPDATE CHECK_STEP SET VISIBLEIF = 'ISNOTNULL' where CHECK_ID in (123,125) and IS_UPDATABLE = 0;
+
+

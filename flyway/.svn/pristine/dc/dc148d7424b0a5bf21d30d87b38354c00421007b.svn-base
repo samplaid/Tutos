@@ -1,0 +1,8 @@
+flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+flyway.url=jdbc:sqlserver://sv-wvt81:1433;DatabaseName=user_access_tst
+flyway.baselineOnMigrate=true
+flyway.user=tuseraccess-svc
+flyway.password=P9XDxgKrHh
+flyway.locations=filesystem:./sql/useraccess
+flyway.cleanDisabled=true
+flyway.target=18.6.01

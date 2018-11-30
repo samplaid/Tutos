@@ -1,0 +1,1 @@
+INSERT INTO APPLI_PARAM VALUES ('MAX_WITHDRAWAL_RATE','Maxmium rate of the policy amount to deduce during a withdrawal.','0.95');

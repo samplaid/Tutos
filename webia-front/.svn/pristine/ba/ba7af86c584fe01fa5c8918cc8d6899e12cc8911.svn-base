@@ -1,0 +1,105 @@
+<div class="col-md-12 payment-form">
+    <div class="row">
+        <label class="col-md-2 text-right"></label>
+        <div class="col-md-3 form-group">
+        </div>
+        <ng-container *ngIf="payment.transferStatus === transferStatus.NEW || payment.transferStatus === transferStatus.READY; else nonEditableStatus">
+            <label class="col-md-1 text-right">Ready</label>
+            <div class="col-md-2 form-group radio">            
+                <label><input [attr.name]="uuid" type="radio" [value]="transferStatus.READY" [name]="uuid" [(ngModel)]="payment.transferStatus" [disabled]="mode !== stateMode.edit"><span class="cr"><i class="cr-icon fa fa-circle"></i></span>Yes</label>
+                <label><input [attr.name]="uuid" type="radio" [value]="transferStatus.NEW" [name]="uuid" [(ngModel)]="payment.transferStatus" [disabled]="mode !== stateMode.edit"><span class="cr"><i class="cr-icon fa fa-circle"></i></span>No</label>            
+            </div>
+        </ng-container>
+        <ng-template #nonEditableStatus>
+            <div class="col-md-3 form-group"></div>
+        </ng-template>        
+        <label class="col-md-1 text-right">Status</label>
+        <div class="col-md-1 form-group">
+            <transfer-status [transfer]="payment"></transfer-status>
+        </div>
+    </div>
+    <ng-container *ngIf="showSecurities">
+        <div class="row securities" *ngFor="let securityTransferLine of payment.transferSecurities;let last = last; let index = index" [@addDeleteAnimation]>           
+            <label class="col-md-2 text-right">Security name</label>
+            <div class="form-group col-md-3">
+                <input type="text" class="form-control input-sm" [(ngModel)]="securityTransferLine.fundName"
+                    [desactive]="mode" maxlength=35>
+            </div>
+            <label class="col-md-1 text-right">ISIN</label>
+            <div class="form-group col-md-2">
+                <input type="text" class="form-control input-sm" [(ngModel)]="securityTransferLine.isin" [desactive]="mode" maxlength=12>
+            </div>
+            <label class="col-md-1 text-right">Quantity</label>
+            <div class="form-group col-md-2">
+                <w-number [precision]="6" [(number)]="securityTransferLine.units" css="form-control input-sm text-right" [mode]="mode" ></w-number>
+            </div>
+            <div class="col-md-2">
+                <button *ngIf="index != 0" class="btn btn-xs btn-secondary add-button" title="remove the security transfer line"
+                    type="button" (click)="deleteSecurityTransferLine(index)" [desactive]="mode">
+                    <i class="fa fa-trash" aria-hidden="true"></i><span></span>
+                </button>   
+                <button *ngIf="last" class="btn btn-xs btn-primary add-button" title="Add a new security transfer line"
+                    type="button" (click)="addSecurityTransferLine()" [desactive]="mode">
+                    <i class="fa fa-plus" aria-hidden="true"></i><span></span>
+                </button>                             
+            </div>
+        </div>        
+    </ng-container>        
+    <div class="row">
+        <label class="col-md-2 text-right">From</label>
+        <div class="form-group col-md-3">
+            <ng-template [ngIf]="fromEditable" [ngIfElse]="fromNotEditableBlock">
+                <select class="form-control input-sm text-left" [(ngModel)]="payment.fdsId" [desactive]="mode" (ngModelChange)="candidateChange($event)">
+                    <option [ngValue]="null"></option>
+                    <option *ngFor="let candidate of transferCandidates" [ngValue]="candidate.fundId">{{candidate.fundName}}</option>
+                </select>
+            </ng-template>
+            <ng-template #fromNotEditableBlock>
+                {{payment.libDonOrd}}
+            </ng-template>
+        </div>
+        <label class="col-md-1 text-right">BIC</label>
+        <div class="form-group col-md-2">
+            <ng-template [ngIf]="bicEditable" [ngIfElse]="bicNotEditableBlock">
+                <input type="text" class="form-control input-sm" [(ngModel)]="payment.swiftDonOrd" [desactive]="mode" maxlength=30>
+            </ng-template>
+            <ng-template #bicNotEditableBlock>
+                {{payment.swiftDonOrd}}
+            </ng-template>                
+        </div>
+        <label class="col-md-1 text-right">Account</label>
+        <div class="form-group col-md-3">
+            <input type="text" [mask]="ibanMask" class="form-control input-sm uppercase-text" [(ngModel)]="payment.ibanDonOrd" [desactive]="mode" maxlength=50>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-md-2 text-right">Beneficiary</label>
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control input-sm" [(ngModel)]="payment.libBenef" [desactive]="mode" maxlength=100>
+        </div>
+        <label class="col-md-1 text-right">BIC</label>
+        <div class="form-group col-md-2">
+            <input type="text" class="form-control input-sm" [(ngModel)]="payment.swiftBenef" [desactive]="mode" maxlength=30>
+        </div>
+        <label class="col-md-1 text-right">Account</label>
+        <div class="form-group col-md-3">
+            <input type="text" [mask]="ibanMask" class="form-control input-sm uppercase-text" [(ngModel)]="payment.ibanBenef" [desactive]="mode" maxlength=50>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-md-2 text-right">Reference</label>
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control input-sm" [(ngModel)]="payment.trfComm" [desactive]="mode" maxlength=150>
+        </div>
+        <label class="col-md-1 text-right">Policy</label>
+        <div class="form-group col-md-2">
+            <input type="text" class="form-control input-sm" [(ngModel)]="payment.policyOut" [desactive]="mode" maxlength=20>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 4px; margin-bottom: 4px;">
+        <label class="col-md-2 text-right">Comment</label>
+        <div class="form-group col-md-9">
+            <textarea autosize class="form-control" [(ngModel)]='payment.transferSecuritiesComment' rows="2" [desactive]="mode" maxlength=1000> </textarea>
+        </div>
+    </div>
+</div>

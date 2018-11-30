@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:batch-int="http://www.springframework.org/schema/batch-integration"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/integration/file
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+ 	<context:annotation-config />
+	<context:component-scan base-package="lu.wealins.rest, lu.wealins.service, lu.wealins.batch" />
+	
+	<bean id="simpleJdbcCall" class="org.springframework.jdbc.core.simple.SimpleJdbcCall">
+      <constructor-arg ref="wealinsODSDataSource"/>
+   	</bean>
+	
+	<!-- Configuration of the LOAD ODS procedure -->
+	<!-- Need to define 3 beans :-->
+	<!-- 	- bean JOB -->
+	<!-- 	- bean Tasklet -->
+	<!-- 	- bean Scheduler -->
+	<job id="procedureLoadOdsJob" xmlns="http://www.springframework.org/schema/batch" restartable="true">
+		<batch:description>Load ods job with a SQL procedure</batch:description>
+		<step id="procedureLoadOdsStep">		
+			<tasklet ref="procedureLoadOdsTaskLet" />
+		</step>
+	</job>
+	
+	<bean id="procedureLoadOdsTaskLet" class="lu.wealins.batch.procedureexecutor.ProcedureExecutorTaskLet">
+		<property name="simpleJdbcCall" ref="simpleJdbcCall"/>				
+		<property name="schemaName" value="${procedureLoadOdsSchemaName}"/>
+		<property name="procedureName" value="${procedureLoadOdsProcedureName}"/>
+		<property name="parameters" value="${procedureLoadOdsParams}"/>
+		<property name="jobName" value="${procedureLoadOdsJobName}"/>
+		<property name="result" value="${procedureLoadOdsResult}"/>
+	</bean>
+	
+	<task:scheduled-tasks>    
+		<task:scheduled ref="procedureLoadOdsTaskLet" method="scheduleExecute" cron="${procedureLoadOdsCronExpression}" />
+   	</task:scheduled-tasks>
+	<!-- end configuration of the LOAD ODS procedure -->
+
+</beans>

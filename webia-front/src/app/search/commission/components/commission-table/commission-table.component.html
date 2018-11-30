@@ -1,0 +1,132 @@
+<div class="commission">
+  <search-menu path='..'></search-menu>
+  <div class="line-break"></div>
+
+  <div class="split-screen">
+    <div class="form">
+      <section class="commission-view container-fluid">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <div class="marginTop-f-6 checkbox">
+                <label>
+                  <input id="selectReconciledId" [checked]="isSelectedAllReconciled" name="selectReconciled" type="checkbox" (change)="onSelectAllReconciled($event.target.checked)" [disabled]="!someReconciled">
+                  <span class="cr">
+                    <i class="cr-icon">&#x2714;</i>
+                  </span>
+                  Select all Reconciled
+                </label>               
+                <button [disabled]="!selected || selected.length == 0" class="marginHorizontal7 btn btn-primary btn-xs" type="button" (click)="onValidateSelected()">Validate</button>
+              </div>
+            </div>
+
+            <div class="navbar-nav marginTop5 marginLeft16 paddingLeft16">
+              <button type="button" class="btn btn-default btn-sm marginLeft16" (click)="launchGenerateStatementComJob()">
+                <i class="fa " [ngClass]="generateStatementComProcessing ? 'fa-spinner fa-spin' : 'fa-share-alt'" aria-hidden="true"></i>Generate Documents</button>
+            </div>
+
+            <form (submit)="onSearch(searchCriteria)" class="navbar-form navbar-right marginTop5">
+              <label for="commissionType" class="control-label">Commission type</label>
+              <select name="type" id="commissionType" class="form-control  input-sm" [(ngModel)]="searchCriteria.type" (ngModelChange)="onTypeSelected($event)">
+                <option value="PORTFOLIO">Portfolio</option>
+                <option value="ENTRY">Entry</option>
+              </select>
+              <div class="input-group">
+                <input name="text" type="text" class="form-control input-sm" placeholder="Code/Name" [(ngModel)]="searchCriteria.text">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </span>
+              </div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="onClearInputSearch()">
+                <i class="fa fa-eraser" aria-hidden="true"></i>Clear</button>
+            
+            </form>
+            
+          </div>
+        </nav>
+
+        <div [ngBusy]="[sub]">
+          <table class="table dataTable table-hover nomargin fullwidth" role="grid">
+            <thead>
+                <th class="width-fluid-2"></th>
+                <ng-container *ngFor="let column of columns">
+                  <th webia-sortable [columns]="columns" [column]="column" (sortChange)="onSort($event)" [ngClass]="column.className">  </th>
+                </ng-container>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of page.content; let i=index">
+                <!-- row group -->
+                <tr class="grey">
+                  <td>
+                    <div *ngIf="item.aggregate?.status !== comStatus.VALIDATED" class="checkbox">
+                      <label>
+                        <input type="checkbox" [checked]="item.selected" (change)="onSelect({ selected: item, checked: $event.target.checked })">
+                        <span class="cr">
+                          <i class="cr-icon">&#x2714;</i>
+                        </span>
+                      </label>
+                    </div>
+                  </td>
+                  <td>
+                    <span>{{ item.aggregate?.agentId }}</span>
+                  </td>
+                  <td colspan="6">
+                    <span>{{ item.aggregate?.name }}</span>
+                  </td>
+                  <td class="width-fluid-1 text-nowrap text-center">
+                    <span [ngClass]="{'text-danger' : item.aggregate?.status === comStatus.NOT_RECONCILED, 'text-success' : item.aggregate?.status !== comStatus.NOT_RECONCILED }">
+                      <strong>{{ item.aggregate?.status }}</strong>
+                    </span>
+                    <i *ngIf="item.aggregate?.status=='Validated' && item.aggregate?.statement" (click)="onDone(item)" class="done fa fa-check-square-o" aria-hidden="true"></i>
+                  </td>
+                </tr>
+
+                <!-- row elements -->
+                <ng-container *ngFor="let com of item.commissions; let i=index">
+                  <tr class="tr-commission">
+                    <td colspan="3"></td>
+                    <td class="width-fluid-1 text-nowrap text-center">
+                      <span>{{ com.period.substring(4, 6) }}-{{ com.period.substring(0, 4) }}</span>
+                    </td>
+                    <td class="width-fluid-1 text-nowrap text-center">
+                      <span>{{ com.currency }}</span>
+                    </td>
+                    <td class="width-fluid-1 text-nowrap text-right">
+                      <span>{{ com.sapBalance | currencyFormatter:',':' ':'':'':6:false}}</span>
+                    </td>
+                    <td class="width-fluid-1 text-nowrap text-right">
+                      <span>{{ com.statementBalance | currencyFormatter:',':' ':'':'':6:false}}</span>
+                    </td>
+                    <td class="width-fluid-1 text-nowrap text-right">
+                      <span>{{ com.gap | currencyFormatter:',':' ':'':'':6:false}}</span>
+                    </td>
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                </ng-container>
+
+
+              </ng-container>
+
+            </tbody>
+            <tfoot >
+              <tr>
+                <td colspan="10">
+                  <div *ngIf="page.totalPages > 1">
+                    <pagination *ngIf="page.totalPages > 1" class="text-center" [boundaryLinks]="true" [totalItems]="page.totalRecordCount" [itemsPerPage]="page.size"
+                      [(ngModel)]="page.currentPage" (pageChanged)="onPageChange($event)" [maxSize]="10" previousText="&lsaquo;"
+                      nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+                  </div>
+                  <div>
+                    <button [disabled]="!selected || selected.length == 0" class="btn btn-primary btn-xs" type="button" (click)="onValidateSelected()">Validate</button>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:batch-int="http://www.springframework.org/schema/batch-integration"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/integration/file
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+ 	<context:annotation-config />
+	<context:component-scan base-package="lu.wealins.rest, lu.wealins.service, lu.wealins.batch" />
+	
+	<job id="extractLissiaIntoSapAccountingJob" xmlns="http://www.springframework.org/schema/batch"
+		restartable="false">
+		<batch:description>Extract Lissia Into Sap Accounting Job</batch:description>
+		<step id="extractLissiaSapAccountingReadLissiaStep" next="extractLissiaSapAccountingReadFromLissiaDecision">
+			<tasklet throttle-limit="1"
+				ref="extractLissiaSapAccountingReadFromLissiaTaskLet" />
+
+		</step>
+		<decision id="extractLissiaSapAccountingReadFromLissiaDecision"
+			decider="extractLissiaSapAccountingReadFromLissiaDecider">
+			<fail on="FAILED" exit-code="EARLY TERMINATION" />
+			<end on="COMPLETED" />
+			<next on="*" to="extractLissiaSapAccountingInsertWebiaStep" />
+		</decision>
+
+		<step id="extractLissiaSapAccountingInsertWebiaStep" next="extractLissiaSapAccountingInsertWebiaDecision">
+			<tasklet throttle-limit="1"
+				ref="extractLissiaSapAccountingInsertWebiaTaskLet" />
+		</step>
+		<decision id="extractLissiaSapAccountingInsertWebiaDecision"
+			decider="extractLissiaSapAccountingInsertWebiaDecider">
+			<fail on="FAILED" exit-code="EARLY TERMINATION" />
+			<next on="*" to="extractLissiaSapAccountingUpdateLissiaStep" />
+		</decision>
+
+		<step id="extractLissiaSapAccountingUpdateLissiaStep" next="extractLissiaSapAccountingUpdateLissiaDecision">
+			<tasklet throttle-limit="1"
+				ref="extractLissiaSapAccountingUpdateStatusTaskLet" />
+		</step>
+		<decision id="extractLissiaSapAccountingUpdateLissiaDecision"
+			decider="extractLissiaSapAccountingUpdateLissiaDecider">
+			<fail on="FAILED" exit-code="EARLY TERMINATION" />
+			<next on="*" to="extractLissiaSapAccountingReadLissiaStep" />
+		</decision>
+		<listeners>
+			<listener ref="extractLissiaSapAccountingListener" />
+		</listeners>
+	</job>
+
+	<bean id="extractLissiaSapAccountingReadFromLissiaTaskLet"
+		class="lu.wealins.batch.extract.sapaccounting.ExtractLissiaSapAccountingReadFromLissiaTaskLet">
+	</bean>
+	<bean id="extractLissiaSapAccountingInsertWebiaTaskLet"
+		class="lu.wealins.batch.extract.sapaccounting.ExtractLissiaSapAccountingInsertWebiaTaskLet">
+	</bean>
+	<bean id="extractLissiaSapAccountingUpdateStatusTaskLet"
+		class="lu.wealins.batch.extract.sapaccounting.ExtractLissiaSapAccountingUpdateStatusTaskLet">
+	</bean>
+
+	<bean id="extractLissiaSapAccountingReadFromLissiaDecider"
+		class="lu.wealins.batch.extract.sapaccounting.ExtractLissiaSapAccountingDecider" />
+	<bean id="extractLissiaSapAccountingInsertWebiaDecider"
+		class="lu.wealins.batch.extract.sapaccounting.ExtractLissiaSapAccountingDecider" />
+	<bean id="extractLissiaSapAccountingUpdateLissiaDecider"
+		class="lu.wealins.batch.extract.sapaccounting.ExtractLissiaSapAccountingDecider" />
+
+	<bean id="extractLissiaSapAccountingListener"
+		class="lu.wealins.batch.extract.sapaccounting.ExtractLissiaSapAccountingListener">
+
+	</bean>
+	
+	<bean id="extractLissiaSapAccountingJobLauncher"
+		class="lu.wealins.batch.extract.sapaccounting.ExtractLissiaSapAccountingJobLauncher">
+	</bean>
+	
+</beans>

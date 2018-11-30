@@ -1,0 +1,127 @@
+<div class="asset-manager-strategies">    
+    <table cellspacing="0" cellpadding="0" border="0" class="table dataTable table-striped table-hover nomargin fullwidth" role="table">
+        <caption class="nopadding paddingBottom2">
+            <div class="row">
+                <div class="col-md-10" *ngIf="!isReadOnlyMode(mode)">
+                    <div class="in risktype">     
+                        <div class="in-grp input-group input-group-sm">
+                            <span class="input-group-addon">Risk type</span>
+                            <select id="amStrRiskTypeId" name="amStrRiskType" class="form-control input-sm text-left" [(ngModel)]="newStrategy.riskType" aria-placeholder="Risk type">
+                                <option *ngFor="let rType of (riskTypes | orderBy:['label'])" [ngValue]="rType.code">{{ rType.label }}</option>
+                            </select>
+                        </div> 
+                    </div>  
+                    <div class="in code">   
+                        <div class="in-grp input-group input-group-sm">       
+                            <span class="input-group-addon">Code</span>
+                            <input id="newStrCodeId" name="newStrCode" type="text" [(ngModel)]="newStrategy.riskProfile" (keyup)="toUpperCase($event)"  class="form-control input-sm" [disabled]="isReadOnlyMode(mode)" maxlength="8">
+                        </div> 
+                    </div>  
+                    <div class="in desc">
+                        <div class="in-grp input-group input-group-sm">  
+                            <span class="input-group-addon">Description</span>
+                            <input id="newStrRiskProfileDescriptionId" name="newStrRiskProfileDescription" type="text" [(ngModel)]="newStrategy.riskProfileDescription" class="form-control input-sm" [disabled]="isReadOnlyMode(mode)" maxlength="80" >                        
+                        </div> 
+                    </div>
+                    <div class="in clsrisk" *ngIf="hasProfilRiskType(newStrategy)">                            
+                        <div class="in-grp input-group input-group-sm">
+                            <span class="input-group-addon">Class of risk</span>
+                            <select aria-placeholder="Class of risk" *ngIf="hasProfilRiskType(newStrategy)" class="form-control input-sm text-left" [(ngModel)]="newStrategy.classOfRisk" id="tmpClassOfRiskId" name="classOfRisk">
+                                <option [ngValue]="null"></option>
+                                <option *ngFor="let rc of riskClasses" [ngValue]="rc.keyValue">{{ rc.description }}</option>
+                            </select>
+                        </div> 
+                    </div>
+                    <div class="in btn-group">
+                        <div class="input-group input-group-sm">                               
+                            <div class="input-group-btn">                                
+                                <button class="btn btn-xs btn-primary" title="Add new item" type="button" (click)="save(newStrategy)">
+                                    <i class="fa fa-plus" aria-hidden="true"></i><span>Add New Strategy</span>
+                                </button>
+                                <button class="btn btn-xs btn-primary" type="button" (click)="clearNewEntry()">
+                                    <i class="fa fa-eraser" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div> 
+                </div>               
+                <div class="col-md-2 nopaddingLeft" [ngClass]=" isReadOnlyMode(mode) ? 'col-md-offset-10' : ''">
+                    <div class="input-group input-group-sm">                       
+                        <input #search aria-describedby="addon-basic" [(ngModel)]="searchText" placeholder="Search by code/description..." type="text" class="form-control input-sm">
+                        <div class="input-group-btn">
+                            <button class="btn btn-xs btn-primary" type="button" (click)="clearSearch()"><i class="fa fa-eraser" aria-hidden="true"></i></button>
+                        </div>                                                
+                    </div>
+                </div>
+            </div>
+        </caption>
+        <thead>
+            <th width="12%">Risk type</th>
+            <th width="10%">Code</th>
+            <th width="50%">Description</th>
+            <th width="10%">Class of risk</th>
+            <th width="10%">
+                <div class="checkbox">
+                    <label>
+                        <input name="ams" type="checkbox" (change)="setStatusFilter($event.target.checked)" [checked]="status == '1'">
+                        <span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                        Active Only
+                    </label>
+                </div>
+            </th>
+            <th width="15%" *ngIf="!isReadOnlyMode(mode)"></th>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-ams [ngForOf]="strategyPage.content" let-i="index" let-last="last" let-first="first">
+                <tr *ngIf="!!ams" [attr.title]="ams.linkedToFund ? 'Linked to a fund' : ''">
+                    <td>
+                        <select *ngIf="(!isReadOnlyMode(mode) && isActiveItem(ams))" id="amStrRiskTypeId" name="amStrRiskType" class="form-control input-sm text-left" [(ngModel)]="ams.riskType">
+                            <option *ngFor="let rType of (riskTypes | orderBy:['label'])" [ngValue]="rType.code">{{ rType.label }}</option>
+                        </select>
+                        <ng-container *ngFor="let rTypeDesc of riskTypeDesc">
+                            <span *ngIf="(isReadOnlyMode(mode) || !isActiveItem(ams)) && rTypeDesc">{{ rTypeDesc[ams.riskType] }}</span>
+                        </ng-container>                        
+                    </td>
+                    <td>
+                        <input *ngIf="(!isReadOnlyMode(mode) && isActiveItem(ams)  && !ams.linkedToFund)" id="amsId" name="amsCode" type="text" class="form-control input-sm" [(ngModel)]="ams.riskProfile"  maxlength="8" (keyup)="toUpperCase($event)">
+                        <span *ngIf="(isReadOnlyMode(mode) || !isActiveItem(ams) || ams.linkedToFund)">{{ ams.riskProfile | uppercase }}</span>
+                    </td>
+                    <td>
+                        <input *ngIf="(!isReadOnlyMode(mode) && isActiveItem(ams))" id="amsRiskProfileDescriptionId" name="amsRiskProfileDescription" type="text" [(ngModel)]="ams.riskProfileDescription" class="form-control input-sm" maxlength="80"> 
+                        <span *ngIf="(isReadOnlyMode(mode) || !isActiveItem(ams))">{{ ams.riskProfileDescription }}</span>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="hasProfilRiskType(ams)">
+                            <select *ngIf="!isReadOnlyMode(mode) && isActiveItem(ams)" class="form-control input-sm text-left" [(ngModel)]="ams.classOfRisk" id="classOfRiskId" name="classOfRisk">
+                                <option [ngValue]="null"></option>
+                                <option *ngFor="let rc of riskClasses" [ngValue]="rc.keyValue">{{ rc.description }}</option>
+                            </select>
+                            <span *ngIf="(isReadOnlyMode(mode) || !isActiveItem(ams))"> {{ ams.classOfRisk }} </span>
+                        </ng-container>                        
+                    </td>
+                    <td class="text-center">
+                        <span *ngIf="isValidItem(ams)">{{ isActiveItem(ams) ? 'Active' : 'Inactive' }}</span>
+                    </td>
+                    <td class="text-center" *ngIf="!isReadOnlyMode(mode)">                       
+                        <button *ngIf="canDeactiveItem(ams)" title="Disable this existing item." class="btn btn-xs btn-primary" type="button" (click)="deactiveItem(ams)">
+                            <i class="fa fa-minus" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template> 
+        </tbody>
+        <tfoot>
+            <tr *ngIf="strategyPage.totalPageCount > 1">
+                <td class="text-center" colspan="10">
+                    <!-- <ngb-pagination class="text-center" (pageChange)="pageChanged($event)" [collectionSize]="strategyPage.totalRecordCount"
+                        [pageSize]="strategyPage.size" [(page)]="strategyPage.number" [maxSize]="10" [ellipses]="true"
+                        [boundaryLinks]="true"></ngb-pagination> -->
+
+                    <pagination  class="text-center" [boundaryLinks]="true" [maxSize]="10"
+                        [totalItems]="strategyPage.totalRecordCount" [itemsPerPage]="strategyPage.size" [(ngModel)]="strategyPage.number" (pageChanged)="pageChanged($event.page)" 
+                        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>    
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

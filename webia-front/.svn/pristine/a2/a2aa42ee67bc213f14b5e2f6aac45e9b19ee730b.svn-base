@@ -1,0 +1,22 @@
+<div [ngClass]="{'relative' : isWrapped, 'form' : isWrapped} ">
+    <div [ngBusy]="subs">
+        <div class="row">
+            <div class="pull-right" style="margin-right:1%">
+                <button class="btn btn-xs btn-primary" (click)="download()" *ngIf="downloadable">
+                    <i class="fa fa-download" title="Download"></i>
+                </button>
+                <button class="btn btn-xs btn-primary" (click)="refresh()" *ngIf="refreshable">
+                    <i class="fa fa-refresh" title="Refresh"></i>
+                </button>
+                <button class="btn btn-xs btn-default" (click)="close()" *ngIf="closeable">
+                    <i class="fa fa-window-close" title="Close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="line-break"></div>
+    <div class="row">
+        <pdf-viewer (onError)="endLoading()" (after-load-complete)="endLoading()" [autoresize]="true" [original-size]="false"
+        [src]="pdfSrc" [render-text]="true" style="display: block;"></pdf-viewer>
+    </div>
+</div>

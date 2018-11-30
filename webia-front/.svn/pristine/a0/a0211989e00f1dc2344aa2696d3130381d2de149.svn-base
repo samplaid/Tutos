@@ -1,0 +1,7 @@
+    <footer>
+      <div class="col-md-8 col-md-offset-2">
+        <a href="#" class="pull-right marginRight4"><img src="./assets/img/foyer-group.png" class="foyer-group-footer" /></a>
+      </div>
+     <!-- <hr class="separator col-xs-12" /> -->
+      <div class="col-xs-12 text-center legal"></div>
+    </footer>

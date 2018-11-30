@@ -1,0 +1,18 @@
+<div>
+    <!--  -->
+    <div class="form-inline">
+        <div class="input-group input-group-sm search-client" >
+            <div [ngClass]="css + ' ' + (required ? 'ng-invalid':'') + ' ' + (disabled ? 'disabled':'')  "  class="search-box form-control input-sm" (click)="tryOpen()">
+                <a [attr.href]="_href" target="_blank" [attr.title]="_title">
+                    <div class="search-caption" [innerHtml]="_label"></div>
+                </a>
+            </div>
+            <div class="input-group-btn search-btn" *ngIf="!disabled">
+                <button (click)="modalOpen()" [disabled]="disabled" class="btn btn-xs btn-primary paddingVertical" ><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
+                <button (click)="clear()" *ngIf="clientId && allowClear" [disabled]="disabled" class="btn btn-xs btn-primary paddingVertical" ><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                <ng-content></ng-content>
+            </div>            
+        </div>
+    </div>
+
+</div>

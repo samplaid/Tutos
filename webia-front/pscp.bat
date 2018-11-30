@@ -1,0 +1,1 @@
+C:\IDE\Tools\putty\pscp.exe -r dist/* root@sv-lvd65.rh.olympe.loc:/opt/rh/jbcs-httpd24/root/var/www/html/WebiaFront

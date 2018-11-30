@@ -1,0 +1,72 @@
+<table cellspacing="0" cellpadding="0" border="0" class="table dataTable table-striped table-hover nomargin fullwidth" role="table">
+    <caption class="nopadding paddingBottom2">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-10">
+                <div class="input-group input-group-sm">
+                    <input aria-describedby="addon-basic" [(ngModel)]="inputSearch" (keyup)="onSearchKeyUp($event)" placeholder="Search by name..." type="text" class="form-control input-sm">
+                    <span class="input-group-btn">
+                        <button class="btn btn-xs btn-primary" type="button" (click)="clearSearch()"><i class="fa fa-eraser" aria-hidden="true"></i></button>
+                    </span>                                                
+                </div>
+            </div>
+        </div>
+    </caption>
+    <thead>
+        <th width="5%">Code</th>
+        <th width="25%">Name</th>
+        <th width="40%">Address</th>
+        <th width="15%">Email</th>
+        <th width="10%">
+            <div class="checkbox">
+                <label>
+                    <input name="agh" type="checkbox" [(ngModel)]="status" (ngModelChange)="statusChange($event)" [checked]="status"><span class="cr"><i class="cr-icon">&#x2714;</i></span> 
+                    Active Only
+                </label>
+            </div></th>
+        <th width="5%" *ngIf="!isReadOnly()"></th>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let agh of page.content; let i=index">
+            <tr *ngIf="!!agh && !!agh.subBroker">                                                    
+                <td>
+                    {{ agh?.subBroker?.agtId }}
+                </td>
+                <td>
+                    <!-- <a [routerLink]="'/agent/sb/' + agh.subBroker.agtId" target="_blank">{{ agh?.subBroker?.name }}</a> -->                                                            
+                    <agt-basic-modal-button [mode]="mode" [agentId]="agh.subBroker.agtId" [asLink]="true" [title]="agh.subBroker.name" (close)="subBrokerUpdated($event)">
+                        <span asLink>{{ agh?.subBroker?.name }}</span>
+                    </agt-basic-modal-button>
+                </td> 
+                <td>{{ agh?.subBroker | address }}</td>
+                <td>{{ agh?.subBroker?.email }}</td>
+                <td class="text-center">{{ agh.status == 1 ? 'Active':'Inactive'}}</td>
+                <td class="text-center" *ngIf="!isReadOnly()">                                                            
+                    <button *ngIf="agh && agh.status == 1" class="btn btn-xs btn-primary" type="button" (click)="deactivate(agh)"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                </td>
+            </tr> 
+        </ng-container>
+            
+    </tbody>
+    <tfoot>                                                
+        <tr *ngIf="page.totalPageCount>1">
+            <td class="text-center" colspan="10">
+                <!-- <ngb-pagination class="text-center" (pageChange)="setPage($event)" [collectionSize]="page.totalRecordCount"
+                [pageSize]="page.size" [(page)]="page.number" [maxSize]="10" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination> -->
+            
+                <pagination  class="text-center" [boundaryLinks]="true" 
+                    [totalItems]="page.totalRecordCount" [itemsPerPage]="page.size" [(ngModel)]="page.number" (pageChanged)="setPage($event.page)" [maxSize]="10"
+                    previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+            
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center" colspan="10">    
+                <ng-container *ngIf="!isReadOnly()">
+                    <agt-basic-modal-button [mode]="mode" category="SB" css="btn btn-sm btn-primary" title="New Sub-broker" (close)="createHierarchyLink($event)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>Add New Sub-broker
+                    </agt-basic-modal-button>
+                </ng-container>
+            </td>                                                    
+        </tr>
+    </tfoot>
+</table>

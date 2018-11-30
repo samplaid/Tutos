@@ -1,0 +1,6 @@
+
+ALTER TABLE	FUNDS
+ADD
+	EXPORTED_FUND		smallint	null
+	
+GO

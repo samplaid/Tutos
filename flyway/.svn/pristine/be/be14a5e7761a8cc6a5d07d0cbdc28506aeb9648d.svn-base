@@ -1,0 +1,40 @@
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBEID_10','Contract value OR 100 % of premiums increased by 2% per year of premiums');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBEIDX_10','Contract value OR 100 % of premiums increased by 2% per year of premiums');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBEOD_14','Contract value OR [MULTIPLIER|PERCENTAGE]% of the premiums');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBEODX_14','Contract value OR [MULTIPLIER|PERCENTAGE]% of the premiums');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBEODNO_14','Contract value OR [MULTIPLIER|PERCENTAGE]% of the premiums');
+
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBESD_14','Contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBESD2_14','Contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBESDX_14','Contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WBESDNO_14','Contract value');
+
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFIOD_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFIODX_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFISD_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFISDX_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFROD_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFRODBX_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFRODT_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFRODX_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFRSD_11','100% of the premium OR the contract value increased by 1% of premiums');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFRSDBX_11','100% of the premium OR the contract value increased by 1% of premiums');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFRSDT_11','100% of the premium OR the contract value increased by 1% of premiums');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WFRSDX_11','100% of the premium OR the contract value increased by 1% of premiums');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WNOAD_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WNOADX_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WNOSD_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WNOSDX_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WPTOD_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WPTODX_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WPTSD_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WPTSDX_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WSEOD_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WSEODX_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WLUSD_11','100% of the premium or valued of the contract increased by 1% of premium');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WLUSDX_11','100% of the premium or valued of the contract increased by 1% of premium');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WLUOD_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WLUODX_18','Contract value increased by a fixed amount [DTHFC3|AMOUNT]');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WSEOD2_2','[DTHFAC|PERCENTAGE]% of the contract value');
+insert into code_label (type_cd, code, label) values ( 'GD', 'WSEOX2_2','[DTHFAC|PERCENTAGE]% of the contract value');
+

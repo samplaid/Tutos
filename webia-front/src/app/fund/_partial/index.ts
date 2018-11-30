@@ -1,0 +1,1 @@
+export { FundType } from './fund-type';

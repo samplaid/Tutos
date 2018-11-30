@@ -1,0 +1,78 @@
+
+$primary-font: "Roboto", "Helvetica", "Arial", sans-serif;
+$break-small: 320px;
+$break-mobile: 800px;
+$break-large: 1200px;
+
+//iwicolor 
+$wealins_selected_row: #1483ff;
+$wealins_details_row: #bfb27fa6;
+$wealins_white: #ffffff;    // IWI_WHITE 
+$wealins_taupe: #9B8E68;    // IWI_TAUPE 
+$wealins_taupe_light: #C0B176;    // IWI_TAUPE_LIGHT 
+$wealins_grisbleu: #262837;    // IWI_GRISBLEU 
+$wealins_vert: #BED732;     // IWI_PANTONE382 vert 
+$wealins_mauve: #8787C3;     // IWI_PANTONE7746 mauve 
+$wealins_rose: #B7517D;     // IWI_ROSE
+$wealins_grey: #909090;     // IWI_ROSE 
+$unity: 3px;
+$wealins_striped_row : #e9e9e9;
+$wealins_hover_row : #f9f8dd;
+$panel-primary-heading-bg : $wealins_taupe;
+
+$brand-default:       #e4e0cd;
+$brand-primary:         $wealins_taupe_light !default; // #337ab7
+$brand-success:         #5cb85c !default;
+$brand-info:            #e1ddd2 !default;
+$brand-warning:         #f0ad4e !default;
+$brand-danger:          #d9534f !default;
+
+$btn_margin_h : 3px;
+
+$nav-button-color: $wealins_taupe_light;
+$navbar-inverse-link-color: $wealins_taupe_light;
+$loader-color : darken($wealins_taupe_light, 13%) ; //ligthen($wealins_taupe,10%); 
+$wealins-th : lighten($wealins_taupe, 20%);
+$wealins-actor : lighten($wealins_taupe, 10%);
+
+$baseUrl : "~";
+
+//== Media queries breakpoints
+//
+//## Define the breakpoints at which your layout will change, adapting to different screen sizes.
+
+// Extra small screen / phone
+//** Deprecated `$screen-xs` as of v3.0.1
+$screen-xs:                  480px !default;
+//** Deprecated `$screen-xs-min` as of v3.2.0
+$screen-xs-min:              $screen-xs !default;
+//** Deprecated `$screen-phone` as of v3.0.1
+$screen-phone:               $screen-xs-min !default;
+
+// Small screen / tablet
+//** Deprecated `$screen-sm` as of v3.0.1
+$screen-sm:                  768px !default;
+$screen-sm-min:              $screen-sm !default;
+//** Deprecated `$screen-tablet` as of v3.0.1
+$screen-tablet:              $screen-sm-min !default;
+
+// Medium screen / desktop
+//** Deprecated `$screen-md` as of v3.0.1
+$screen-md:                  992px !default;
+$screen-md-min:              $screen-md !default;
+//** Deprecated `$screen-desktop` as of v3.0.1
+$screen-desktop:             $screen-md-min !default;
+
+// Large screen / wide desktop
+//** Deprecated `$screen-lg` as of v3.0.1
+$screen-lg:                  1200px !default;
+$screen-lg-min:              $screen-lg !default;
+//** Deprecated `$screen-lg-desktop` as of v3.0.1
+$screen-lg-desktop:          $screen-lg-min !default;
+
+// So media queries don't overlap when required, provide a maximum
+$screen-xs-max:              ($screen-sm-min - 1) !default;
+$screen-sm-max:              ($screen-md-min - 1) !default;
+$screen-md-max:              ($screen-lg-min - 1) !default;
+
+$w-grid-columns:             24 !default;

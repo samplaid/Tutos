@@ -1,0 +1,11 @@
+<select id="circularLetter" 
+        name="circularLetter" 
+        class="form-control input-sm text-left "
+        [ngClass]="(!circularEnabled) ? 'text-danger': ''"
+        [required]="required"
+        [desactive]="mode"
+        [ngModel]="value"
+        (ngModelChange)="circularValueChange($event)">
+    <option *ngFor="let e of circularLetterList | filter:'item.status == 1' " [ngValue]="e.keyValue" style="color: #555555 !important">{{ e.description }}</option>
+    <option *ngFor="let e of circularLetterList | filter:'item.status != 1' " [ngValue]="e.keyValue" class="text-danger"><span>{{ e.description }}&nbsp;&nbsp;&#9888;&nbsp;Inactive</span></option>
+</select>

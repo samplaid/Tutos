@@ -1,0 +1,127 @@
+<div class="relative">
+    <div [ngBusy]="subs">
+        <div class="mini-form row">
+            <div class="row">
+                <label class="marginTop col-md-2 text-right">Policy </label>
+                <div class="form-group col-md-2">
+                    <policy-picker [policySearchString]="form?.policyId" [mode]="policyIdDisabled ? stateMode.readonly : mode" (onPolicyChange)="onPolicyChange($event)">
+                    </policy-picker>
+                </div>
+                <ng-container *ngIf="showCps2">
+                    <label class="marginTop col-md-2 text-right">CPS 2</label>
+                    <div class="form-group col-md-2">
+                        <select class="form-control input-sm text-left" id="cps2" name="cps2" [(ngModel)]="form.secondCpsUser" [desactive]="mode">
+                            <option [ngValue]="null"></option>
+                            <option *ngFor="let a of usersList" [ngValue]="a.usrId">{{a.name0}}</option>
+                        </select>
+                    </div>
+                </ng-container>                
+            </div>
+
+            <ng-container *ngIf="policy">
+                <!-- Non editable section -->
+                <div class="row" class="col-md-12">
+
+                    <!-- Clients (policy holders, insured, beneficiaries, other clients, etc..)   -->
+                    <div class="analysis-section">
+                        <policy-clients 
+                            [product]="policy.product" 
+                            [policyHolders]="policy.policyHolders" 
+                            [insureds]="policy.insureds" 
+                            [deathBeneficiaries]="policy.deathBeneficiaries"
+                            [lifeBeneficiaries]="policy.lifeBeneficiaries" 
+                            [otherClients]="policy.otherClients">
+                        </policy-clients>
+                    </div>
+
+                    <!-- Policy fees    -->
+                    <div class="analysis-section">
+                        <policy-fees                                                        
+                            [contractCurrency]= "policy?.currency"
+                            [valuation]="valuation"
+                            [displayEntryFeesLine]="false"
+                        ></policy-fees>
+                    </div>
+
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="line-break"></div>
+        <div class="line-break"></div>
+
+        <!-- Editable section -->
+        <div class="mini-form row" *ngIf="showEditionSection && policy && form">
+            <div class="row" class="col-md-12">
+
+                <div class="analysis-section">
+                    <div class="row">
+                        <label class="marginTop col-md-2 text-right">Effective date</label>
+                        <div class="form-group col-md-2">
+                            <datepicker [disabled]="mode == stateMode.readonly" [(date)]="form.effectiveDate" (dateChange)="onEffectiveDateChange($event, policy.polId)"></datepicker>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="col-md-2 radio form-group">
+                                    <label><input [attr.name]="'specificAmountByFund'" [disabled]="mode == stateMode.readonly" type="radio" [value]="false" name="specificAmountByFund" [(ngModel)]="form.specificAmountByFund" [desactive]="modeAmounts"><span class="cr"><i class="cr-icon fa fa-circle"></i></span>Amount</label>
+                                </div>
+                                    
+                                <div class="col-md-6">
+                                    <div class="form-inline" *ngIf="form.specificAmountByFund === false" [@addDeleteAnimation]>
+                                            <select class="form-control input-sm text-left" [(ngModel)]="form.amountType" id="amountType" name="amountType" [desactive]="mode">
+                                                <option [ngValue]="null" selected="selected"></option>
+                                                <option *ngFor="let option of Object.keys(amountTaxTypeList)" [ngValue]="option">{{amountTaxTypeList[option]}}</option>
+                                            </select>
+                                            <w-number [(number)]="form.amount" css="form-control input-sm text-right input-amount" [mode]="mode" ></w-number>{{form.currency}}                            
+                                        </div>                       
+                                </div>
+        
+                                <div class="col-md-4 radio form-group">
+                                    <label class="col-md-12"><input [attr.name]="'specificAmountByFund'" [disabled]="mode == stateMode.readonly" type="radio" [value]="true" name="specificAmountByFund" [(ngModel)]="form.specificAmountByFund" [desactive]="modeAmounts" (change)="onSpecificAmountRadioChange()"><span class="cr"><i class="cr-icon fa fa-circle"></i></span>Specific amount by fund</label>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="analysis-section">
+                    <fees
+                        [(brokerFees)]="form.brokerTransactionFees"
+                        [(fees)]="form.transactionFees"
+                        [feesLabel]="'Withdrawal fees'"
+                        [brokerFeesLabel]="'Broker withdrawal fees'"
+                        [mode]="mode">
+                    </fees>
+                </div>                
+
+                <div class="analysis-section">
+                    <fund-transaction
+                        [mode]="mode"
+                        [valuation]="valuationOnDate"
+                        [policyCurrency]="policy.currency"
+                        [(fundTransactions)]="form.fundTransactionForms"
+                        [showSectionTitle]="false"
+                        [specificAmountByFund]="form.specificAmountByFund"
+                        [showInputs]="true"
+                    ></fund-transaction>
+                </div>
+
+                <div class="analysis-section">
+                    <cash-transfers *ngIf="form.paymentType === paymentType.CASH_TRANSFER"
+                        [currencyList]="currencyList"
+                        [transferCandidates]="transferCandidates"
+                        [mode]="paymentsMode"
+                        (onAddPayment)="onAddPaymentEvent()"
+                        [(payments)]="form.payments">
+                    </cash-transfers>
+                    <securities-transfers *ngIf="form.paymentType === paymentType.SECURITY_TRANSFER"
+                        [mode]="paymentsMode"
+                        [transferCandidates]="transferCandidates"                        
+                        [securitiesTransfers]="form.securitiesTransfer"
+                        [showSecurities]="true"
+                        [fromEditable]="true"
+                        [bicEditable]="true">
+                    </securities-transfers>
+                </div>
+
+            </div>
+        </div>
+</div>

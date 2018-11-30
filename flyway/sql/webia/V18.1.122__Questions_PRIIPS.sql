@@ -1,0 +1,3 @@
+
+UPDATE CHECK_WORKFLOW set CHECK_TYPE = 'YesNo' where CHECK_DESC like '%PRIIPS%';
+

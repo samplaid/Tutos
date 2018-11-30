@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:batch-int="http://www.springframework.org/schema/batch-integration"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/integration/file
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		
+	<context:annotation-config />		
+	<context:component-scan base-package="lu.wealins.batch, lu.wealins.service, lu.wealins.rest, lu.wealins.utils" />
+
+	<bean id="cloturedVniItemReader"
+      class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+   
+        <property name="resource" value="file:#{jobParameters['path']}" />
+ 		<property name="strict" value="false" />
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer">
+                    <bean class=
+                      "org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="names"  value="fund,navAmount,currency,navDate,CreateDate,IsinCode,fundType,OperationType" />
+                        <property name="delimiter"  value="," />
+                    </bean>
+                </property>
+                <property name="fieldSetMapper">
+                    <bean class="lu.wealins.batch.mapper.CloturedVniRecordFieldSetMapper" />
+                </property>
+            </bean>
+        </property>
+    </bean>
+	
+	<bean id="cloturedVniItemWriter"
+      class="lu.wealins.batch.writer.CloturedVniItemWriter" />
+	
+
+	
+	<batch:job id="cloturedVniInjectionJob" xmlns="http://www.springframework.org/schema/batch">
+		<batch:description>Clotured VNI  injection job</batch:description>	
+		<batch:step id="cloturedVniInjectionStep">
+			<batch:tasklet>
+				<batch:chunk reader="cloturedVniItemReader" writer="cloturedVniItemWriter" 
+								commit-interval="500">			
+				</batch:chunk>
+			</batch:tasklet>		
+		</batch:step>
+	</batch:job>
+	
+		
+</beans>

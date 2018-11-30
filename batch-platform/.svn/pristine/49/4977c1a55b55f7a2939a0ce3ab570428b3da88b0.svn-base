@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="jobRepository"
+		class="lu.wealins.persistence.sqlserver.SqlServerJobRepositoryFactoryBean"
+		p:dataSource-ref="dataSource" p:transactionManager-ref="transactionManager"
+		p:isolationLevelForCreate="ISOLATION_REPEATABLE_READ" p:tablePrefix="${batch.table.prefix}" />
+
+	<bean id="jobService" class="org.springframework.batch.admin.service.SimpleJobServiceFactoryBean">
+		<property name="jobRepository" ref="jobRepository" />
+		<property name="jobLauncher" ref="jobLauncher" />
+		<property name="jobLocator" ref="jobRegistry" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="jobExplorer" ref="jobExplorer"/>
+		<property name="transactionManager" ref="transactionManager"/>
+		<property name="tablePrefix" value="${batch.table.prefix}" />
+	</bean>
+	
+	<bean id="batchMBeanExporter" class="java.lang.String"/>
+	
+	<bean id="integrationMBeanExporter" class="java.lang.String"/>
+
+</beans>

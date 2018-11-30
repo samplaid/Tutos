@@ -1,0 +1,40 @@
+<section subject="fees">
+    <div class="row" *ngIf="showSectionTitle">
+        <div class="title col-md-5">Fees</div>
+    </div>
+
+    <!-- Entry fees and broker entry fees  -->
+    <div class="row" *ngIf="displayEntryFeesLine">
+        <label class="col-md-2 text-right text-nowrap">Entry fees</label>
+        <span class="col-md-4 text-nowrap">{{entryFees | percentageAmount:isFeesPercentage:contractCurrency}}</span>
+        <label class="col-md-2 text-right text-nowrap">Broker entry fees</label>
+        <span class="col-md-4 text-nowrap">{{brokerEntryFees | percentageAmount:isFeesPercentage:contractCurrency}}</span>
+    </div>
+
+    <!-- Fees bund to funds (such as admin fees and commissions -->
+    <div class="fund-fees-table col-md-12">
+        <table class="table dataTable table-striped table-hover fullwidth" role="grid">
+            <thead>
+                <tr role="row">
+                    <th class="width-fluid-1"></th>
+                    <th class="width-fluid-50">Fund</th>
+                    <th class="width-fluid-1">Admin Fees</th>
+                    <th class="width-fluid-1">Commission</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let holding of (valuation?.holdings); let i = index">
+                    <td><span class="fund-badge">{{  holding?.fundSubType?.trim() }}</span></td>
+                    <td style="word-wrap: break-word">
+                        <span><a highlight="text-danger" [pattern]="fundNameRegXp" target="_blank" [routerLink]="'/fund/'+ holding.fundSubType.trim() + '/' + holding.fundId">{{ (!!holding?.fundDisplayName) ? holding?.fundDisplayName : holding?.fundId}}</a></span>
+                    </td>
+                    <td><span class="text-nowrap">{{ holding.feeRate }}%</span></td>
+                    <td><span class="text-nowrap">{{ holding.commissionRate}}%</span></td> 
+                </tr>
+                <tr *ngIf="valuation == null || !valuation.holdings || valuation.holdings.length == 0">
+                    <td colspan="4" class="text-center"><p>No result found </p></td>
+                </tr>
+            <tbody>
+        </table>
+    </div>
+</section>

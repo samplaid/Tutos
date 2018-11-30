@@ -1,0 +1,224 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://tempuri.org/Wssupdfds/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="WSSUPDFDS" targetNamespace="http://tempuri.org/Wssupdfds/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/Wssupdfds/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://tempuri.org/Wssupdfds/">
+  <xs:element name="Wssupdfdscall" type="tns:Wssupdfdscall"/>
+  <xs:element name="WssupdfdscallResponse" type="tns:WssupdfdscallResponse"/>
+  <xs:complexType name="Wssupdfdscall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssupdfdsImport" type="tns:WssupdfdsImport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssupdfdsImport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ImpCreateModifyDatesFunds">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CreatedDate" type="xs:string"/>
+            <xs:element name="CreatedTime" type="xs:string"/>
+            <xs:element name="ModifyDate" type="xs:string"/>
+            <xs:element name="ModifyTime" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpUseridUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UsrId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpMethodCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CallFunction" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpFdsFunds">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="FdsId" type="xs:string"/>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="FundType" type="xs:short"/>
+            <xs:element name="PricingFrequency" type="xs:short"/>
+            <xs:element name="Status" type="xs:short"/>
+            <xs:element name="Currency" type="xs:string"/>
+            <xs:element name="PriceBasis" type="xs:short"/>
+            <xs:element name="PricingDay" type="xs:short"/>
+            <xs:element name="BidOfferSpread" type="xs:string"/>
+            <xs:element name="PricingDayOfMonth" type="xs:short"/>
+            <xs:element name="UnitTypes" type="xs:short"/>
+            <xs:element name="FwdPriceReportDays" type="xs:short"/>
+            <xs:element name="PricingTime" type="xs:string"/>
+            <xs:element name="AccountingStream" type="xs:short"/>
+            <xs:element name="GroupingCode" type="xs:string"/>
+            <xs:element name="DocumentationName" type="xs:string"/>
+            <xs:element name="IsinCode" type="xs:string"/>
+            <xs:element name="NlProduct" type="xs:string"/>
+            <xs:element name="CutOffTime" type="xs:string"/>
+            <xs:element name="MaxAllocationPercent" type="xs:string"/>
+            <xs:element name="UlFundType" type="xs:string"/>
+            <xs:element name="NavEntryFee" type="xs:string"/>
+            <xs:element name="NavExitFee" type="xs:string"/>
+            <xs:element name="AssetManager" type="xs:string"/>
+            <xs:element name="DepositBank" type="xs:string"/>
+            <xs:element name="Country" type="xs:string"/>
+            <xs:element name="Notes" type="xs:string"/>
+            <xs:element name="RiskProfile" type="xs:string"/>
+            <xs:element name="RiskCurrency" type="xs:string"/>
+            <xs:element name="InvestCat" type="xs:string"/>
+            <xs:element name="InvestObjective" type="xs:string"/>
+            <xs:element name="AlternativeFunds" type="xs:string"/>
+            <xs:element name="RiskProfileDate" type="xs:string"/>
+            <xs:element name="PricingDelay" type="xs:short"/>
+            <xs:element name="InvestCashLimit" type="xs:string"/>
+            <xs:element name="Poa" type="xs:short"/>
+            <xs:element name="PoaType" type="xs:string"/>
+            <xs:element name="MandateHolder" type="xs:string"/>
+            <xs:element name="PoaDate" type="xs:string"/>
+            <xs:element name="Iban" type="xs:string"/>
+            <xs:element name="SalesRep" type="xs:string"/>
+            <xs:element name="PrivateEquity" type="xs:int"/>
+            <xs:element name="PerformanceFee" type="xs:string"/>
+            <xs:element name="DepositAccount" type="xs:string"/>
+            <xs:element name="FundClassification" type="xs:string"/>
+            <xs:element name="PrivateEquityFee" type="xs:string"/>
+            <xs:element name="AccountRoot" type="xs:string"/>
+            <xs:element name="FundSubType" type="xs:string"/>
+            <xs:element name="FinancialAdvisor" type="xs:string"/>
+            <xs:element name="AssetManagerFee" type="xs:string"/>
+            <xs:element name="FinFeesFlatAmount" type="xs:string"/>
+            <xs:element name="FinFeesMinAmount" type="xs:string"/>
+            <xs:element name="FinFeesMaxAmount" type="xs:string"/>
+            <xs:element name="BankDepositFee" type="xs:string"/>
+            <xs:element name="FinAdvisorFee" type="xs:string"/>
+            <xs:element name="ClassOfRisk" type="xs:string"/>
+            <xs:element name="AssetManRiskProfile" type="xs:short"/>
+            <xs:element name="Poc" type="xs:short"/>
+            <xs:element name="PocType" type="xs:string"/>
+            <xs:element name="Consultant" type="xs:string"/>
+            <xs:element name="PocDate" type="xs:string"/>
+            <xs:element name="DepositBankFlatFee" type="xs:string"/>
+            <xs:element name="AssetManFeeCcy" type="xs:string"/>
+            <xs:element name="BankDepFeeCcy" type="xs:string"/>
+            <xs:element name="FinAdvisorFeeCcy" type="xs:string"/>
+            <xs:element name="Broker" type="xs:string"/>
+            <xs:element name="Ucits" type="xs:short"/>
+            <xs:element name="MaxAllocationA" type="xs:string"/>
+            <xs:element name="MaxAllocationB" type="xs:string"/>
+            <xs:element name="MaxAllocationC" type="xs:string"/>
+            <xs:element name="MaxAllocationD" type="xs:string"/>
+            <xs:element name="MaxAllocationN" type="xs:string"/>
+            <xs:element name="ExcludeFromChgs" type="xs:short"/>
+            <xs:element name="ExAssManNotes" type="xs:string"/>
+            <xs:element name="ExDepBankNotes" type="xs:string"/>
+            <xs:element name="ExRiskProfileNotes" type="xs:string"/>
+            <xs:element name="ExAllInFees" type="xs:string"/>
+            <xs:element name="ExDepositBankContact" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpValidationUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Password" type="xs:string"/>
+            <xs:element name="LoginId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="clientId" type="xs:string"/>
+    <xs:attribute name="clientPassword" type="xs:string"/>
+    <xs:attribute name="nextLocation" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="dialect" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="WssupdfdscallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssupdfdsExport" type="tns:WssupdfdsExport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssupdfdsExport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExpFdsFunds">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="FdsId" type="xs:string"/>
+            <xs:element name="Name" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpErrormessageBrowserFields">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorMessage" type="xs:string"/>
+            <xs:element name="ErrorTxt" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpErrorCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorParameters" type="xs:string"/>
+            <xs:element name="ErrorNo" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateType" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateMsg" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="Exception" type="tns:Exception"/>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Wssupdfdscall">
+    <wsdl:part element="tns:Wssupdfdscall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part element="tns:Exception" name="Exception">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WssupdfdscallResponse">
+    <wsdl:part element="tns:WssupdfdscallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="WSSUPDFDS">
+    <wsdl:operation name="Wssupdfdscall">
+      <wsdl:input message="tns:Wssupdfdscall" name="Wssupdfdscall">
+    </wsdl:input>
+      <wsdl:output message="tns:WssupdfdscallResponse" name="WssupdfdscallResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSSUPDFDSSoapBinding" type="tns:WSSUPDFDS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Wssupdfdscall">
+      <soap:operation soapAction="http://tempuri.org/Wssupdfdscall/" style="document"/>
+      <wsdl:input name="Wssupdfdscall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="WssupdfdscallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WSSUPDFDS">
+    <wsdl:port binding="tns:WSSUPDFDSSoapBinding" name="WSSUPDFDSPort">
+      <soap:address location="http://sv-lvd46.rh.olympe.loc:8080/XWSUPFDS/WSSUPDFDS/WSSUPDFDS"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

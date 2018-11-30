@@ -1,0 +1,83 @@
+<!-- Brand and toggle get grouped for better mobile display -->
+<nav class='navbar navbar-inverse' [class.fixed]="navIsFixed" >
+
+<span class="brand">DEV tool</span>
+
+
+  <div class="col-md-8 col-md-offset-2">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+              [attr.aria-expanded]="!isCollapsed" (click)="toggleCollapse()" [ngClass]="{'collapsed': isCollapsed}">
+          <span class="sr-only">Toggle</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+      </button>    
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" [ngClass]="{'in': !isCollapsed}">
+      <ul class="nav navbar-nav">
+          <li ngbDropdown class="dropdown">
+            <a class="btn btn-outline-primary dropdown-toggle" id="dropdownMenu6" ngbDropdownToggle>Agent <span class="caret"></span></a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./agent']"> Broker </a> </li>
+            </ul>
+            
+          </li>
+          
+          <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./policy']" [queryParams]="{id:'GU034073'}"> Policy </a> </li>
+          <li ngbDropdown class="dropdown" >
+            <a class="btn btn-outline-primary dropdown-toggle" id="dropdownMenu5" ngbDropdownToggle>Search <span class="caret"></span></a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./search/policy'] ">search policy</a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./search/client'] ">search client</a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./search/fund'] ">search fund</a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./search/agent'] ">search partner</a> </li>
+            </ul>
+          </li>
+
+          <li ngbDropdown class="dropdown" >
+            <a class="btn btn-outline-primary dropdown-toggle" id="dropdownMenu4" ngbDropdownToggle>Fund <span class="caret"></span></a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./fund/FID'] "> FID </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./fund/FAS'] "> FAS </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./fund/FE'] "> FE </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./fund/FIC'] "> FIC </a> </li>
+            </ul>
+          </li>
+
+          <li ngbDropdown class="dropdown" >
+            <a class="btn btn-outline-primary dropdown-toggle" id="dropdownMenu3" ngbDropdownToggle>Client <span class="caret"></span></a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./client/physical'] ">Client Physique </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./client/moral'] ">Client Moral </a> </li>
+            </ul>
+          </li>
+
+          <li ngbDropdown class="dropdown" >
+            <a class="btn btn-outline-primary dropdown-toggle" id="dropdownMenu2" ngbDropdownToggle>Subscription <span class="caret"></span></a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/1']"  [queryParams]="{workflowItemId:210,stepWorkflow:'Registration' }"> Registration </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/2']"  [queryParams]="{workflowItemId:210,stepWorkflow:'Waiting Dispatch'}"> Waiting Dispatch</a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/3']"  [queryParams]="{workflowItemId:210,stepWorkflow:'New'}"> New </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/4']"  [queryParams]="{workflowItemId:210,stepWorkflow:'Analysis'}"> Analysis </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/5']"  [queryParams]="{workflowItemId:210,stepWorkflow:'Validate Analysis'}"> Validate Analysis </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/6']"  [queryParams]="{workflowItemId:210,stepWorkflow:'Acceptance'}"> Acceptance </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/7']"  [queryParams]="{workflowItemId:311,stepWorkflow:'Awaiting Premium'}"> Awaiting Premium </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/8']"  [queryParams]="{workflowItemId:311,stepWorkflow:'Premium Input and NAV'}"> Premium Input & NAV* </a> </li>
+              <li [routerLinkActive]="['open']"> <a [routerLink]=" ['./step/9']"  [queryParams]="{workflowItemId:311,stepWorkflow:'Validate Premium and NAV'}"> Validate Premium & NAV* </a> </li>
+            </ul>
+          </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+          <li ngbDropdown class="dropdown" >
+            <a class="btn btn-outline-primary dropdown-toggle" id="dropdownMenu1" ngbDropdownToggle>Account <span class="caret"></span></a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+              <li><a [routerLink]=" ['./profile'] ">Password</a></li>
+              <li><a class="clickable" (click)="logout()">Logout</a></li>    
+            </ul>
+          </li>
+
+      </ul>
+    </div>    
+  </div>   
+</nav>

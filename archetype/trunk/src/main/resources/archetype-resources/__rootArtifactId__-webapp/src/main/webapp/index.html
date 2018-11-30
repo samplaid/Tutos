@@ -1,0 +1,53 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<html>
+<head>
+<script src="http://localhost:8080/auth/js/keycloak.js"></script>
+<script>
+
+	var keycloak = Keycloak();
+	keycloak.init({
+		onLoad : 'login-required'
+	}).success(function(authenticated) {
+		console.log('Logged as '+keycloak.tokenParsed.given_name);
+	}).error(function() {
+		alert('failed to initialize');
+	});
+
+
+	var loadAction = function() {
+		
+		keycloak.updateToken(30).success(function() {
+    		var url = 'http://localhost:8080/${parentArtifactId}/rest/something/action';
+	
+			var req = new XMLHttpRequest();
+			req.open('GET', url, true);
+			req.setRequestHeader('Accept', 'application/json');
+			req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
+		
+			req.onreadystatechange = function() {
+				if (req.readyState == 4) {
+					if (req.status == 200) {
+						console.log(req.responseText);
+					} else if (req.status == 403) {
+						alert('Forbidden');
+					}
+				}
+			}
+		
+			req.send();
+		}).error(function() {
+		    //alert('Failed to refresh token');
+	    });
+	};
+
+
+</script>
+</head>
+
+<body>
+	<h1>Hello Spring !</h1>
+	<input type="button" value="loadAction" onclick="loadAction();" />
+</body>
+</html>

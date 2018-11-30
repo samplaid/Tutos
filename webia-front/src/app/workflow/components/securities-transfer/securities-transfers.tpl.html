@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="title col-md-5">Securities Transfer</div>
+</div>
+<ng-container *ngIf="securitiesTransfers">
+    
+    <div class="payment-row row" *ngFor="let securitiesTransfer of securitiesTransfers; let index = index">
+        <div style="width: 95%; display: inline-block">
+            <securities-transfer
+                [mode]="mode"
+                [transferCandidates]="transferCandidates"                        
+                [payment]="securitiesTransfer"
+                [showSecurities]="showSecurities"
+                [fromEditable]="fromEditable"
+                [bicEditable]="bicEditable">
+            </securities-transfer>
+        </div>        
+        <div *ngIf="index == 0 && securitiesTransfers.length > 1" style="display: inline-block; vertical-align:top;">
+            <button class="btn btn-xs btn-secondary" title="Duplicate first beneficiary" type="button" (click)="duplicateBeneficiary(securitiesTransfers)">
+                    <i class="fa fa-files-o" aria-hidden="true"></i>
+            </button>
+        </div>        
+    </div>
+</ng-container>

@@ -1,0 +1,17 @@
+++ Apply the database changes ++
+
+dev migrate
+test migrate
+uat migrate
+prod migrate
+
+++ Other flyway command ++
+
+dev validate
+dev info
+
+++ Query only one specific database ++
+
+dev info webia
+dev migrate webia
+

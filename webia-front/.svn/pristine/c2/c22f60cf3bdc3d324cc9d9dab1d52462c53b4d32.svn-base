@@ -1,0 +1,44 @@
+<section subject="premium-and-fees">
+    <div class="row">
+        <div class="title col-md-6 col-md-offset-1">Premium & Fees</div>
+    </div>
+
+    <div class="row">
+        <label class="marginTop col-md-2 text-right">Expected Premium</label>
+        <div class="form-group col-md-3 form-inline">
+            <w-number  [number]="expectedPremium" (numberChange)="onExpectedPremiumChange($event)" css="form-control input-sm text-right" [mode]="mode" ></w-number>
+            <span>&nbsp;{{contractCurrency}}</span>
+        </div> 
+    </div>
+    <div class="row form-inline marginTop">
+        <label class="marginTop col-md-2 text-right">Entry fees</label>
+        <div class="form-group col-md-4">
+            <percent-amount [percent]="entryFeesPct"
+                               [flatAmount]="entryFeesAmt"
+                               [currency]="contractCurrency"
+                               [(currencyList)]="currencyList"
+                               [defaultCurrency]="contractCurrency"
+                               [disabledCurrency]="true"
+                               (unityChange)="unityChange($event)"
+                               (percentChange)="onEntryFeesPctChange($event)"
+                               (flatAmountChange)="onEntryFeesAmtChange($event)"
+                               [disabled]="mode == stateMode.readonly"
+            ></percent-amount >
+        </div> 
+        <ng-container *ngIf="hasBroker">
+            <label class="marginTop col-md-2 text-right"><span >Broker entry fees</span></label>
+            <div class="form-group col-md-2 form-inline" *ngIf="isEntryFeesPCT">
+            <span><w-number [number]="brokerEntryFeesPct" (numberChange)="onBrokerEntryFeesPctChange($event)"  css="form-control input-sm text-right input-percent" [precision]="6" [mode]="mode" ></w-number>%</span>
+            </div> 
+            <div class="form-group col-md-2 form-inline" *ngIf="!isEntryFeesPCT">
+            <span><w-number [number]="brokerEntryFeesAmt" (numberChange)="onBrokerEntryFeesAmtChange($event)"  css="form-control input-sm text-right input-percent" [mode]="mode" ></w-number><span>{{ contractCurrency }}</span></span>
+            </div> 
+        </ng-container>
+    </div>
+    <div class="row marginTop" *ngIf="showTax">
+            <label class="marginTop col-md-2 text-right"><span >Taxe</span></label>
+            <div class="form-group col-md-2 form-inline">
+                <span><w-number [number]="taxRate" (numberChange)="onTaxRateChange($event)"  css="form-control input-sm text-right input-percent" [precision]="6" [mode]="mode" ></w-number>%</span>
+            </div>  
+    </div>
+</section>

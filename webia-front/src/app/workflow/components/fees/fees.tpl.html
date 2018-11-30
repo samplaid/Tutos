@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="title col-md-5">Fees</div>
+</div>
+<div class="row">
+    <label class="marginTop col-md-2 text-right"><span>{{feesLabel}}</span></label>
+    <div class="form-group col-md-2 form-inline">
+        <span>
+            <w-number [number]="fees" (numberChange)="onFeesChange($event)" css="form-control input-sm text-right input-percent"
+                [precision]="6" [mode]="mode"></w-number>%
+        </span>
+    </div>
+    <label class="marginTop col-md-2 text-right"><span>{{brokerFeesLabel}}</span></label>
+    <div class="form-group col-md-2 form-inline">
+        <span>
+            <w-number [number]="brokerFees" (numberChange)="onBrokerFeesChange($event)" css="form-control input-sm text-right input-percent"
+                [precision]="6" [mode]="mode"></w-number>%
+        </span>
+    </div>
+</div>

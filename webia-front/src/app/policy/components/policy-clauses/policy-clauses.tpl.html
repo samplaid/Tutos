@@ -1,0 +1,32 @@
+<section subject="death-life-clauses">
+    <ng-container >
+        <div class="relative">
+            <div [ngBusy]="subs">
+
+                <!-- Death clauses - start -->
+                <div class="row" *ngIf="clauses?.death.length > 0">
+                    <div class="title col-md-5">Death Clauses</div>
+                </div>
+                <div class="row" *ngIf="clauses">
+                    <ul class="col-md-10 list-unstyled line-breaker">
+                        <li *ngFor="let dcn of clauses.death | filter:'item.typeOfClause!=\'N\''">{{dcn | textOfClause }}</li>
+                    </ul>
+                </div>
+                <!-- Death clauses - end -->
+
+                <!-- Life clauses - start -->
+                <ng-container *ngIf="firstPolicyCoverages?.term != 0 && clauses?.maturity.length > 0">
+                    <div class="row">
+                        <div class="title col-md-5">Life Clauses</div>
+                    </div>
+                    <div class="row" *ngIf="clauses">
+                        <ul class="col-md-10 list-unstyled  line-breaker">
+                            <li *ngFor="let dcn of clauses.maturity | filter:'item.typeOfClause!=\'N\''"> {{ dcn | textOfClause }}</li>
+                        </ul>
+                    </div>
+                </ng-container>
+                <!-- Life clauses - end -->
+            </div>
+        </div>
+    </ng-container>
+</section>

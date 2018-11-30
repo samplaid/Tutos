@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://tempuri.org/Wssupdpst/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="WSSUPDPST" targetNamespace="http://tempuri.org/Wssupdpst/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/Wssupdpst/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://tempuri.org/Wssupdpst/">
+  <xs:element name="Wssupdpstcall" type="tns:Wssupdpstcall"/>
+  <xs:element name="WssupdpstcallResponse" type="tns:WssupdpstcallResponse"/>
+  <xs:complexType name="Wssupdpstcall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssupdpstImport" type="tns:WssupdpstImport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssupdpstImport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ImpGrpPst">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="row">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="ImpItmPstPostingSets">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="PstId" type="xs:long"/>
+                        <xs:element name="SapStatus" type="xs:short"/>
+                        <xs:element name="SapExportDate" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpUseridUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UsrId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpValidationUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Password" type="xs:string"/>
+            <xs:element name="LoginId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="clientId" type="xs:string"/>
+    <xs:attribute name="clientPassword" type="xs:string"/>
+    <xs:attribute name="nextLocation" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="dialect" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="WssupdpstcallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssupdpstExport" type="tns:WssupdpstExport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssupdpstExport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExpErrorCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorParameters" type="xs:string"/>
+            <xs:element name="ErrorNo" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpErrorMessageBrowserFields">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorTxt" type="xs:string"/>
+            <xs:element name="ErrorMessage" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpRecordsUpdatedCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="RecordsUpdated" type="xs:long"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateType" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateMsg" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="Exception" type="tns:Exception"/>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="WssupdpstcallResponse">
+    <wsdl:part element="tns:WssupdpstcallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part element="tns:Exception" name="Exception">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Wssupdpstcall">
+    <wsdl:part element="tns:Wssupdpstcall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="WSSUPDPST">
+    <wsdl:operation name="Wssupdpstcall">
+      <wsdl:input message="tns:Wssupdpstcall" name="Wssupdpstcall">
+    </wsdl:input>
+      <wsdl:output message="tns:WssupdpstcallResponse" name="WssupdpstcallResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSSUPDPSTSoapBinding" type="tns:WSSUPDPST">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Wssupdpstcall">
+      <soap:operation soapAction="http://tempuri.org/Wssupdpstcall/" style="document"/>
+      <wsdl:input name="Wssupdpstcall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="WssupdpstcallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WSSUPDPST">
+    <wsdl:port binding="tns:WSSUPDPSTSoapBinding" name="WSSUPDPSTPort">
+      <soap:address location="http://sv-lvd46.rh.olympe.loc:8080/XWSUPDPS/WSSUPDPST/WSSUPDPST"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

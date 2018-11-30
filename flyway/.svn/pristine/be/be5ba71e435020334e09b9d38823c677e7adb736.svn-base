@@ -1,0 +1,1 @@
+INSERT INTO APPLI_PARAM (CODE, DESCRIPTION, VALUE) VALUES ('CHANGE_BENEF_AVAILABLE_SUB_ROLES', 'Sous roles disponibles pour un changement de bénéficiaire', '17,29,30,31,32,33');

@@ -1,0 +1,81 @@
+// Framework grid generation
+//
+// Used only by Bootstrap to generate the correct number of grid classes given
+// any value of `$w-grid-columns`.
+
+// [converter] This is defined recursively in LESS, but Sass supports real loops
+@mixin w-make-grid-columns($i: 1, $list: ".w-col-xs-#{$i}, .w-col-sm-#{$i}, .w-col-md-#{$i}, .w-col-lg-#{$i}") {
+  @for $i from (1 + 1) through $w-grid-columns {
+    $list: "#{$list}, .w-col-xs-#{$i}, .w-col-sm-#{$i}, .w-col-md-#{$i}, .w-col-lg-#{$i}";
+  }
+  #{$list} {
+    position: relative;
+    // Prevent columns from collapsing when empty
+    min-height: 1px;
+    // Inner gutter via padding
+    padding-left:  ceil(($grid-gutter-width / 2));
+    padding-right: floor(($grid-gutter-width / 2));
+  }
+}
+
+
+// [converter] This is defined recursively in LESS, but Sass supports real loops
+@mixin w-float-grid-columns($class, $i: 1, $list: ".w-col-#{$class}-#{$i}") {
+  @for $i from (1 + 1) through $w-grid-columns {
+    $list: "#{$list}, .w-col-#{$class}-#{$i}";
+  }
+  #{$list} {
+    float: left;
+  }
+}
+
+
+@mixin w-calc-grid-column($index, $class, $type) {
+  @if ($type == width) and ($index > 0) {
+    .w-col-#{$class}-#{$index} {
+      width: percentage(($index / $w-grid-columns));
+    }
+  }
+  @if ($type == push) and ($index > 0) {
+    .w-col-#{$class}-push-#{$index} {
+      left: percentage(($index / $w-grid-columns));
+    }
+  }
+  @if ($type == push) and ($index == 0) {
+    .w-col-#{$class}-push-0 {
+      left: auto;
+    }
+  }
+  @if ($type == pull) and ($index > 0) {
+    .w-col-#{$class}-pull-#{$index} {
+      right: percentage(($index / $w-grid-columns));
+    }
+  }
+  @if ($type == pull) and ($index == 0) {
+    .w-col-#{$class}-pull-0 {
+      right: auto;
+    }
+  }
+  @if ($type == offset) {
+    .w-col-#{$class}-offset-#{$index} {
+      margin-left: percentage(($index / $w-grid-columns));
+    }
+  }
+}
+
+// [converter] This is defined recursively in LESS, but Sass supports real loops
+@mixin w-loop-grid-columns($columns, $class, $type) {
+  @for $i from 0 through $columns {
+    @include  w-calc-grid-column($i, $class, $type);
+  }
+}
+
+
+// Create grid for specific class
+@mixin w-make-grid($class) {
+  @include w-float-grid-columns($class);
+  @include w-loop-grid-columns($w-grid-columns, $class, width);
+  @include w-loop-grid-columns($w-grid-columns, $class, pull);
+  @include w-loop-grid-columns($w-grid-columns, $class, push);
+  @include w-loop-grid-columns($w-grid-columns, $class, offset);
+}

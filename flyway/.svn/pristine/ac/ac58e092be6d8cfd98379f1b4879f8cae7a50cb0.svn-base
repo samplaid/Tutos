@@ -1,0 +1,8 @@
+flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+flyway.url=jdbc:sqlserver://10.45.7.24:1433;databaseName=EDITING_UAT
+flyway.baselineOnMigrate=true
+flyway.user=uediting-svc
+flyway.password=
+flyway.locations=filesystem:./sql/editing,filesystem:./callback/editing
+flyway.cleanDisabled=true
+flyway.target=18.7.02

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="classpath:/conf/beansContext.xml" />
+	<import resource="classpath:/conf/jndiContext.xml" />
+	<import resource="classpath:/conf/persistenceContext.xml" />
+	<import resource="classpath:/conf/propertiesConfig.xml"/>
+	<import resource="classpath:/conf/ws-client-config.xml" />
+
+	<beans profile="unit-test">
+		<import resource="classpath:/mock/unit-test/mockJndiContext.xml" />
+		<import resource="classpath:/mock/unit-test/mockPersistenceContext.xml" />
+	</beans>
+	
+	<beans profile="dev-test">
+		<import resource="classpath:/mock/dev/mockProperties.xml" />
+		<import resource="classpath:/mock/dev/mockJndiContext.xml" />
+		<import resource="classpath:/mock/dev/mockPersistenceContext.xml" />
+		<import resource="classpath:/mock/dev/mockUtilsContext.xml" />
+	</beans>
+
+</beans>

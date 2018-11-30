@@ -1,0 +1,12 @@
+flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+flyway.url=jdbc:sqlserver://10.45.7.24:1433;databaseName=WEBIA_UAT
+flyway.baselineOnMigrate=true
+flyway.baselineVersion=00.00
+flyway.user=uwebia-svc
+flyway.password=
+flyway.locations=filesystem:./sql/webia,filesystem:./callback/webia
+flyway.cleanDisabled=true
+flyway.placeholders.schemaWorkflow=UAT_WORKFLOW
+flyway.placeholders.schemaCommon=UAT_COMMON
+flyway.placeholders.loginByPassStepAccess='rvn,duo,mbh,hbe,amc,oro,nal,sla,mcn,lur,hog,fbr,eda,ubatch-svc'
+flyway.target=18.5.104

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:file="http://www.springframework.org/schema/integration/file"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/integration
+            http://www.springframework.org/schema/integration/spring-integration.xsd
+            http://www.springframework.org/schema/integration/file
+            http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context.xsd">
+  
+ 	<!-- file poller for the price injection -->
+    <file:inbound-channel-adapter id="priceInjectionFilesIn" directory="file:${priceInjectionInputDirectory}" auto-startup="true" prevent-duplicates="false">
+        <int:poller id="priceInjectionPoller" fixed-delay="${priceInjectionDelay}" />
+    </file:inbound-channel-adapter>
+ 
+	<int:channel id="priceInjectionFilesOut">
+		<int:interceptors>
+			<ref bean="priceInjectionChannelInterceptor"/>
+		</int:interceptors>
+	</int:channel>
+	
+    <file:outbound-channel-adapter channel="priceInjectionFilesOut" directory="file:${priceInjectionOutputDirectory}" delete-source-files="true"/>
+ 
+    <int:service-activator input-channel="priceInjectionFilesIn" output-channel="priceInjectionFilesOut" ref="priceInjectionParser" method="parse" />
+
+    <bean id="priceInjectionParser" class="lu.wealins.batch.injection.price.PriceInjectionParser"/> 
+
+    <bean id="priceInjectionChannelInterceptor" class="lu.wealins.filepoller.ChannelInterceptor"> 
+    	<property name="jobExecutor" ref="priceInjectionJobExecutor" />    	
+    </bean>
+    <bean id="priceInjectionJobExecutor" class="lu.wealins.filepoller.JobExecutor"> 
+    	<property name="jobName" value="priceInjectionJob" />
+    	<property name="outputDirectory" value="${priceInjectionOutputDirectory}" />    	
+    </bean>
+    
+ 	<!-- End - file poller for the price injection -->
+
+ 	<!-- jms listener for the exchange rate -->
+ 	<bean id="exchangeRateInjectionJobExecutor" class="lu.wealins.filepoller.JobExecutor"> 
+    	<property name="jobName" value="exchangeRateInjectionJob" />
+    	<property name="outputDirectory" value="${exchangeRateInjectionSuccessPath}" />    	
+    </bean>
+    
+    <bean id="exchangeRateInjectionParser" class="lu.wealins.batch.injection.exchangerate.ExchangeRateInjectionParser">
+    	<property name="jobExecutor" ref="exchangeRateInjectionJobExecutor" />  
+    </bean>
+	
+    <bean id="exchangeRateInjectionDestination" class="org.apache.activemq.artemis.jms.client.ActiveMQQueue">
+		<constructor-arg value="${exchangeRateInjectionQueue}"/>
+	</bean>
+     
+    <bean id="exchangeRateInjectionJMSContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+ 		<property name="connectionFactory" ref="connectionFactory"/>
+		<property name="destination" ref="exchangeRateInjectionDestination"/>
+		<property name="messageListener" ref="exchangeRateInjectionParser" />
+	</bean>
+
+ 	<!-- End - jms listener for the exchange rate -->
+ 	
+ 	<!-- jms listener for the vni from bloomberg  -->
+	<bean id="soliamVniDestination" class="org.apache.activemq.artemis.jms.client.ActiveMQQueue">
+		<constructor-arg value="${soliamVniInjectionQueue}"/>
+	</bean>
+	
+	<bean id="soliamVniInjectionParser" class="lu.wealins.batch.injection.bloomberg.SoliamVniParser"/>  
+
+	<bean id="soliamVniJMSContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+ 		<property name="connectionFactory" ref="connectionFactory"/>
+		<property name="destination" ref="soliamVniDestination"/>
+		<property name="messageListener" ref="soliamVniInjectionParser" />
+		<property name="messageSelector" value="${soliamVniInjectionQueueFilter}" />
+	</bean>     
+ 	<!-- End jms listener for the vni from bloomberg -->
+ 	
+ 	
+ 	<!-- file poller for the acl injection -->
+    <file:inbound-channel-adapter id="aclInjectionFilesIn" directory="file:${aclInjectionInputDirectory}" auto-startup="true" prevent-duplicates="false">
+        <int:poller id="aclInjectionPoller" fixed-delay="${aclInjectionDelay}" />
+    </file:inbound-channel-adapter>
+ 
+	<int:channel id="aclInjectionFilesOut">
+		
+	</int:channel>
+	
+    <file:outbound-channel-adapter channel="aclInjectionFilesOut" directory="file:${aclInjectionOutputDirectory}" delete-source-files="true"/>
+ 
+    <int:service-activator input-channel="aclInjectionFilesIn" output-channel="aclInjectionFilesOut" ref="aclInjector" method="inject" />
+
+    <bean id="aclInjector" class="lu.wealins.batch.injection.acl.ACLInjector"/> 
+ 	<!-- End - file poller for the acl injection -->	
+ 	
+ 	<!-- jms listener for the signaletic funds from bloomberg  -->
+	<bean id="signaleticDestination" class="org.apache.activemq.artemis.jms.client.ActiveMQQueue">
+		<constructor-arg value="${signaleticInjectionQueue}"/>
+	</bean>
+	
+	<bean id="signaleticInjectionParser" class="lu.wealins.batch.injection.bloomberg.SignaleticParser"/> 
+	
+	<bean id="signaleticJMSContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+ 		<property name="connectionFactory" ref="connectionFactory"/>
+		<property name="destination" ref="signaleticDestination"/>
+		<property name="messageListener" ref="signaleticInjectionParser" />
+		<property name="messageSelector" value="${signaleticInjectionQueueFilter}" />
+	</bean>   
+ 	<!-- End jms listener for the signaletic funds from bloomberg -->
+ 	
+ 	<!-- file poller for the lissia files injection -->
+    <file:inbound-channel-adapter id="lissiaFilesInjectionFilesIn" directory="file:${lissiaFilesInjectionInputDirectory}" auto-startup="true" prevent-duplicates="false">
+        <int:poller id="lissiaFilesInjectionPoller" fixed-delay="${lissiaFilesInjectionDelay}" />
+    </file:inbound-channel-adapter>
+ 
+	<int:channel id="lissiaFilesInjectionFilesOut">
+		<int:interceptors>
+			<ref bean="lissiaFilesInjectionChannelInterceptor"/>
+		</int:interceptors>
+	</int:channel>
+	
+    <file:outbound-channel-adapter channel="lissiaFilesInjectionFilesOut" directory="file:${lissiaFilesInjectionOutputDirectory}" delete-source-files="true"/>
+ 
+    <int:service-activator input-channel="lissiaFilesInjectionFilesIn" output-channel="lissiaFilesInjectionFilesOut" ref="lissiaFilesInjectionFilenameValidation" method="parse" />
+
+    <bean id="lissiaFilesInjectionFilenameValidation" class="lu.wealins.batch.injection.lissia.LissiaFilesInjectionFilenameValidation"/> 
+
+    <bean id="lissiaFilesInjectionChannelInterceptor" class="lu.wealins.filepoller.ChannelInterceptor"> 
+    	<property name="jobExecutor" ref="lissiaFilesInjectionJobExecutor" />    	
+    </bean>
+    <bean id="lissiaFilesInjectionJobExecutor" class="lu.wealins.filepoller.JobExecutor"> 
+    	<property name="jobName" value="lissiaFilesInjectionJob" />
+    	<property name="outputDirectory" value="${lissiaFilesInjectionOutputDirectory}" />    	
+    </bean>
+    
+ 	<!-- End - file poller for the lissia files injection -->
+ 	<!-- Clotured FE VNI input directory -->
+ 	 <file:inbound-channel-adapter id="cloturedVniInjectionFeFilesIn" directory="file:${cloturedVniFeInjectionInputDirectory}" auto-startup="true" prevent-duplicates="false">
+        <int:poller id="cloturedVniFeInjectionPoller" fixed-delay="${cloturedVniFeInjectionDelay}" />
+    </file:inbound-channel-adapter>
+ 
+ 	<!-- Clotured VNI output directory interceptor  -->
+	<int:channel id="cloturedVniFeInjectionFilesOut">
+		<int:interceptors>
+			<ref bean="cloturedVniFeInjectionChannelInterceptor"/>
+		</int:interceptors>
+	</int:channel>
+	
+	<!-- Clotured VNI FE output directory -->
+    <file:outbound-channel-adapter channel="cloturedVniFeInjectionFilesOut" directory="file:${cloturedVniFeInjectionOutputDirectory}" delete-source-files="true"/>
+ 
+ 	<!-- Clotured VNI FE parser  service activator -->
+    <int:service-activator input-channel="cloturedVniInjectionFeFilesIn" output-channel="cloturedVniFeInjectionFilesOut" ref="cloturedVniFeInjectionParser" method="parse" />
+	
+    <bean id="cloturedVniFeInjectionParser" class="lu.wealins.batch.injection.clotured.vni.CloturedVniFeInjectionParser"/>
+   
+	<!-- Clotured VNI interceptor execution -->
+    <bean id="cloturedVniFeInjectionChannelInterceptor" class="lu.wealins.filepoller.FileChannelInterceptor"> 
+    	<property name="jobExecutor" ref="cloturedVniFeInjectionJobExecutor" />    	
+    </bean>
+    
+    <!-- Clotured VNI job executor -->
+    <bean id="cloturedVniFeInjectionJobExecutor" class="lu.wealins.filepoller.SuccessFileJobExecutor"> 
+    	<property name="jobName" value="cloturedVniInjectionJob" />
+    	<property name="successOutputDirectory" value="${cloturedVniFeInjectionSuccessPath}" />    	
+    </bean>
+    
+    
+    <!--  Clotured VNI FIDFAS  -->
+    
+    <!-- Clotured FE VNI input directory -->
+ 	 <file:inbound-channel-adapter id="cloturedVniInjectionFidFasFilesIn" directory="file:${cloturedVniFidFasInjectionInputDirectory}" auto-startup="true" prevent-duplicates="false">
+        <int:poller id="cloturedVniFidFasInjectionPoller" fixed-delay="${cloturedVniFidFasInjectionDelay}" />
+    </file:inbound-channel-adapter>
+    
+    <!-- Clotured VNI output directory interceptor  -->
+	<int:channel id="cloturedVniInjectionFidFasFilesOut">
+		<int:interceptors>
+			<ref bean="cloturedVniFidFasInjectionChannelInterceptor"/>
+		</int:interceptors>
+	</int:channel>
+ 	<!-- Clotured VNI output directory -->
+    <file:outbound-channel-adapter channel="cloturedVniInjectionFidFasFilesOut" directory="file:${cloturedVniFidFasInjectionOutputDirectory}" delete-source-files="true"/>
+ 	
+ 	<!-- Clotured VNI FID and FAS service activator -->
+    <int:service-activator input-channel="cloturedVniInjectionFidFasFilesIn" output-channel="cloturedVniInjectionFidFasFilesOut" ref="cloturedVniFidFasInjectionParser" method="parse" />
+
+	<!-- Clotured VNI FID and FAS parser  service activator -->
+	<bean id="cloturedVniFidFasInjectionParser" class="lu.wealins.batch.injection.clotured.vni.CloturedVniFidFasInjectionParser"/>
+    
+    <!-- Clotured VNI interceptor execution -->
+    <bean id="cloturedVniFidFasInjectionChannelInterceptor" class="lu.wealins.filepoller.FileChannelInterceptor"> 
+    	<property name="jobExecutor" ref="cloturedVniFidFasInjectionJobExecutor" />    	
+    </bean>
+    
+    <!-- Clotured VNI job executor -->
+    <bean id="cloturedVniFidFasInjectionJobExecutor" class="lu.wealins.filepoller.SuccessFileJobExecutor"> 
+    	<property name="jobName" value="cloturedVniInjectionJob" />
+    	<property name="successOutputDirectory" value="${cloturedVniFidFasInjectionSuccessPath}" />    	
+    </bean>
+    
+ 	<!-- End - file poller for clotured VNI injection -->
+ 	
+</beans>

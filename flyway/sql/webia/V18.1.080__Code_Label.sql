@@ -1,0 +1,1 @@
+update CODE_LABEL set LABEL = '[DTHFC2|PERCENTAGE]% of the value of the contract' where TYPE_CD = 'GD' AND CODE = 7;

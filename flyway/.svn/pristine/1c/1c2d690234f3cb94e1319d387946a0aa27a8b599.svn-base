@@ -1,0 +1,15 @@
+flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+flyway.url=jdbc:sqlserver://10.45.7.24:1433;databaseName=UAT_WORKFLOW
+flyway.baselineOnMigrate=true
+flyway.user=uworkflow-svc
+flyway.password=
+flyway.locations=filesystem:./sql/elissia,filesystem:./callback/elissia
+flyway.cleanDisabled=true
+flyway.placeholders.formURL=https://sv-lvu68.rh.olympe.loc/WebiaFront/#/step/1
+flyway.placeholders.beneficiaryChangeURL=https://sv-lvu68.rh.olympe.loc/WebiaFront/#/workflow/changeBenef
+flyway.placeholders.brokerChangeURL=https://sv-lvu68.rh.olympe.loc/WebiaFront/#/workflow/changeBroker
+flyway.placeholders.additionalPremiumURL=https://sv-lvu68.rh.olympe.loc/WebiaFront/#/workflow/additionalPremium
+flyway.placeholders.schemaCommon=UAT_COMMON
+flyway.placeholders.schemaWorkflow=UAT_WORKFLOW
+flyway.placeholders.batchUser=ubatch-svc
+flyway.target=18.5.001

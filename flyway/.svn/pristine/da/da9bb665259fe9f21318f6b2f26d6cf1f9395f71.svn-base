@@ -1,0 +1,14 @@
+flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+flyway.url=jdbc:sqlserver://10.45.7.25:1433;databaseName=DE2_WORKFLOW
+flyway.baselineOnMigrate=true
+flyway.user=dworkflow-svc
+flyway.password=e5wVVzzA
+flyway.locations=filesystem:./sql/elissia,filesystem:./callback/elissia
+flyway.cleanDisabled=true
+flyway.placeholders.formURL=https://swdl-webia-15.rh.olympe.loc/WebiaFront/#/step/1
+flyway.placeholders.beneficiaryChangeURL=https://swdl-webia-15.rh.olympe.loc/WebiaFront/#/workflow/changeBenef
+flyway.placeholders.brokerChangeURL=https://swdl-webia-15.rh.olympe.loc/WebiaFront/#/workflow/changeBroker
+flyway.placeholders.additionalPremiumURL=https://swdl-webia-15.rh.olympe.loc/WebiaFront/#/workflow/additionalPremium
+flyway.placeholders.schemaCommon=DE2_COMMON
+flyway.placeholders.schemaWorkflow=DE2_WORKFLOW
+flyway.placeholders.batchUser=dbatch-svc

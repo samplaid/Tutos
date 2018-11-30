@@ -1,0 +1,28 @@
+<div class="line-break-big"></div>
+<div class="row">
+	<div class="col-md-5 col-md-offset-1">
+		<div class="title">Valuation</div>
+	</div>
+	<div class="col-md-6">
+		<div class="title">Prices</div>
+	</div>
+</div>
+<div class="row marginTop4" >
+	<div class="col-md-4 col-md-offset-1">
+		<fund-valuation [fund]="fund"></fund-valuation>
+	</div>
+	<div class="col-md-3 col-md-offset-1">
+		<fund-prices [fundId]="fund.fdsId"></fund-prices>
+	</div>
+</div>
+<div class="line-break-big"></div>
+<div class="row">
+	<div class="col-md-5 col-md-offset-1">
+		<div class="title">New business</div>
+	</div>
+</div>
+<div class="row marginTop4" >
+	<div class="col-md-4 col-md-offset-1">
+		<operation-entry [ownerId]="fund.fdsId" [ownerType]="ownerType"></operation-entry>
+	</div>
+</div>

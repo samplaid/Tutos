@@ -1,0 +1,36 @@
+<div class="row" [desactive]="mode">
+    <div class="w-col-md-24 text-center marginVertical2">
+        <button id="btn-newFid" name="newFid" type="button" class="btn btn-xs btn-primary" (click)="newFund('NEW_FID')" [desactive]="mode">
+            New FID
+        </button>
+        <button id="btn-newFas" name="newFas" type="button" class="btn btn-xs btn-primary" (click)="newFund('NEW_FAS')" [desactive]="mode">
+            New FAS
+        </button>
+    </div>
+</div>
+
+<div class="row" *ngIf="_fundForms && _fundForms.length>0">
+    <div class="w-col-md-24">
+        <ul class="list-group">
+            <ng-container *ngFor="let rgFund of (_fundForms | filter: 'item.fund && !item.fund.isValorized'); let i = index">
+                <li *ngIf="(rgFund.fundTp == 'FID' || rgFund.fund && rgFund.fundTp == 'FAS')"  class="list-group-fund animated slideInUp">
+                    <div class="form-horizontal ">                        
+                        <div class="form-group nomargin-f">
+                            <label *ngIf="rgFund.fund && rgFund.fundTp == 'FID'" class="verticaltext pull-left">New FID</label>
+                            <label *ngIf="rgFund.fund && rgFund.fundTp == 'FAS'" class="verticaltext pull-left Fas">New FAS</label>
+                            <div class="w-col-md-23">
+                                <partialfid id="in-new-fid" [defaultCurrency]="defaultCurrency" [(fund)]="rgFund.fund" *ngIf="rgFund.fund && rgFund.fundTp =='FID'" [disabled]="(mode =='waiting' || mode =='readOnly')"></partialfid>
+                                <partialfas [defaultCurrency]="defaultCurrency" [(fund)]="rgFund.fund" *ngIf="rgFund.fund && rgFund.fundTp =='FAS'" [disabled]="(mode =='waiting' || mode =='readOnly')"></partialfas>                            
+                            </div> 
+                            <div class="w-col-md-1 reg-invest remove paddingLeft">
+                                <button class="btn btn-sm btn-primary" type="button" (click)="onFundRemove(i)" aria-label="Delete" [desactive]="mode">
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                </button>
+                            </div>                        
+                        </div>
+                    </div>
+                </li>
+            </ng-container>            
+        </ul>  
+    </div>
+</div>

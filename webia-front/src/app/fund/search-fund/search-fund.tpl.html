@@ -1,0 +1,111 @@
+<div class="search-fund">
+    
+     <ng-template #content >
+    <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="searchModal.hide()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search {{ header }}</h4>
+    </div>
+
+    <div class="modal-body relative">
+      <div [ngBusy]="[busy]">    
+        <form class="form-horizontal" (ngSubmit)="search(1)" #searchForm="ngForm">
+            <div class="form-group">
+                 <div class="fundType col-xs-3 radio">
+                    <label class="radio-inline" *ngFor="let fundType of _fundTypes, let i=index">
+                        <input type="radio" name="r-fundType" id="{{ fundType + i }}" [value]="fundType" [(ngModel)]="searchCriteria.type" (change)="fundTypeChange(searchCriteria.type)" [checked]="fundType == 'FID'"> 
+                        <span class="cr"><i class="cr-icon fa fa-circle"></i></span>{{fundType}}
+                    </label>
+                </div>
+
+                <div class="col-xs-2 paddingRight checkbox" *ngIf="searchCriteria.type == 'FE' && brokerId">
+                    <label>
+                        <input name="status" class="input-sm form-control" type="checkbox" [(ngModel)]="brokerStatus" (ngModelChange)="brokerChange($event)" >
+                            <span class="cr"><i class="cr-icon">&#x2714;</i></span> Specific to the broker
+                    </label>
+                </div>
+
+                <div class="col-xs-7">
+                    <label class="col-xs-2 control-label">Name / Code</label>
+                    <div class="col-xs-3">
+                        <input type="text" id="searchTxt" name="searchTxt" class="input-sm form-control" [(ngModel)]="searchCriteria.filter" autofocus>
+                    </div>
+                    <button class="btn btn-primary btn-xs" [disabled]="!searchCriteria.filter && !searchCriteria.date" type="submit">
+                        <span aria-hidden="true" class="glyphicon glyphicon-search"></span> 
+                        Search
+                    </button>
+                    <div class="pull-right paddingRight5" *ngIf="page.totalRecordCount > 0">{{page.totalRecordCount}} Result(s)</div>
+                </div>  
+            </div>  
+        </form>
+        <div class="line-break"></div>
+        <div>
+            <table class="table dataTable table-striped table-hover nomargin fullwidth" role="grid" *ngIf="page.content">
+                <thead>
+                    <tr role="row">
+                        <th class="multiple-check"></th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Currency</th>
+                        <th *ngIf="searchCriteria.type === 'FE'">Pricing frequency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let fund of page.content; let i = index" (click)="fundChecked(fund)" [class.selected]="isSelected(fund)">
+                        <td>
+                            <label class="checkbox-inline" *ngIf="!!fund">
+                                <input #input type="checkbox" id="cb-{{ i }}" [value]="fund.fundSubType" [checked]="isSelected(fund)" (change)="fundChecked(fund)" [desactive]="mode"> 
+                                <span class="cr">
+                                    <i class="cr-icon">&#x2714;</i>
+                                </span>
+                            </label>
+                        </td>
+                        <td highlight="text-danger"  [pattern]="regXp">{{ fund?.displayName }}</td>
+                        <td>{{ fund?.fdsId }}</td>
+                        <td>{{ fund?.currency }}</td>
+                        <td *ngIf="!!fund && fund.fundSubType === 'FE'"> {{ toPricingDescription(fund?.pricingFrequency) }}</td>
+                    </tr>
+                    <tr *ngIf="noResult">
+                        <td colspan="5" class="text-center">
+                            <p style="padding: 300px">No result found </p>
+                        </td>
+                    </tr>                    
+                </tbody>
+	                <tfoot *ngIf="page.totalPageCount>1">
+                        <tr>
+                            <td colspan="10" class="text-center">
+                    <!-- <ngb-pagination *ngIf="page.totalPageCount > 1" class="text-center" (pageChange)="search($event)" [collectionSize]="page.totalRecordCount"
+                            [pageSize]="page.pageSize" [(page)]="page.currentPage" [maxSize]="10" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination> -->
+
+                                <pagination  class="text-center" [boundaryLinks]="true" 
+                                            [totalItems]="page.totalRecordCount" [itemsPerPage]="page.pageSize" [(ngModel)]="page.currentPage" (pageChanged)="search($event.page)" [maxSize]="10"
+                                            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>                                                    
+                            </td>
+                        </tr>
+                    </tfoot>                 
+            </table>
+
+        </div> 
+      </div>              
+    </div>
+    <div class="modal-footer">
+        <div class="row">            
+            <ng-container *ngIf="mode != stateMode.readonly">
+                <div class="col-md-6 modal-footer-left">
+                    <button type="button" class="btn btn-xs btn-primary text-left" [hasRoles]="[ appRoles.FUND_FID_FAS_EDIT ]" [disabled]="disabledNewFund" (click)="createNewFund('FID')">New FID</button>
+                    <button type="button" class="btn btn-xs btn-primary text-left" [hasRoles]="[ appRoles.FUND_FID_FAS_EDIT ]" [disabled]="disabledNewFund" (click)="createNewFund('FAS')">New FAS</button> 
+                </div>
+            </ng-container>
+            <div [ngClass]="{'col-md-12 ': (mode == stateMode.readonly), 'col-md-6 ' : (mode != stateMode.readonly)}" class="modal-footer-rigth">
+                <button type="button" class="btn btn-xs btn-primary" [disabled]="!selectedItems || selectedItems.length == 0 " (click)="addToStack()">Add</button>
+                <button type="button" class="btn btn-xs btn-primary" [disabled]="!selectedItems || selectedItems.length == 0 " (click)="valide(selectedItems)">Validate</button>
+                <button type="button" class="btn btn-xs btn-primary" (click)="searchModal.hide()">Cancel</button>
+            </div>
+        </div>       
+    </div>
+    </ng-template>
+
+    <button type="button" class="btn btn-xs btn-primary" (click)="open(content)">
+        <span aria-hidden="true" class="glyphicon glyphicon-search"></span> Add fund
+    </button>
+  
+</div>

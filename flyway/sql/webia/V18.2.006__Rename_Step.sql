@@ -1,0 +1,1 @@
+Update step set STEP_WORKFLOW = 'Request to Client/Partner' where STEP_ID = 12;

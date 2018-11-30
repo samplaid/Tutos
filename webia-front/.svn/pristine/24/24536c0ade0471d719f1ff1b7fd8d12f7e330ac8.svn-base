@@ -1,0 +1,25 @@
+[
+    { "agentId": "A0013182", "name": "2C Finances", "period": "09-2017", "currency": "EUR", "sapBalance": "1000" ,"statementBalance": "1000", "gap": "0", "status": "Reconciled"},
+    { "agentId": "A0013182", "name": "2C Finances", "period": "12-2017", "currency": "EUR", "sapBalance": "1000" ,"statementBalance": "1000", "gap": "0", "status": "Reconciled"},
+    { "agentId": "A0013182", "name": "2C Finances", "period": "12-2017", "currency": "USD", "sapBalance": "1500" ,"statementBalance": "1500", "gap": "0", "status": "Reconciled"},
+    { "agentId": "A0531", "name": "Julius Baer", "period": "12-2017", "currency": "EUR", "sapBalance": "1500" ,"statementBalance": "1500", "gap": "0", "status": "Validated"},
+    { "agentId": "A04536", "name": "AGP Patrimoine", "period": "12-2017", "currency": "EUR", "sapBalance": "2346" ,"statementBalance": "2000", "gap": "346", "status": "NOT RECONCILED"},
+
+    { "agentId": "XX7895", "name": "toto", "period": "08-2018", "currency": "MGA", "sapBalance": "875" ,"statementBalance": "875", "gap": "0", "status": "Validated"},
+    { "agentId": "XX7895", "name": "toto", "period": "12-2017", "currency": "EUR", "sapBalance": "1000" ,"statementBalance": "1000", "gap": "0", "status": "Validated"},
+    { "agentId": "XX7895", "name": "toto", "period": "01-2019", "currency": "NUR", "sapBalance": "1500" ,"statementBalance": "1500", "gap": "0", "status": "Validated"},
+    { "agentId": "Z7852", "name": "Bertin", "period": "12-2017", "currency": "EUR", "sapBalance": "1500" ,"statementBalance": "1500", "gap": "0", "status": "Validated"},
+    { "agentId": "KL4589", "name": "Jean paul", "period": "05-2017", "currency": "EUR", "sapBalance": "1200" ,"statementBalance": "700", "gap": "500", "status": "NOT RECONCILED"},
+
+    { "agentId": "F789546", "name": "Herlim", "period": "09-2017", "currency": "EUR", "sapBalance": "3658" ,"statementBalance": "100", "gap": "0", "status": "NOT RECONCILED"},
+    { "agentId": "F789546", "name": "Herlim", "period": "12-2017", "currency": "DAK", "sapBalance": "1000" ,"statementBalance": "1000", "gap": "0", "status": "Validated"},
+    { "agentId": "F789546", "name": "Herlim", "period": "03-2018", "currency": "PER", "sapBalance": "1500" ,"statementBalance": "1500", "gap": "0", "status": "Reconciled"},
+    { "agentId": "J78952", "name": "Justin Biber", "period": "02-2018", "currency": "USD", "sapBalance": "500" ,"statementBalance": "1500", "gap": "500", "status": "NOT RECONCILED"},
+    { "agentId": "G7895", "name": "AGP Patrimoine", "period": "12-2018", "currency": "EUR", "sapBalance": "2346" ,"statementBalance": "2000", "gap": "346", "status": "NOT RECONCILED"},
+
+    { "agentId": "G78965", "name": "Henri", "period": "09-2017", "currency": "EUR", "sapBalance": "3658" ,"statementBalance": "100", "gap": "3558", "status": "NOT RECONCILED"},
+    { "agentId": "G78965", "name": "Herlim", "period": "11-2017", "currency": "DAK", "sapBalance": "1000" ,"statementBalance": "536", "gap": "464", "status": "NOT RECONCILED"},
+    { "agentId": "X45454", "name": "Tintin", "period": "05-2019", "currency": "LAR", "sapBalance": "1500" ,"statementBalance": "1500", "gap":"0", "status": "Reconciled"},
+    { "agentId": "Z45855", "name": "Marcel", "period": "04-2017", "currency": "USD", "sapBalance": "1500" ,"statementBalance": "1500", "gap": "0", "status": "Reconciled"},
+    { "agentId": "Z75632", "name": "Pepe", "period": "06-2017", "currency": "RET", "sapBalance": "100" ,"statementBalance": "100", "gap": "0", "status": "Validated"}
+]

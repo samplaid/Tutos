@@ -1,0 +1,90 @@
+<div class="search-policy">
+
+    <search-menu path='..'></search-menu>
+
+    <div class="line-break"></div>
+    <div class="split-screen">
+        <div class="form">
+            <form (ngSubmit)="search(1)" #searchForm="ngForm">
+                <div class="form-inline row">
+                    <div class="col-sm-2">
+                        <label class="col-sm-5 text-right marginTop">Policy</label>
+                        <input type="text" name="polId" class="form-control input-sm" [(ngModel)]="sc.polId">
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="col-sm-5 text-right marginTop">Application Nr</label>
+                        <input type="text" name="applicationForm" class="form-control input-sm" [(ngModel)]="sc.applicationForm">
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-5 text-right marginTop">Broker's contract ref.</label>
+                        <input type="text" name="brokerRefContract" class="form-control input-sm" [(ngModel)]="sc.brokerRefContract">
+                    </div> 
+                    <div class="checkbox col-xs-3">          
+                        <label class="col-lg-2 col-md-4"><input type="checkbox" name="showactive" [(ngModel)]="sc.withActive" (change)="search(1)"> <span class="cr"><i class="cr-icon">&#x2714;</i></span>Active</label>
+                        <label class="col-lg-2 col-md-4"><input type="checkbox" name="showpending" [(ngModel)]="sc.withPending" (change)="search(1)"> <span class="cr"><i class="cr-icon">&#x2714;</i></span>Pending</label>
+                        <label class="col-lg-3 col-md-5"><input type="checkbox" name="showterminated" [(ngModel)]="sc.withInactive" (change)="search(1)"> <span class="cr"><i class="cr-icon">&#x2714;</i></span>Terminated</label>
+                    </div>
+                    <div class="col-sm-1 nopadding">
+                        <button type="sumbit" class="btn btn-xs btn-primary" [disabled]="!sc.polId && !sc.applicationForm && !sc.brokerRefContract" ><span aria-hidden="true" class="glyphicon glyphicon-search"></span> Search</button>
+                        <button class="btn btn-primary btn-xs" [disabled]="!sc.polId && !sc.applicationForm && !sc.brokerRefContract" type="button" (click)="eraseFields()"><i class="fa fa-eraser" aria-hidden="true"></i> Clear</button> 
+                    </div> 
+                    <div class="col-sm-2" *ngIf="page.totalRecordCount>0">{{page.totalRecordCount}} Result(s)</div>                
+                </div>
+            </form>
+
+            <div class="line-break-big"></div>
+            <div class="relative">
+                <div [ngBusy]="[busy]">
+                <table class="table dataTable table-striped table-hover nomargin fullwidth" role="grid" *ngIf="page.content">
+                        <thead>
+                            <tr role="row">
+                                <th>Policy</th>
+                                <th>Application Nr</th>
+                                <th>Date of effect</th>
+                                <th>Policyholder(s)</th>
+                                <th>Insured(s)</th>
+                                <th>Broker(s)</th>
+                                <th>Product</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let r of page.content">
+                            <td><a [attr.href]="'#/policy?id='+r.polId" target="_blank">{{r.polId}}</a></td>
+                            <td>{{r.additionalId}}</td>
+                            <td>{{r.dateOfCommencement | wdate}}</td>
+                            <td><div *ngFor="let ph of r.policyHolders"><a [attr.href]="'#/client/'+(ph.type==3?'moral':'physical')+'/'+ph.cliId" target="_blank"  highlight="text-danger"  [pattern]="regXp">{{ph.displayName}}</a></div></td>
+                            <td><div *ngFor="let ins of r.insureds"><a [attr.href]="'#/client/'+(ins.type==3?'moral':'physical')+'/'+ins.cliId" target="_blank"  highlight="text-danger"  [pattern]="regXp">{{ins.displayName}}</a></div></td>
+                            <td>
+                                <div *ngIf="r.broker"><a [attr.href]="'#/agent/' + r.broker.agent?.agtId" target="_blank">{{r.broker.agent?.name}} - {{r.broker.agent?.agtId}}</a></div>
+                            </td>
+                            <td>{{r.product?.name}}</td>
+                            <td>{{r.policyStatus?.description}}</td>
+                            </tr>
+                            <tr *ngIf="noResult"><td colspan="10" class="text-center"><p style="padding: 300px">No result found </p></td></tr>
+                        </tbody>
+                        <tfoot *ngIf="!!page && page.totalPageCount > 1">
+                            <tr>
+                                <td colspan="10" class="text-center">
+                    <!-- <ngb-pagination *ngIf="page.totalPageCount>1" class="text-center" (pageChange)="search($event)"
+                        [collectionSize]="page.totalRecordCount" [pageSize]="page.pageSize" [(page)]="page.currentPage" [maxSize]="10" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination> -->
+
+                                <pagination class="text-center" [boundaryLinks]="true" 
+                                            [totalItems]="page.totalRecordCount" [itemsPerPage]="page.pageSize" [(ngModel)]="page.currentPage" (pageChanged)="search($event.page)" [maxSize]="10"
+                                        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+                                </td>
+                            </tr>
+                        </tfoot>                         
+                    </table>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

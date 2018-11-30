@@ -1,0 +1,5 @@
+
+update CHECK_STEP set IS_UPDATABLE = 0 WHERE CHECK_ID = 88 and STEP_ID in (4,27);
+
+update CHECK_STEP set IS_MANDATORY = 1 where CHECK_ID in (29,35,14,15,2,3,4,5) and STEP_ID = 4;
+

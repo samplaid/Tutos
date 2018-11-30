@@ -1,0 +1,11 @@
+flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+flyway.url=jdbc:sqlserver://10.45.7.25:1433;databaseName=WEBIA_DEV
+flyway.baselineOnMigrate=true
+flyway.baselineVersion=00.00
+flyway.user=dwebia-svc
+flyway.password=Hdwjes85224_
+flyway.locations=filesystem:./sql/webia,filesystem:./callback/webia
+flyway.cleanDisabled=true
+flyway.placeholders.schemaWorkflow=DEV_WORKFLOW
+flyway.placeholders.schemaCommon=DEV_COMMON
+flyway.placeholders.loginByPassStepAccess='rvn,duo,mbh,hbe,amc,oro,nal,sla,mcn,lur,hog,frk,lax,lur,azz,nli,eda,feb,skg,ihi,api,cwa,dbatch-svc'

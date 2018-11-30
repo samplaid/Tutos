@@ -1,0 +1,12 @@
+
+
+<select [required]="required" [ngClass]="classes" class="form-control input-sm text-left" [desactive]="mode" [(ngModel)]="modelId" id="strId" name="strategy">
+  <ng-container *ngFor="let e of (amStrategies | orderBy: ['keyValue'])">
+    <option  class="am-strategy" *ngIf="e.status == 1" [value]="e.keyValue">{{e.description}}</option>
+    <option  class="text-danger" *ngIf="e.status != 1" [value]="e.keyValue"><span>{{ e.description }}(&nbsp;&nbsp;&#9888;&nbsp;Inactive)</span></option>
+  </ng-container>
+  <ng-container *ngFor="let e of (defaultStrategies | orderBy: ['keyValue'])">
+    <option *ngIf="e.status == 1" [ngValue]="e.keyValue" style="color: #555555 !important">{{e.description}}</option>
+    <option *ngIf="e.status != 1" [ngValue]="e.keyValue" class="text-danger" ><span>{{ e.description }}(&nbsp;&nbsp;&#9888;&nbsp;Inactive)</span></option>
+  </ng-container>
+</select>

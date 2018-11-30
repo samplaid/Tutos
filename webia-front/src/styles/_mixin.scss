@@ -1,0 +1,34 @@
+@mixin transition($transition...) {
+    -moz-transition:    $transition;
+    -webkit-transition: $transition;
+    transition:         $transition;
+}
+
+@mixin margin ($val, $direction:null){
+    @if $direction==null { margin : $val}
+    @else if $direction==horizontal { margin-right : $val ; margin-left : $val}
+    @else if $direction==vertical { margin-top : $val ; margin-bottom : $val}
+    @else { margin-#{$direction} : $val}
+}
+
+@mixin margin-f ($val, $direction:null){
+    @if $direction==null { margin : $val !important}
+    @else if $direction==horizontal { margin-right : $val !important; margin-left : $val !important}
+    @else if $direction==vertical { margin-top : $val !important; margin-bottom : $val !important}
+    @else { margin-#{$direction} : $val !important}
+}
+
+
+@mixin padding ($val, $direction:null){
+    @if $direction==null { padding : $val}
+    @else if $direction==horizontal { padding-right : $val ; padding-left : $val}
+    @else if $direction==vertical { padding-top : $val ; padding-bottom : $val}
+    @else { padding-#{$direction} : $val}
+}
+
+@mixin padding-f ($val, $direction:null){
+    @if $direction==null { padding : $val !important}
+    @else if $direction==horizontal { padding-right : $val !important; padding-left : $val !important}
+    @else if $direction==vertical { padding-top : $val !important; padding-bottom : $val !important}
+    @else { padding-#{$direction} : $val !important}
+}

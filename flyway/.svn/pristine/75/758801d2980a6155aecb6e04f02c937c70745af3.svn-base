@@ -1,0 +1,1 @@
+UPDATE [dbo].[STEP] set STEP_REJECTABLE= 1 where step_id = 29; 

@@ -1,0 +1,6 @@
+{
+    "esbEndPoint" : "http://localhost:8080/esb-light/services/camel",
+    "webiaEndPoint" : "/webia-application/rest",
+    "timeoutELissia" : 30000,
+    "environment" : "local"
+}

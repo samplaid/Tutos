@@ -1,0 +1,248 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://tempuri.org/Wssadcvg/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="WSSADCVG" targetNamespace="http://tempuri.org/Wssadcvg/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/Wssadcvg/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://tempuri.org/Wssadcvg/">
+  <xs:element name="Wssadcvgcall" type="tns:Wssadcvgcall"/>
+  <xs:element name="WssadcvgcallResponse" type="tns:WssadcvgcallResponse"/>
+  <xs:complexType name="Wssadcvgcall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssadcvgImport" type="tns:WssadcvgImport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssadcvgImport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ImpGrpControls">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="row">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="ImpItmControlProductValues">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Control" type="xs:string"/>
+                        <xs:element name="NumericValue" type="xs:string"/>
+                        <xs:element name="ProductLine" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpValidationUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Password" type="xs:string"/>
+            <xs:element name="LoginId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpCallMethodCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CallFunction" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpUseridUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UsrId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpGrpPas">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="row">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="ImpItmPrlProductLines">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="PrlId" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element minOccurs="0" name="ImpItmPasPolicyAgentShares">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Status" type="xs:short"/>
+                        <xs:element name="Coverage" type="xs:short"/>
+                        <xs:element name="Agent" type="xs:string"/>
+                        <xs:element name="PasId" type="xs:long"/>
+                        <xs:element name="Percentage" type="xs:string"/>
+                        <xs:element name="Type" type="xs:short"/>
+                        <xs:element name="SpecificIce" type="xs:string"/>
+                        <xs:element name="SacrificeAmount" type="xs:string"/>
+                        <xs:element name="SacrificePercent" type="xs:string"/>
+                        <xs:element name="PrimaryAgent" type="xs:short"/>
+                        <xs:element name="PartnerAuthorized" type="xs:short"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpGrpPfd">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="row">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="ImpSelPfdIefSupplied">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="SelectChar" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element minOccurs="0" name="ImpItmPfdPolicyFundDirections">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Status" type="xs:short"/>
+                        <xs:element name="Holding" type="xs:short"/>
+                        <xs:element name="Fund" type="xs:string"/>
+                        <xs:element name="PfdId" type="xs:long"/>
+                        <xs:element name="Percentage" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpPolPolicies">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="PolId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpPocPolicyCoverages">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Coverage" type="xs:short"/>
+            <xs:element name="ProductLine" type="xs:string"/>
+            <xs:element name="InitialSumAssured" type="xs:string"/>
+            <xs:element name="SoldBasis" type="xs:short"/>
+            <xs:element name="Multiplier" type="xs:string"/>
+            <xs:element name="Term" type="xs:string"/>
+            <xs:element name="DateOfApplication" type="xs:string"/>
+            <xs:element name="DateOfReqCommencement" type="xs:string"/>
+            <xs:element name="DateCommenced" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpPcpPolicyPremiums">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ModalPremium" type="xs:string"/>
+            <xs:element name="Currency" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="clientId" type="xs:string"/>
+    <xs:attribute name="clientPassword" type="xs:string"/>
+    <xs:attribute name="nextLocation" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="dialect" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="WssadcvgcallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssadcvgExport" type="tns:WssadcvgExport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssadcvgExport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExpPocPolicyCoverages">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="PocId" type="xs:string"/>
+            <xs:element name="Policy" type="xs:string"/>
+            <xs:element name="Coverage" type="xs:short"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="EcommsCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorParameters" type="xs:string"/>
+            <xs:element name="ErrorNo" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpErrormessageBrowserFields">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorMessage" type="xs:string"/>
+            <xs:element name="ErrorTxt" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateType" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateMsg" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="Exception" type="tns:Exception"/>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Wssadcvgcall">
+    <wsdl:part element="tns:Wssadcvgcall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WssadcvgcallResponse">
+    <wsdl:part element="tns:WssadcvgcallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part element="tns:Exception" name="Exception">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="WSSADCVG">
+    <wsdl:operation name="Wssadcvgcall">
+      <wsdl:input message="tns:Wssadcvgcall" name="Wssadcvgcall">
+    </wsdl:input>
+      <wsdl:output message="tns:WssadcvgcallResponse" name="WssadcvgcallResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSSADCVGSoapBinding" type="tns:WSSADCVG">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Wssadcvgcall">
+      <soap:operation soapAction="http://tempuri.org/Wssadcvgcall/" style="document"/>
+      <wsdl:input name="Wssadcvgcall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="WssadcvgcallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WSSADCVG">
+    <wsdl:port binding="tns:WSSADCVGSoapBinding" name="WSSADCVGPort">
+      <soap:address location="http://localhost:8080/XWSADCVG/WSSADCVG/WSSADCVG"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

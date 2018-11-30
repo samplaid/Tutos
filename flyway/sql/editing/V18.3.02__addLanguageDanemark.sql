@@ -1,0 +1,1 @@
+insert into [dbo].[TRANSCODIFICATION] ([TYPE], [ODSCODE], [SCRIPTURACODE], [DESCRIPTION]) values('DOCUMENT_LANGUAGE', 'DNK', 'EN', 'English');

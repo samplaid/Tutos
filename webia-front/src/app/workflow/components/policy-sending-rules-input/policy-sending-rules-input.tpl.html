@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="form-inline">
+        <label class="control-label col-md-2 text-right marginTop">Sending Rules</label>
+        <div class="form-group col-md-3">
+            <select class="form-control input-sm" [ngModel]="sendingRules" [desactive]="mode" (ngModelChange)="onSendingRulesChange($event)">
+                <option value=""></option>
+                <option *ngFor="let sendingRule of sendingRuleList" [ngValue]="sendingRule.keyValue">{{sendingRule.description}}</option>
+            </select>
+        </div> 
+        <ng-container *ngIf="showMail2Agent">
+            <label class="marginTop col-md-2 text-right">Mail to Agent</label>
+            <div class="form-group col-md-3 form-inline">
+                <select class="form-control input-sm" [ngModel]="mailToAgent" [desactive]="mode" (ngModelChange)="onMailToAgentChange($event)">
+                    <option value=""></option>
+                    <option *ngFor="let mail2Agent of mail2AgentList" [ngValue]="mail2Agent.agtId">{{mail2Agent.name}} [<agt-label [categoryCode]="mail2Agent.category"></agt-label>]</option>
+                </select>
+            </div> 
+        </ng-container>        
+    </div>
+</div>

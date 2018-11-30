@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://tempuri.org/Wssrspol/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="WSSRSPOL" targetNamespace="http://tempuri.org/Wssrspol/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/Wssrspol/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://tempuri.org/Wssrspol/">
+  <xs:element name="Wssrspolcall" type="tns:Wssrspolcall"/>
+  <xs:element name="WssrspolcallResponse" type="tns:WssrspolcallResponse"/>
+  <xs:complexType name="Wssrspolcall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssrspolImport" type="tns:WssrspolImport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssrspolImport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ImpUseridUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UsrId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpValidationUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Password" type="xs:string"/>
+            <xs:element name="LoginId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ImpPolPolicies">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Product" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="clientId" type="xs:string"/>
+    <xs:attribute name="clientPassword" type="xs:string"/>
+    <xs:attribute name="nextLocation" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="dialect" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="WssrspolcallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WssrspolExport" type="tns:WssrspolExport"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WssrspolExport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExpErrorMessageBrowserFields">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorMessage" type="xs:string"/>
+            <xs:element name="ErrorTxt" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpErrorCommunications">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ErrorNo" type="xs:string"/>
+            <xs:element name="ErrorParameters" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpPolPolicies">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="PolId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="exitState" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateType" type="xs:int" use="required"/>
+    <xs:attribute name="exitStateMsg" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="Exception" type="tns:Exception"/>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Wssrspolcall">
+    <wsdl:part element="tns:Wssrspolcall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part element="tns:Exception" name="Exception">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WssrspolcallResponse">
+    <wsdl:part element="tns:WssrspolcallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="WSSRSPOL">
+    <wsdl:operation name="Wssrspolcall">
+      <wsdl:input message="tns:Wssrspolcall" name="Wssrspolcall">
+    </wsdl:input>
+      <wsdl:output message="tns:WssrspolcallResponse" name="WssrspolcallResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSSRSPOLSoapBinding" type="tns:WSSRSPOL">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Wssrspolcall">
+      <soap:operation soapAction="http://tempuri.org/Wssrspolcall/" style="document"/>
+      <wsdl:input name="Wssrspolcall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="WssrspolcallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WSSRSPOL">
+    <wsdl:port binding="tns:WSSRSPOLSoapBinding" name="WSSRSPOLPort">
+      <soap:address location="http://sv-lvd46.rh.olympe.loc:8080/XWSRSPOL/WSSRSPOL/WSSRSPOL"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

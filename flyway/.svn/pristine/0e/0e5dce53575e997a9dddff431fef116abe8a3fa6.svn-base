@@ -1,0 +1,46 @@
+INSERT INTO CHECK_STEP values (29,7,0,0,2,0,8,'NO',null);
+
+INSERT INTO CHECK_STEP values (97,7,0,0,3,0,8,'NO',null);
+
+INSERT INTO CHECK_STEP values (99,7,0,0,4,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (100,7,0,0,5,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (101,7,0,0,6,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (102,7,0,0,7,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (103,7,0,0,8,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (104,7,0,0,9,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (105,7,0,0,10,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (35,7,0,0,11,0,8,'NO',null);
+
+update CHECK_STEP set CHECK_ORDER = 12 WHERE STEP_ID = 7 and CHECK_ID = 36;
+
+INSERT INTO CHECK_STEP values (42,7,0,0,13,0,8,'NO',null);
+
+INSERT INTO CHECK_STEP values (43,7,0,0,14,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (44,7,0,0,15,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (87,7,0,0,16,0,8,'YES',null);
+
+INSERT INTO CHECK_STEP values (88,7,0,0,17,0,8,'YES',null);
+
+update CHECK_STEP set CHECK_ORDER = 18 WHERE STEP_ID = 7 and CHECK_ID = 94;
+
+update CHECK_STEP set CHECK_ORDER = 19 WHERE STEP_ID = 7 and CHECK_ID = 95;
+
+update CHECK_STEP set CHECK_ORDER = 20 WHERE STEP_ID = 7 and CHECK_ID = 96;
+
+INSERT INTO CHECK_STEP values (98,7,0,0,21,0,8,'YES',null);
+
+
+
+
+
+
+

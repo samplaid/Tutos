@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="form-group">
+        <label class="text-nowrap control-label col-md-3">Insider trading</label>
+        <div class="form-inline col-md-9">
+            <div class="radio paddingLeft5">
+                <label class="text-nowrap radio-inline paddingRight4 ">
+                    <input class="form-control input input-sm" [desactive]="mode" type="radio" name="insiderTrading"  [value]="'IT YES'" [checked]="fc.insiderTrading=='IT YES'" [(ngModel)]="fc.insiderTrading">
+                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                    Yes
+                </label>
+                <label class="text-nowrap radio-inline paddingRight4 ">
+                    <input class="form-control input input-sm"  [desactive]="mode" type="radio" name="insiderTrading"  [value]="'NO'" [checked]="fc.insiderTrading=='NO'" [(ngModel)]="fc.insiderTrading" (ngModelChange)="clearInsiderTradingDetails($event)">
+                    <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                    No
+                </label>                                            
+            </div>                 
+            <input *ngIf="fc.insiderTrading=='IT YES'" name="insiderTradingDetails" type="text" class="width-fluid-f-47 form-control input-sm" maxlength="50" [(ngModel)]="fc.insiderTradingDetails" [desactive]="mode">  
+        </div>                            
+    </div>                        
+</div>

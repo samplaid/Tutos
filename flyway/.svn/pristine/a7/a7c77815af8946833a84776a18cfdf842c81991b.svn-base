@@ -1,0 +1,4 @@
+INSERT INTO APPLI_PARAM VALUES ('VAT_AM','Taux de TVA Asset Manager','17');
+
+INSERT INTO APPLI_PARAM VALUES ('VAT_DB','Taux de TVA Deposit Bank','14');
+

@@ -1,0 +1,47 @@
+<section subject="policy-clauses-input">
+    <ng-container *ngIf="clauseForms.length > 0;else add_clause_button_container">
+        <section id="clause">    
+            <div>
+                <div class="row" >
+                    <div class="col-xs-1 col-md-offset-1">
+                        <label>Rank</label>
+                    </div>
+                    <div class="col-xs-1 ">
+                        <label>Type</label>
+                    </div>
+                    <div class="col-xs-5 ">
+                        <label>{{clauseTitle}}</label>
+                    </div>
+                </div>
+                <div class="row client marginBottom" *ngFor="let clause of clauseForms; let i=index;let last=last"  >
+                    <div class="col-xs-1 col-md-offset-1">
+                        <w-number [disabled]="mode == stateMode.readonly" [(number)]="clause.rankNumber" css="form-control input-sm text-right input-percent" [precision]="0"  ></w-number>
+                    </div>
+                    <div class="col-xs-1 nopadding">          
+                        <select [desactive]="mode" class="form-control input-sm text-left" [(ngModel)]="clause.clauseTp" (change)="onClauseTypeChange(clause)">
+                            <option *ngFor="let type of clauseTypeList" [ngValue]="type">{{type}}</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-8 paddingHorizontal2">      
+                        <select [desactive]="mode" *ngIf="(clause.clauseTp=='Standard' && !(clauseTypeList.indexOf('Standard')<0))" class="form-control input-sm text-left" [(ngModel)]="clause.clauseCd" >
+                            <option *ngFor="let clauseStd of benefClauseStdList" [ngValue]="clauseStd.benefClauseCd">{{clauseStd.benefClauseText}}</option>
+                        </select>
+                        <textarea [desactive]="mode" *ngIf="clause.clauseTp=='Free' || clauseTypeList.indexOf('Standard')<0" autosize class="form-control paddingVertical" [(ngModel)]='clause.clauseText' rows="1" > </textarea>
+                    </div>
+                    <div class="col-xs-1 nopadding">
+                        <button [desactive]="mode" class="btn btn-sm btn-primary" (click)="removeClause(i)" ><i class="fa fa-minus" aria-hidden="true"></i></button>
+                        <button [desactive]="mode" *ngIf="last" type="button" class="btn btn-sm btn-primary" (click)="addClause()" ><i class="fa fa-plus" aria-hidden="true"></i></button>                    
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-container>
+    <ng-template #add_clause_button_container>
+        <div class="row add-clause-line">
+            <div class="col-md-4 col-md-offset-1">
+                <button type="button" class="btn btn-xs btn-primary" (click)="addClause()" [desactive]="mode">
+                    <i class="fa fa-plus" aria-hidden="true"></i>Add {{clauseTitle}}</button>
+            </div>
+        </div>
+    </ng-template>
+</section>
