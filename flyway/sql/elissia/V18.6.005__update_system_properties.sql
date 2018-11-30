@@ -1,1 +1,0 @@
-﻿update ${schemaCommon}.[dbo].[SYSTEM_PROPERTIES] set PROPERTY_VALUE = 'true' where PROPERTY_NAME like 'landing.page.run.default.search'

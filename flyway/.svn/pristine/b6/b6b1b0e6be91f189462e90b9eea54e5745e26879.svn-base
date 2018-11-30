@@ -1,8 +1,0 @@
-flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
-flyway.url=jdbc:sqlserver://sv-wvu80.olympe.loc:1433;databaseName=user_access_UAT
-flyway.baselineOnMigrate=true
-flyway.user=uuseraccess-svc
-flyway.password=
-flyway.locations=filesystem:./sql/useraccess
-flyway.cleanDisabled=true
-flyway.target=18.6.06

@@ -1,9 +1,0 @@
-flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
-flyway.url=jdbc:sqlserver://sv-wvp79:1433;DatabaseName=RedHatSSO_PRD
-flyway.baselineOnMigrate=true
-flyway.baselineVersion=00.00
-flyway.user=predhatsso-svc
-flyway.password=
-flyway.locations=filesystem:./sql/keycloak
-flyway.cleanDisabled=true
-flyway.target=18.5.999

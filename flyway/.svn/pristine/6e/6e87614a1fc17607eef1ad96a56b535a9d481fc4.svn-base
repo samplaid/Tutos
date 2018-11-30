@@ -1,8 +1,0 @@
-flyway.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
-flyway.url=jdbc:sqlserver://sv-wvu80:1433;DatabaseName=BATCH_UAT
-flyway.baselineOnMigrate=true
-flyway.baselineVersion=00.00
-flyway.user=ubatch-svc
-flyway.password=
-flyway.locations=filesystem:./sql/batch
-flyway.cleanDisabled=true

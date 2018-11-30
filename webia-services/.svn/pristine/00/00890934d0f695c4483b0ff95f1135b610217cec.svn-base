@@ -1,4 +1,0 @@
-jpa.default_schema=dbo
-jpa.dialect=org.hibernate.dialect.SQLServer2012Dialect
-jpa.show_sql=false
-jpa.format_sql=false

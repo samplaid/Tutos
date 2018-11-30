@@ -1,1 +1,0 @@
-  update sap_mapping set data_out = '7545003' where DATA_IN in ( 'ULDTF_12','ULDTF_13');

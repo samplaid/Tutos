@@ -1,9 +1,0 @@
-.am-strategy{
-    color: blue;
-}
-.text-grey-darken {
-    color: #555555 !important;
-}
-.text-select-danger {
-    color: #a94442 !important;
-}

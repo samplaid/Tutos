@@ -1,1 +1,0 @@
-insert into APPLI_PARAM(CODE, DESCRIPTION, VALUE) values ('CPS_PHONE', 'Numéro de teléphone du service Client Partner Solutions', '+352 437 43 ????')

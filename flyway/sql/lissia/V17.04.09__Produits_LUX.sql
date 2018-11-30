@@ -1,1 +1,0 @@
-update products set status = 3 where prd_id in ('WEACLU','WEALLU');

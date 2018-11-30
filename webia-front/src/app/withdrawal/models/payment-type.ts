@@ -1,4 +1,0 @@
-export const paymentType  = {
-    CASH_TRANSFER: "CASH_TRANSFER",
-    SECURITY_TRANSFER : "SECURITY_TRANSFER"
-}

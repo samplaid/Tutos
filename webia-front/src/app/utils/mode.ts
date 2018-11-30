@@ -1,1 +1,0 @@
-export const StateMode={edit:"edit",readonly:"readOnly",waiting:"waiting", create:"create", update:"update"};

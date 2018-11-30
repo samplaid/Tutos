@@ -1,1 +1,0 @@
-insert into [dbo].[TRANSCODIFICATION] ([TYPE], [ODSCODE], [SCRIPTURACODE], [DESCRIPTION]) values('LANGUAGE', 'ESP', 'ES', 'Spanish');

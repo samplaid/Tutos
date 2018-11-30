@@ -1,1 +1,0 @@
-insert into APPLI_PARAM(CODE, DESCRIPTION, VALUE) values('FUND_TRANSACTION_EVENT_TYPES_MONEY_OUT', 'les types de fund transactions qui doivent être vérifiées durant la validation de rachat partiel/total', '8,15,37,38,3,12,13,71');

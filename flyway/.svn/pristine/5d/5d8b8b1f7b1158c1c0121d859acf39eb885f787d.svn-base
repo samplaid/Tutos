@@ -1,1 +1,0 @@
-insert into [APPLI_PARAM]([CODE], [DESCRIPTION], [VALUE]) values('SALES_SUPPORT_ID_GROUP', 'Id workflow group for Sales support' ,'24');

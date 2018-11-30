@@ -1,1 +1,0 @@
-ALTER table transactions add PRICE_NOTIF_SENT bit  DEFAULT (0);

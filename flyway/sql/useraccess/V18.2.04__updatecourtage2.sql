@@ -1,1 +1,0 @@
-UPDATE PROFIL SET NAME = 'Courtage-2_policy' WHERE NAME = 'Courtage-2';

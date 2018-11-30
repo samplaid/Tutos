@@ -1,8 +1,0 @@
-#set( $symbol_pound = '#' )
-#set( $symbol_dollar = '$' )
-#set( $symbol_escape = '\' )
-db.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
-db.url=jdbc:sqlserver://10.36.0.38:1433;DatabaseName=user_access;
-db.username=tuseraccess-svc
-db.password=P9XDxgKrHh
-       

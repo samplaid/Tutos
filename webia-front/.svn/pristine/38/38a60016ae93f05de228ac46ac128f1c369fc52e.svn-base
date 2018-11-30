@@ -1,9 +1,0 @@
-.search-client {
-    min-width: 120px;
-    display: block;
-}
-.search-box {
-    line-height: 1.9rem !important;
-    text-align:left;
-    width: calc(100% - 100px)!important;
-}
